@@ -1,8 +1,13 @@
 export const typeDefs = `#graphql
-type TuyChon {
+type KichThuoc {
     id: String,
-    tenTuyChon: String,
-    giaTuyChon: Float
+    tenKichThuoc: String,
+    giaKichThuoc: Float
+},
+type LoaiDe {
+    id: String,
+    tenLoaiDe: String,
+    giaLoaiDe: Float
 },
 type DanhMuc {
     id: String,
@@ -14,22 +19,26 @@ type SanPham {
     id: String,
     maSanPham: String,
     tenSanPham: String,
-    tuyChon: [TuyChon],
+    kichThuoc: [KichThuoc],
     ghiChu: String,
     moTa: String,
     hinhAnh: String,
     danhMuc: [DanhMuc],
     trangThai: String,
+    loaiDe: [LoaiDe],
+    giaSanPham: Float
 }
 
 type Query {
-    danhSachSanPham: [SanPham]
+    danhSachSanPham: [SanPham],
+    danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham]
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,
     themSanPham(
     tenSanPham: String, 
-    tuyChon: [String], 
+    kichThuoc: [String],
+    loaiDe: [String], 
     ghiChu: String, 
     moTa: String, 
     hinhAnh: String, 

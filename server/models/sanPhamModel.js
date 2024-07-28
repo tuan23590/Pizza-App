@@ -7,7 +7,7 @@ const SanPhamSchema = new mongoose.Schema({
     tenSanPham: {
         type: String,
     },
-    tuyChon: {
+    kichThuoc: {
         type: [String],
     },
     ghiChu: {
@@ -22,8 +22,14 @@ const SanPhamSchema = new mongoose.Schema({
     danhMuc: {
         type: [String],
     },
+    giaSanPham: {
+        type: Number,
+    },
     trangThai: {
         type: String,
+    },
+    loaiDe: {
+        type: [String],
     },
 },{timestamps: true});
 

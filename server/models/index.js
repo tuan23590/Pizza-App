@@ -1,9 +1,11 @@
 import sanPhamModel from './sanPhamModel.js';
 import danhMucModel from './danhMucModel.js';
-import tuyChonModel from './tuyChonModel.js';
+import kichThuocModel from './kichThuocModel.js';
+import loaiDeModel from './loaiDeModel.js';
 
 export {
     sanPhamModel,
-    tuyChonModel,
+    kichThuocModel,
     danhMucModel,
+    loaiDeModel
 }

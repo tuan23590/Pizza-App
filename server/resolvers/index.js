@@ -1,20 +1,29 @@
-import { danhMucModel, sanPhamModel, tuyChonModel } from "../models/index.js";
+import { danhMucModel, kichThuocModel, loaiDeModel, sanPhamModel } from "../models/index.js";
 
 export const resolvers = {
     Query: {
         danhSachSanPham: async () => {
             const danhSachSanPham = await sanPhamModel.find();
             return danhSachSanPham;
+        },
+        danhSachSanPhamTheoMaDanhMuc: async (parent, args) => {
+            const danhSachSanPham = await sanPhamModel.find({ danhMuc: args.maDanhMuc });
+            return danhSachSanPham;
         }
     },
     SanPham: {
+        kichThuoc: async (parent) => {
+            const danhSachKichThuoc = await kichThuocModel.find({ _id: { $in: parent.kichThuoc } });
+            console.log(danhSachKichThuoc);
+            return danhSachKichThuoc;
+        },
         danhMuc: async (parent) => {
-            const danhSachDanhMuc = await danhMucModel.find({ _id: { $in: parent.danhMuc } });
+            const danhSachDanhMuc = await danhMucModel.find({ maDanhMuc: { $in: parent.danhMuc } });
             return danhSachDanhMuc;
         },
-        tuyChon: async (parent) => {
-            const danhSachTuyChon = await tuyChonModel.find({ _id: { $in: parent.tuyChon } });
-            return danhSachTuyChon;
+        loaiDe: async (parent) => {
+            const danhSachLoaiDe = await loaiDeModel.find({ _id: { $in: parent.loaiDe } });
+            return danhSachLoaiDe;
         }
     },
     Mutation:{

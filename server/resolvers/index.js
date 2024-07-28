@@ -9,6 +9,18 @@ export const resolvers = {
         danhSachSanPhamTheoMaDanhMuc: async (parent, args) => {
             const danhSachSanPham = await sanPhamModel.find({ danhMuc: args.maDanhMuc });
             return danhSachSanPham;
+        },
+        danhSachDanhMuc: async () => {
+            const danhSachDanhMuc = await danhMucModel.find();
+            return danhSachDanhMuc;
+        },
+        danhSachLoaiDe: async () => {
+            const danhSachLoaiDe = await loaiDeModel.find();
+            return danhSachLoaiDe;
+        },
+        danhSachKichThuoc: async () => {
+            const danhSachKichThuoc = await kichThuocModel.find();
+            return danhSachKichThuoc;
         }
     },
     SanPham: {

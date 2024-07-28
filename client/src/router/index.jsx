@@ -5,9 +5,9 @@ import Header from "../components/Header";
 import AuthProvider from "../context/AuthProvider";
 import DatHang from "../pages/DatHang";
 import DanhSachSanPham from "../components/DatHang/DanhSachSanPham";
-import { APIDanhSachPizza } from "../utils/sanPhamUtils";
-
-
+import { APIDanhSachSanPhamTheoMaDanhMuc } from "../utils/sanPhamUtils";
+import QuanLy from './../pages/QuanLy';
+import QuanLySanPham from "../components/QuanLy/QuanLySanPham";
 const KhachHangProvider = () => {
     return <>
     <AuthProvider>
@@ -38,8 +38,19 @@ export default createBrowserRouter(
                     {
                         element: <DanhSachSanPham/>,
                         path: "/DatHang/:maDanhMuc",
-                        loader: APIDanhSachPizza
+                        loader: APIDanhSachSanPhamTheoMaDanhMuc
                     }]
+            },
+            {
+                element: <QuanLy />,
+                path: "/QuanLy",
+                children:[
+                    {
+                        element: <QuanLySanPham/>,
+                        path: "/QuanLy/QuanLySanPham",
+                        
+                    }
+                ]
             }
         ]
     }

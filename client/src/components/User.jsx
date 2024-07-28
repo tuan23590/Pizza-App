@@ -10,7 +10,7 @@ export default function User() {
         borderRadius: '10px',
       }}}>
         <AccountCircleIcon sx={{color: 'red'}} />
-        <Typography sx={{fontWeight: '500'}}>Thành viên</Typography>
+        <Typography sx={{fontWeight: '500'}}>Tài Khoản</Typography>
     </Box>
   )
 }

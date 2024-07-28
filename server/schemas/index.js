@@ -31,6 +31,9 @@ type SanPham {
 
 type Query {
     danhSachSanPham: [SanPham],
+    danhSachDanhMuc: [DanhMuc],
+    danhSachLoaiDe: [LoaiDe],
+    danhSachKichThuoc: [KichThuoc],
     danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham]
 },
 type Mutation {

@@ -31,7 +31,7 @@ export default function SanPham({ sanPham }) {
       />
       <Box sx={{ padding: '10px' }}>
         <Typography variant='h6'>{sanPham.tenSanPham}</Typography>
-        <Typography color='green' mb={'5px'} variant='subtitle2'>{sanPham.ghiChu}</Typography>
+        {/* <Typography height={"20px"} color='green' mb={'5px'} variant='subtitle2'>{sanPham.ghiChu}</Typography> */}
         <Typography variant='body1' mb={'5px'} >{sanPham.moTa}</Typography>
 
 

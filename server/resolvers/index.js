@@ -26,11 +26,10 @@ export const resolvers = {
     SanPham: {
         kichThuoc: async (parent) => {
             const danhSachKichThuoc = await kichThuocModel.find({ _id: { $in: parent.kichThuoc } });
-            console.log(danhSachKichThuoc);
             return danhSachKichThuoc;
         },
         danhMuc: async (parent) => {
-            const danhSachDanhMuc = await danhMucModel.find({ maDanhMuc: { $in: parent.danhMuc } });
+            const danhSachDanhMuc = await danhMucModel.findOne({maDanhMuc: parent.danhMuc});
             return danhSachDanhMuc;
         },
         loaiDe: async (parent) => {
@@ -54,7 +53,7 @@ export const resolvers = {
             return danhMuc.save();
         },
         themSanPham: async (parent, args) => {
-            const sanPhamCuoi = await sanPhamModel.findOne().sort({ _id: -1 }).exec();
+        const sanPhamCuoi = await sanPhamModel.findOne().sort({ _id: -1 }).exec();
         
         let maSanPhamMoi;
         
@@ -66,20 +65,14 @@ export const resolvers = {
 
             maSanPhamMoi = "SP1";
         }
-
-        const danhSachTuyChon = args.tuyChon || [];
-        let danhSachTuyChonMoi = [];
-        
-        for (const tuyChon of danhSachTuyChon) {
-            const tc = new tuyChonModel({ tuyChon });
-            await tc.save();
-            danhSachTuyChonMoi.push(tc.id);
-        }
-        
         const sanPham = new sanPhamModel({
             ...args,
+            giaSanPham: parseFloat(args.giaSanPham),
             maSanPham: maSanPhamMoi,
-            tuyChon: danhSachTuyChonMoi
+            kichThuoc: args.kichThuoc,
+            loaiDe: args.loaiDe,
+            trangThai: "Đang kinh doanh",
+            soLuong: 0
         });
         
         return await sanPham.save();

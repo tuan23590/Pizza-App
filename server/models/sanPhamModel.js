@@ -10,6 +10,9 @@ const SanPhamSchema = new mongoose.Schema({
     kichThuoc: {
         type: [String],
     },
+    soLuong: {  
+        type: Number,
+    },
     ghiChu: {
         type: String,
     },
@@ -20,7 +23,7 @@ const SanPhamSchema = new mongoose.Schema({
         type: String,
     },
     danhMuc: {
-        type: [String],
+        type: String,
     },
     giaSanPham: {
         type: Number,

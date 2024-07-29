@@ -23,10 +23,11 @@ type SanPham {
     ghiChu: String,
     moTa: String,
     hinhAnh: String,
-    danhMuc: [DanhMuc],
+    danhMuc: DanhMuc,
     trangThai: String,
     loaiDe: [LoaiDe],
-    giaSanPham: Float
+    giaSanPham: Float,
+    soLuong: Int
 }
 
 type Query {
@@ -45,7 +46,7 @@ type Mutation {
     ghiChu: String, 
     moTa: String, 
     hinhAnh: String, 
-    danhMuc: [String], 
+    danhMuc: String, 
     trangThai: String): SanPham
 }
 `;

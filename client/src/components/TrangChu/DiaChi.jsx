@@ -4,11 +4,12 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import MapIcon from '@mui/icons-material/Map';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { useNavigate } from 'react-router-dom';
 
 export default function DiaChi() {
     const [selectedOption, setSelectedOption] = useState('Giao hàng tận nơi');
     const [address, setAddress] = useState('');
-
+    const navigate = useNavigate();
     const handleOptionClick = (option) => {
         setSelectedOption(option);
     };
@@ -102,7 +103,7 @@ export default function DiaChi() {
                         <MapIcon sx={{ color: 'green', cursor: 'pointer'}} />
                         </IconButton>
                     </Box>
-                    <Button variant='contained' fullWidth color='success'>Bắt đầu đặt hàng</Button>
+                    <Button variant='contained' fullWidth color='success' onClick={()=>{navigate('/DatHang');}}>Bắt đầu đặt hàng</Button>
                 </Box>
             )}
         </Box>

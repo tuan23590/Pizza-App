@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, FormLabel, FormControlLabel, Checkbox, Box, Select, MenuItem, Typography } from '@mui/material';
 import { APIDanhSachDanhMuc } from '../../utils/danhMucUtils';
-import { APIDanhLoaiDe,APIDanhKichThuoc } from './../../utils/sanPhamUtils';
+import { APIDanhLoaiDe, APIDanhKichThuoc, APIThemSanPham } from './../../utils/sanPhamUtils';
 
 export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
   const [danhSachDanhMuc, setDanhSachDanhMuc] = useState([]);
   const [danhSachLoaiDe, setDanhSachLoaiDe] = useState([]);
   const [danhSachKichThuoc, setDanhSachKichThuoc] = useState([]);
-  const [selectedDanhMuc, setSelectedDanhMuc] = useState([]);
+  const [selectedDanhMuc, setSelectedDanhMuc] = useState('');
   const [selectedLoaiDe, setSelectedLoaiDe] = useState([]);
   const [selectedKichThuoc, setSelectedKichThuoc] = useState([]);
   const [formData, setFormData] = useState({
@@ -15,7 +15,7 @@ export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
     moTa: '',
     hinhAnh: '',
     giaSanPham: '',
-    trangThai: 'Đang kinh doanh'
+    danhMuc: '',
   });
 
   const fetchData = async () => {
@@ -35,11 +35,9 @@ export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
         moTa: sanPham.moTa || '',
         hinhAnh: sanPham.hinhAnh || '',
         giaSanPham: sanPham.giaSanPham || '',
-        trangThai: sanPham.trangThai || 'Đang kinh doanh'
+        danhMuc: sanPham.danhMuc?.maDanhMuc || '',
       });
-      if (sanPham.danhMuc) {
-        setSelectedDanhMuc(sanPham.danhMuc.map(danhMuc => danhMuc.maDanhMuc));
-      }
+      setSelectedDanhMuc(sanPham.danhMuc?.maDanhMuc || '');
       if (sanPham.loaiDe) {
         setSelectedLoaiDe(sanPham.loaiDe.map(loaiDe => loaiDe.id));
       }
@@ -55,15 +53,9 @@ export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
       ...prev,
       [name]: value
     }));
-  };
-
-  const handleDanhMucChange = (event) => {
-    const value = event.target.value;
-    setSelectedDanhMuc((prevSelected) =>
-      prevSelected.includes(value)
-        ? prevSelected.filter((item) => item !== value)
-        : [...prevSelected, value]
-    );
+    if (name === 'danhMuc') {
+      setSelectedDanhMuc(value);
+    }
   };
 
   const handleLoaiDeChange = (event) => {
@@ -84,13 +76,12 @@ export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
     );
   };
 
-  const handleSave = () => {
-    console.log({
-     formData,
-      danhMuc: danhSachDanhMuc.filter(danhMuc => selectedDanhMuc.includes(danhMuc.maDanhMuc)),
-      loaiDe: danhSachLoaiDe.filter(loaiDe => selectedLoaiDe.includes(loaiDe.id)),
-      kichThuoc: danhSachKichThuoc.filter(kichThuoc => selectedKichThuoc.includes(kichThuoc.id)),
-    });
+  const handleSave = async () => {
+    const res = await APIThemSanPham({ formData, selectedLoaiDe, selectedKichThuoc });
+    if (res) {
+      console.log('Thêm sản phẩm thành công');
+      console.log(res);
+    }
   };
 
   return (
@@ -155,53 +146,36 @@ export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
                 readOnly: mode === 'view',
               }}
             />  
-            <Typography>Trạng Thái</Typography>
+            {/* <Typography>Trạng Thái</Typography>
             <Select 
               fullWidth 
               label='Trạng thái' 
               name="trangThai"
               value={formData.trangThai} 
               onChange={handleInputChange}
-              InputProps={{
+              inputProps={{
                 readOnly: mode === 'view',
               }}>
               <MenuItem value="Đang kinh doanh">Đang kinh doanh</MenuItem>
               <MenuItem value="Ngừng kinh doanh">Ngừng kinh doanh</MenuItem>
-            </Select>
-            {/* <FormControl fullWidth component="fieldset" sx={{ mt: 2 }}>
-              <FormLabel component="legend">Danh mục</FormLabel>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                {danhSachDanhMuc.map((danhMuc) => (
-                  <FormControlLabel
-                    key={danhMuc.maDanhMuc}
-                    control={
-                      <Checkbox
-                        checked={selectedDanhMuc.includes(danhMuc.maDanhMuc)}
-                        onChange={handleDanhMucChange}
-                        value={danhMuc.maDanhMuc}
-                        disabled={mode === 'view'}
-                      />
-                    }
-                    label={danhMuc.tenDanhMuc}
-                  />
-                ))}
-              </Box>
-            </FormControl> */}
+            </Select> */}
             <Typography>Danh mục</Typography>
              <Select 
               fullWidth 
               label='Danh mục' 
               name="danhMuc"
-              value={formData.id} 
+              value={selectedDanhMuc} 
               onChange={handleInputChange}
-              InputProps={{
+              inputProps={{
                 readOnly: mode === 'view',
               }}>
-              {danhSachDanhMuc.map((danhMuc) => (
-                <MenuItem key={danhMuc.id} value={danhMuc.id}>{danhMuc.tenDanhMuc}</MenuItem>
+              {danhSachDanhMuc?.map((danhMuc) => (
+                <MenuItem key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>{danhMuc.tenDanhMuc}</MenuItem>
               ))}
             </Select>
-            <FormControl fullWidth component="fieldset" sx={{ mt: 2 }}>
+           {selectedDanhMuc === 'DM2' && (
+            <>
+             <FormControl fullWidth component="fieldset" sx={{ mt: 2 }}>
               <FormLabel component="legend">Loại đế</FormLabel>
               <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                 {danhSachLoaiDe.map((loaiDe) => (
@@ -239,12 +213,14 @@ export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
                 ))}
               </Box>
             </FormControl>
+            </>
+           )}
           </>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Đóng</Button>
-        {mode !== 'view' && <Button color="primary" onClick={handleSave}>Lưu</Button>}
+        <Button color='warning' onClick={onClose}>Đóng</Button>
+        {mode !== 'view' && <Button variant='outlined' color="info" onClick={handleSave}>Lưu</Button>}
       </DialogActions>
     </Dialog>
   );

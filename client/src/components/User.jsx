@@ -1,6 +1,6 @@
 import React from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Box, Typography } from '@mui/material';
+import { Box, Link, Typography } from '@mui/material';
 
 export default function User() {
   return (
@@ -11,6 +11,9 @@ export default function User() {
       }}}>
         <AccountCircleIcon sx={{color: 'red'}} />
         <Typography sx={{fontWeight: '500'}}>Tài Khoản</Typography>
+        <Link href='/QuanLy'>
+            Quản lý
+        </Link>
     </Box>
   )
 }

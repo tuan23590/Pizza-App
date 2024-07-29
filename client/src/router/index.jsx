@@ -49,7 +49,7 @@ export default createBrowserRouter(
                         element: <QuanLySanPham/>,
                         path: "/QuanLy/QuanLySanPham",
                         
-                    }
+                    },
                 ]
             }
         ]

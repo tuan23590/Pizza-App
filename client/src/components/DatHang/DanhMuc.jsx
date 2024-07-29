@@ -1,12 +1,17 @@
 import { Box, Typography,Link } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { APIDanhSachDanhMuc } from '../../utils/danhMucUtils';
 
 export default function DanhMuc() {
-    const [danhSachDanhMuc,setDanhSachDanhMuc] = useState([
-        { maDanhMuc: "DM2", tenDanhMuc: 'PIZZA'}, { maDanhMuc: "DM1", tenDanhMuc: 'THỨC UỐNG'}
-    ])
+    const [danhSachDanhMuc,setDanhSachDanhMuc] = useState([])
+    const fetchData = async () => {
+        const dataDM = await APIDanhSachDanhMuc();
+        setDanhSachDanhMuc(dataDM);
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);
     const curntPath = window.location.pathname.split('/')[2];
-    
     const [danhMucDaChon,setDanhMucDaChon] = useState(danhSachDanhMuc[0]);
     return (
         <Box sx={{borderTop: 1,borderBottom: 1,borderColor: 'gray',display: 'flex',}}>
@@ -23,8 +28,8 @@ export default function DanhMuc() {
                   }}}
                 onClick={() => setDanhMucDaChon(danhMuc)}>
                         <Typography sx={{fontWeight: '500'}}>
-                            {danhMuc.tenDanhMuc}
-                            </Typography>   
+                            {danhMuc.tenDanhMuc.toUpperCase()}
+                        </Typography>   
                 </Link>
             ))}
         </Box>

@@ -1,9 +1,8 @@
-// QuanLySanPham.jsx
 import React, { useEffect, useState } from 'react';
 import { APIDanhSachSanPham } from '../../utils/sanPhamUtils';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select, MenuItem, TextField, FormControl, InputLabel } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select, MenuItem, TextField, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import ChiTietSanPham from './ChiTietSanPham';
-import { APIDanhSachDanhMuc } from '../../utils/danhMucUtils';
+import { APIDanhSachDanhMuc, APIThemDanhMuc } from '../../utils/danhMucUtils';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -11,9 +10,12 @@ export default function QuanLySanPham() {
   const [sanPham, setSanPham] = useState([]);
   const [danhMuc, setDanhMuc] = useState([]);
   const [selectDanhMuc, setSelectDanhMuc] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState('view'); // 'view' or 'add'
   const [selectedSanPham, setSelectedSanPham] = useState(null);
+  const [openDanhMucDialog, setOpenDanhMucDialog] = useState(false);
+  const [tenDanhMuc, setTenDanhMuc] = useState('');
 
   const fetchData = async () => {
     const dataSP = await APIDanhSachSanPham();
@@ -37,78 +39,145 @@ export default function QuanLySanPham() {
     setSelectedSanPham(null);
   };
 
+  const handleOpenDanhMucDialog = () => {
+    setOpenDanhMucDialog(true);
+  };
+
+  const handleCloseDanhMucDialog = () => {
+    setOpenDanhMucDialog(false);
+    setTenDanhMuc('');
+  };
+
+  const handleSaveDanhMuc = async () => {
+    if (!tenDanhMuc) {
+      alert('Vui lòng nhập tên danh mục');
+      return;
+    }
+    const res = await APIThemDanhMuc(tenDanhMuc);
+    if (res) {
+      alert('Thêm danh mục thành công');
+      fetchData();
+      handleCloseDanhMucDialog();
+    } else {
+      alert('Thêm danh mục thất bại');
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // Filter products based on the selected category and search term
+  const filteredSanPham = sanPham.filter((sp) => {
+    const matchesCategory = selectDanhMuc ? sp.danhMuc.id === selectDanhMuc : true;
+    const matchesSearch = sp.maSanPham.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <TableContainer component={Paper}>
-      <Box sx={{display: 'flex', justifyContent: 'space-between', padding: '20px'}}>
-      <Typography variant="h5">
-        Quản Lý Sản Phẩm
-      </Typography>
-      <Box sx={{gap: 2, display: 'flex'}}>
-      <TextField
-      id="outlined-basic"
-      label="Tìm kiếm mã sản phẩm"
-      variant="outlined"
-      size="small"
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-      }}
-    />
-        <FormControl sx={{ width: '300px' }} size="small">
-      <InputLabel >Lọc theo danh mục</InputLabel>
-      <Select
-        label="Lọc theo danh mục"
-        value={selectDanhMuc}
-        onChange={(e) => setSelectDanhMuc(e.target.value)}
-      >
-        {danhMuc.map((dm) => (
-          <MenuItem key={dm.id} value={dm.id}>{dm.tenDanhMuc}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-        <Button variant="outlined" color="primary" onClick={() => {}}>Thêm danh mục</Button>
-      <Button variant="outlined" color="warning" onClick={() => handleClickOpen({}, 'add')}>Thêm sản phẩm</Button>
-      <Button variant="outlined" color="warning" onClick={fetchData}>Tạo phiếu nhập</Button>
-      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
+        <Typography variant="h5">
+          Quản Lý Sản Phẩm
+        </Typography>
+        <Box sx={{ gap: 2, display: 'flex' }}>
+          <TextField
+            id="outlined-basic"
+            label="Tìm kiếm mã sản phẩm"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          <FormControl sx={{ width: '300px' }} size="small">
+            <InputLabel>Lọc theo danh mục</InputLabel>
+            <Select
+              label="Lọc theo danh mục"
+              value={selectDanhMuc}
+              onChange={(e) => setSelectDanhMuc(e.target.value)}
+            >
+              <MenuItem value={null}>Tất cả</MenuItem>
+              {danhMuc.map((dm) => (
+                <MenuItem key={dm.id} value={dm.id}>{dm.tenDanhMuc}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button variant="outlined" color="primary" onClick={handleOpenDanhMucDialog}>Thêm danh mục</Button>
+          <Button variant="outlined" color="warning" onClick={() => handleClickOpen({}, 'add')}>Thêm sản phẩm</Button>
+          <Button variant="outlined" color="warning" onClick={fetchData}>Tạo phiếu nhập</Button>
+        </Box>
       </Box>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Mã Sản Phẩm</TableCell>
-            <TableCell>Tên Sản Phẩm</TableCell>
-            <TableCell>Mô Tả</TableCell>
             <TableCell>Hình Ảnh</TableCell>
-            <TableCell>Danh Mục</TableCell>
+            <TableCell>Tên Sản Phẩm</TableCell>
             <TableCell>Giá Sản Phẩm</TableCell>
+            <TableCell>Số lượng</TableCell>
+            <TableCell>Danh Mục</TableCell>
             <TableCell>Trạng Thái</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {sanPham.map((row) => (
-            <TableRow key={row.id} onClick={() => handleClickOpen(row, 'view')} style={{ cursor: 'pointer' }}>
+          {filteredSanPham.map((row) => (
+            <TableRow key={row.id} onClick={() => handleClickOpen(row, 'view')} sx={{ cursor: 'pointer',':hover':{
+              backgroundColor: '#f5f5f5'
+            } }}>
               <TableCell>{row.maSanPham}</TableCell>
-              <TableCell>{row.tenSanPham}</TableCell>
-              <TableCell>{row.moTa}</TableCell>
               <TableCell>
                 <img src={row.hinhAnh} alt={row.tenSanPham} width="50" />
               </TableCell>
-              <TableCell>{row.danhMuc.tenDanhMuc}</TableCell>
+              <TableCell>{row.tenSanPham}</TableCell>
               <TableCell>{row?.giaSanPham?.toLocaleString()} VND</TableCell>
-              <TableCell>{row.trangThai}</TableCell>
+              <TableCell>{row.soLuong || 0}</TableCell>
+              <TableCell>{row.danhMuc.tenDanhMuc.toUpperCase()}</TableCell>
+              <TableCell
+              sx={{
+                color: row.trangThai == 'Ngừng kinh doanh' ? 'red' : 'green',
+                fontWeight: '500'
+              }}
+              >{row.trangThai}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      <ChiTietSanPham 
-        open={open} 
-        onClose={handleClose} 
-        mode={mode} 
-        sanPham={selectedSanPham} 
+      <ChiTietSanPham
+        open={open}
+        onClose={handleClose}
+        mode={mode}
+        sanPham={selectedSanPham}
       />
+
+      <Dialog open={openDanhMucDialog} onClose={handleCloseDanhMucDialog}>
+        <DialogTitle>Thêm danh mục</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Nhập tên danh mục mới.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Tên danh mục"
+            type="text"
+            fullWidth
+            value={tenDanhMuc}
+            onChange={(e) => setTenDanhMuc(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDanhMucDialog}>Hủy</Button>
+          <Button onClick={handleSaveDanhMuc}>Lưu</Button>
+        </DialogActions>
+      </Dialog>
     </TableContainer>
   );
 }

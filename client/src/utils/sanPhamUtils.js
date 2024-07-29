@@ -49,6 +49,7 @@ export const APIDanhSachSanPham = async () => {
       maDanhMuc
     }
     trangThai
+    soLuong
     loaiDe {
       id
       tenLoaiDe

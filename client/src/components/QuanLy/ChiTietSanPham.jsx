@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, FormLabel, FormControlLabel, Checkbox, Box, Select, MenuItem, Typography } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, FormLabel, FormControlLabel, Checkbox, Box, Select, MenuItem, Typography, InputLabel } from '@mui/material';
 import { APIDanhSachDanhMuc } from '../../utils/danhMucUtils';
 import { APIDanhLoaiDe, APIDanhKichThuoc, APIThemSanPham } from './../../utils/sanPhamUtils';
 
@@ -145,76 +145,70 @@ export default function ChiTietSanPham({ open, onClose, mode, sanPham }) {
               InputProps={{
                 readOnly: mode === 'view',
               }}
-            />  
-            {/* <Typography>Trạng Thái</Typography>
-            <Select 
-              fullWidth 
-              label='Trạng thái' 
-              name="trangThai"
-              value={formData.trangThai} 
-              onChange={handleInputChange}
-              inputProps={{
-                readOnly: mode === 'view',
-              }}>
-              <MenuItem value="Đang kinh doanh">Đang kinh doanh</MenuItem>
-              <MenuItem value="Ngừng kinh doanh">Ngừng kinh doanh</MenuItem>
-            </Select> */}
-            <Typography>Danh mục</Typography>
-             <Select 
-              fullWidth 
-              label='Danh mục' 
-              name="danhMuc"
-              value={selectedDanhMuc} 
-              onChange={handleInputChange}
-              inputProps={{
-                readOnly: mode === 'view',
-              }}>
-              {danhSachDanhMuc?.map((danhMuc) => (
-                <MenuItem key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>{danhMuc.tenDanhMuc}</MenuItem>
-              ))}
-            </Select>
-           {selectedDanhMuc === 'DM2' && (
-            <>
-             <FormControl fullWidth component="fieldset" sx={{ mt: 2 }}>
-              <FormLabel component="legend">Loại đế</FormLabel>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                {danhSachLoaiDe.map((loaiDe) => (
-                  <FormControlLabel
-                    key={loaiDe.id}
-                    control={
-                      <Checkbox
-                        checked={selectedLoaiDe.includes(loaiDe.id)}
-                        onChange={handleLoaiDeChange}
-                        value={loaiDe.id}
-                        disabled={mode === 'view'}
-                      />
-                    }
-                    label={loaiDe.tenLoaiDe}
-                  />
+            />
+            <FormControl fullWidth margin="normal" variant="outlined">
+              <InputLabel id="danh-muc-label">Danh mục</InputLabel>
+              <Select
+                labelId="danh-muc-label"
+                id="danh-muc"
+                label="Danh mục"
+                name="danhMuc"
+                value={selectedDanhMuc}
+                onChange={handleInputChange}
+                inputProps={{
+                  readOnly: mode === 'view',
+                }}
+              >
+                {danhSachDanhMuc?.map((danhMuc) => (
+                  <MenuItem key={danhMuc.maDanhMuc} value={danhMuc.maDanhMuc}>
+                    {danhMuc.tenDanhMuc}
+                  </MenuItem>
                 ))}
-              </Box>
+              </Select>
             </FormControl>
-            <FormControl fullWidth component="fieldset" sx={{ mt: 2 }}>
-              <FormLabel component="legend">Kích thước</FormLabel>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                {danhSachKichThuoc.map((kichThuoc) => (
-                  <FormControlLabel
-                    key={kichThuoc.id}
-                    control={
-                      <Checkbox
-                        checked={selectedKichThuoc.includes(kichThuoc.id)}
-                        onChange={handleKichThuocChange}
-                        value={kichThuoc.id}
-                        disabled={mode === 'view'}
+
+            {selectedDanhMuc === 'DM2' && (
+              <>
+                <FormControl fullWidth component="fieldset" sx={{ mt: 2 }}>
+                  <FormLabel component="legend">Loại đế</FormLabel>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                    {danhSachLoaiDe.map((loaiDe) => (
+                      <FormControlLabel
+                        key={loaiDe.id}
+                        control={
+                          <Checkbox
+                            checked={selectedLoaiDe.includes(loaiDe.id)}
+                            onChange={handleLoaiDeChange}
+                            value={loaiDe.id}
+                            disabled={mode === 'view'}
+                          />
+                        }
+                        label={loaiDe.tenLoaiDe}
                       />
-                    }
-                    label={kichThuoc.tenKichThuoc}
-                  />
-                ))}
-              </Box>
-            </FormControl>
-            </>
-           )}
+                    ))}
+                  </Box>
+                </FormControl>
+                <FormControl fullWidth component="fieldset" sx={{ mt: 2 }}>
+                  <FormLabel component="legend">Kích thước</FormLabel>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                    {danhSachKichThuoc.map((kichThuoc) => (
+                      <FormControlLabel
+                        key={kichThuoc.id}
+                        control={
+                          <Checkbox
+                            checked={selectedKichThuoc.includes(kichThuoc.id)}
+                            onChange={handleKichThuocChange}
+                            value={kichThuoc.id}
+                            disabled={mode === 'view'}
+                          />
+                        }
+                        label={kichThuoc.tenKichThuoc}
+                      />
+                    ))}
+                  </Box>
+                </FormControl>
+              </>
+            )}
           </>
         )}
       </DialogContent>

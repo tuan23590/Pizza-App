@@ -1,13 +1,38 @@
 import { Box, Button, MenuItem, Paper, Select, Typography } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
+import { GioHangContext } from '../../pages/DatHang';
 
 export default function SanPham({ sanPham }) {
+  const { gioHang,setGioHang } = useContext(GioHangContext);
   const [kichThuocBanh, setKichThuocBanh] = React.useState(sanPham.kichThuoc[0]);
   const [loaiDe, setLoaiDe] = React.useState(sanPham.loaiDe[0]);
   const gia = (loaiDe?.giaLoaiDe || 0) + (kichThuocBanh?.giaKichThuoc || 0) + sanPham.giaSanPham;
+
+  const themSanPhamVaoGioHang = (sanPham) => {
+    setGioHang((prevGioHang) => {
+      const existingProductIndex = prevGioHang.findIndex(item => item.maSanPham === sanPham.maSanPham);
+  
+      if (existingProductIndex !== -1) {
+        const updatedGioHang = [...prevGioHang];
+        updatedGioHang[existingProductIndex].soLuong += 1;
+        return updatedGioHang;
+      } else {
+        return [...prevGioHang, {
+          maSanPham: sanPham.maSanPham,
+          tenSanPham: sanPham.tenSanPham,
+          kichThuocBanh: kichThuocBanh,
+          loaiDe: loaiDe,
+          gia: sanPham.giaSanPham,
+          soLuong: 1
+        }];
+      }
+    });
+  };
+  
+
   return (
     <Paper
-      key={sanPham.id}
+      key={sanPham.maSanPham}
       sx={{
         width: 'calc(25% - 15px)', // to account for the gap
         boxSizing: 'border-box',
@@ -69,7 +94,7 @@ export default function SanPham({ sanPham }) {
             </Select>
           </>
         )}
-        <Button fullWidth variant='contained' color='success' sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button fullWidth variant='contained' color='success' sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={()=>themSanPhamVaoGioHang(sanPham)}>
           <Typography variant='button'>Chọn</Typography>
           <Typography variant='inherit'>{gia.toLocaleString('vi-VN') + 'đ'}</Typography>
         </Button>

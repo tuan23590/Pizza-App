@@ -3,21 +3,21 @@ import React, { useContext } from 'react'
 import { GioHangContext } from '../../pages/DatHang';
 
 export default function SanPham({ sanPham }) {
-  const { gioHang,setGioHang } = useContext(GioHangContext);
+  const { setGioHang } = useContext(GioHangContext);
   const [kichThuocBanh, setKichThuocBanh] = React.useState(sanPham.kichThuoc[0]);
   const [loaiDe, setLoaiDe] = React.useState(sanPham.loaiDe[0]);
   const gia = (loaiDe?.giaLoaiDe || 0) + (kichThuocBanh?.giaKichThuoc || 0) + sanPham.giaSanPham;
 
   const themSanPhamVaoGioHang = (sanPham) => {
     setGioHang((prevGioHang) => {
-      const existingProductIndex = prevGioHang.findIndex(item => item.maSanPham === sanPham.maSanPham);
-  
+      const existingProductIndex = prevGioHang.findIndex(item => item.maSanPham === sanPham.maSanPham && item.kichThuocBanh === kichThuocBanh && item.loaiDe === loaiDe);
       if (existingProductIndex !== -1) {
         const updatedGioHang = [...prevGioHang];
         updatedGioHang[existingProductIndex].soLuong += 1;
+        localStorage.setItem('gioHang', JSON.stringify(updatedGioHang));
         return updatedGioHang;
       } else {
-        return [...prevGioHang, {
+        const updatedGioHang = [...prevGioHang, {
           maSanPham: sanPham.maSanPham,
           tenSanPham: sanPham.tenSanPham,
           kichThuocBanh: kichThuocBanh,
@@ -25,6 +25,8 @@ export default function SanPham({ sanPham }) {
           gia: sanPham.giaSanPham,
           soLuong: 1
         }];
+        localStorage.setItem('gioHang', JSON.stringify(updatedGioHang));
+        return updatedGioHang;
       }
     });
   };
@@ -71,7 +73,7 @@ export default function SanPham({ sanPham }) {
               onChange={(e) => setKichThuocBanh(e.target.value)}
             >
               {sanPham.kichThuoc.map((kt) => (
-                <MenuItem key={kt} value={kt}>{kt.tenKichThuoc}</MenuItem>
+                <MenuItem key={kt.id} value={kt}>{kt.tenKichThuoc}</MenuItem>
               ))}
             </Select>
           </>
@@ -89,7 +91,7 @@ export default function SanPham({ sanPham }) {
               onChange={(e) => setLoaiDe(e.target.value)}
             >
               {sanPham.loaiDe.map((ld) => (
-                <MenuItem key={ld} value={ld}>{ld.tenLoaiDe} ({kichThuocBanh?.tenKichThuoc})</MenuItem>
+                <MenuItem key={ld.id} value={ld}>{ld.tenLoaiDe} ({kichThuocBanh?.tenKichThuoc})</MenuItem>
               ))}
             </Select>
           </>

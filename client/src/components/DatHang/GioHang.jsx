@@ -58,7 +58,7 @@ export default function GioHang() {
           variant="contained" 
           fullWidth 
           sx={{display: 'flex',justifyContent: 'space-between'}} 
-          onClick={()=>{navigate('/DatHang/ThanhToan')}}
+          onClick={()=>{navigate('/ThanhToan')}}
           disabled={gioHang.length === 0}
           >
             <Typography >Thanh Toán - {gioHang.length} món</Typography>

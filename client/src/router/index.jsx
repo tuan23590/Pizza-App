@@ -9,6 +9,7 @@ import { APIDanhSachSanPhamTheoMaDanhMuc } from "../utils/sanPhamUtils";
 import QuanLy from './../pages/QuanLy';
 import QuanLySanPham from "../components/QuanLy/QuanLySanPham";
 import ThanhToan from "../pages/ThanhToan";
+import TheoDoiDonHang from "../pages/TheoDoiDonHang";
 const KhachHangProvider = () => {
     return <>
     <AuthProvider>
@@ -46,7 +47,11 @@ export default createBrowserRouter(
             },
             {
                 element: <ThanhToan/>,
-                path: "/DatHang/ThanhToan"
+                path: "/ThanhToan"
+            },
+            {
+                element: <TheoDoiDonHang/>,
+                path: "/TheoDoiDonHang"
             },
             {
                 element: <QuanLy />,

@@ -1,4 +1,4 @@
-import { danhMucModel, kichThuocModel, loaiDeModel, sanPhamModel } from "../models/index.js";
+import { danhMucModel, donHangModel, kichThuocModel, loaiDeModel, sanPhamModel } from "../models/index.js";
 
 export const resolvers = {
     Query: {
@@ -21,7 +21,12 @@ export const resolvers = {
         danhSachKichThuoc: async () => {
             const danhSachKichThuoc = await kichThuocModel.find();
             return danhSachKichThuoc;
-        }
+        },
+        donHangTheoMaDonHangHoacSoDienThoai: async (parent, args) => {
+            const duLieuTimKiem = args.duLieuTimKiem.trim().toUpperCase();
+            const donHang = await donHangModel.find({ $or: [{ maDonHang: duLieuTimKiem }, { soDienThoai: duLieuTimKiem }] });
+            return donHang;
+        },        
     },
     SanPham: {
         kichThuoc: async (parent) => {
@@ -74,8 +79,37 @@ export const resolvers = {
             trangThai: "Đang kinh doanh",
             soLuong: 0
         });
-        
         return await sanPham.save();
-        }
+        },
+        themDonHang: async (parent, args) => {
+
+            const donHangCuoi = await donHangModel.findOne().sort({ _id: -1 }).exec();
+        
+            let maDonHangMoi;
+            
+            if (donHangCuoi) {
+                const maDonHangCuoi = donHangCuoi.maDonHang;
+                const soCuoi = parseInt(maDonHangCuoi.replace("DH", ""), 10);
+                maDonHangMoi = "DH" + (soCuoi + 1);
+            } else {
+    
+                maDonHangMoi = "DH1";
+            }
+            const donHang = new donHangModel();
+            donHang.tenKhachHang = args.tenKhachHang;
+            donHang.soDienThoai = args.soDienThoai;
+            donHang.email = args.email;
+            donHang.maDonHang = maDonHangMoi;
+            donHang.danhSachSanPham = args.gioHang;
+            donHang.phuongThucThanhToan = args.phuongThucThanhToan;
+            donHang.trangThai = "Đang xử lý";
+            donHang.diaChiGiaoHang = args.diaChiGiaoHang;
+            donHang.thoiGianGiao = args.thoiGianGiao;
+            donHang.tongTien = parseFloat(args.tongTien);
+            donHang.tamTinh = parseFloat(args.tamTinh);
+            donHang.giamGia = parseFloat(args.giamGia);
+            donHang.ngayDatHang = new Date().toISOString();
+            return donHang.save();
+        },
     }
 };

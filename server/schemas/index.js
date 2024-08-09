@@ -1,4 +1,22 @@
 export const typeDefs = `#graphql
+
+
+type DonHang {
+    id: String,
+    maDonHang: String,
+    tenKhachHang: String,
+    soDienThoai: String,
+    email: String,
+    ngayDatHang: String,
+    thoiGianGiao: String,
+    diaChiGiaoHang: String,
+    tamTinh: Float,
+    giamGia: Float,
+    tongTien: Float,
+    phuongThucThanhToan: String,
+    trangThai: String,
+    danhSachSanPham: String
+},
 type KichThuoc {
     id: String,
     tenKichThuoc: String,
@@ -35,10 +53,13 @@ type Query {
     danhSachDanhMuc: [DanhMuc],
     danhSachLoaiDe: [LoaiDe],
     danhSachKichThuoc: [KichThuoc],
-    danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham]
+    danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham],
+    danhSachDonHang: [DonHang],
+    donHangTheoMaDonHangHoacSoDienThoai(duLieuTimKiem: String): [DonHang]
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,
+
     themSanPham(
     tenSanPham: String, 
     kichThuoc: [String],
@@ -47,6 +68,19 @@ type Mutation {
     moTa: String, 
     hinhAnh: String, 
     danhMuc: String, 
-    trangThai: String): SanPham
+    trangThai: String): SanPham,
+
+    themDonHang(
+    hoTen: String,
+    soDienThoai: String,
+    email: String,
+    gioHang: String,
+    phuongThucThanhToan: String,
+    diaChiGiaoHang: String,
+    thoiGianGiao: String,
+    tongTien: Float,
+    giamGia: Float,
+    tamTinh: Float
+    ): DonHang
 }
 `;

@@ -5,25 +5,35 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined';
 import { useNavigate } from 'react-router-dom';
+import { APIThemDonHang } from '../utils/donHangUtils';
 
 export default function ThanhToan() {
     const gioHang = localStorage.getItem('gioHang') ? JSON.parse(localStorage.getItem('gioHang')) : [];
-    const tongTien = gioHang?.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0).toLocaleString('vi-VN')
+    const tongTien = gioHang?.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0)
     const navigate = useNavigate();
     const formData = {
         hoTen: '',
         soDienThoai: '',
         email: '',
-        gioHang: gioHang,
+        gioHang: JSON.stringify(gioHang),
         phuongThucThanhToan: 'cash',
-        diaChi: 'Hồ Gươm Plaza, 110 Trần Phú, quận Hà Đông, TP. Hà Nội',
-        thoiGianGiao: Date.now()
+        diaChiGiaoHang: 'Hồ Gươm Plaza, 110 Trần Phú, quận Hà Đông, TP. Hà Nội',
+        thoiGianGiao: Date.now().toString(),
+        tongTien: parseFloat(tongTien),
+        tamTinh: parseFloat(tongTien),
+        giamGia : 0.0
     }
     const handleChange = (e) => {
         formData[e.target.name] = e.target.value;
     }
-    const handleThanhToan = () => {
-        console.log(formData);
+    const handleThanhToan = async () => {
+        const data = await APIThemDonHang(formData);
+        console.log(data);
+        if (data) {
+            localStorage.setItem('gioHang', JSON.stringify([]));
+            alert('Đặt hàng thành công');
+            navigate('/');
+        }
     }
     return (
         <>
@@ -87,7 +97,7 @@ export default function ThanhToan() {
                         </RadioGroup>
                     </FormControl>
                     <Button fullWidth variant='contained' color='success' onClick={handleThanhToan}>
-                        Đặt hàng {tongTien} ₫
+                        Đặt hàng {tongTien.toLocaleString('vi-VN')} ₫
                     </Button>
                 </Paper>
             </Box>

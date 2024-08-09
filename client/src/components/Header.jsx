@@ -3,8 +3,10 @@ import { Box, Link, Typography } from '@mui/material';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import User from './User';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const navigate = useNavigate();
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',backgroundColor: 'white' }}>
       <Link href="/" sx={{ padding: '10px' }}>
@@ -22,11 +24,13 @@ export default function Header() {
         <NotificationsNoneIcon />
         </Box>
         <User />
-        <Link sx={{ display: 'flex', justifyContent: 'space-between',textDecoration: 'none',color: 'black',padding: '5px' ,':hover': {
+        <Link
+        onClick={() => navigate('/TheoDoiDonHang')} 
+        sx={{ display: 'flex', justifyContent: 'space-between',textDecoration: 'none',color: 'black',padding: '5px' ,':hover': {
           cursor: 'pointer',
           backgroundColor: 'rgba(0, 0, 0, 0.1)',
           borderRadius: '10px',
-        }}}>
+        }}} >
           <TravelExploreIcon sx={{ color: 'red' }} />
           <Typography sx={{ fontWeight: '500' }}>Theo dõi đơn hàng</Typography>
         </Link>

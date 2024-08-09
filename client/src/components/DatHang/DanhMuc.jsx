@@ -5,18 +5,16 @@ import { useNavigate } from 'react-router-dom';
 
 export default function DanhMuc() {
     const [danhSachDanhMuc,setDanhSachDanhMuc] = useState([])
+    const curntPath = window.location.pathname.split('/')[2];
+    const navigate = useNavigate();
+    useEffect(() => {
+        fetchData();
+    }, []);
     const fetchData = async () => {
         const dataDM = await APIDanhSachDanhMuc();
         setDanhSachDanhMuc(dataDM);
     };
-    useEffect(() => {
-        fetchData();
-    }, []);
-    const curntPath = window.location.pathname.split('/')[2];
-    const [danhMucDaChon,setDanhMucDaChon] = useState(danhSachDanhMuc[0]);
-    const navigate = useNavigate();
     const chuyenHuong = (danhMuc) => {
-        setDanhMucDaChon(danhMuc);
         navigate(`/datHang/${danhMuc.maDanhMuc}`);
     }
     return (

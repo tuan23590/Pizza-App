@@ -12,7 +12,7 @@ export default function ThanhToan() {
     const tongTien = gioHang?.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0)
     const navigate = useNavigate();
     const formData = {
-        hoTen: '',
+        tenKhachHang: '',
         soDienThoai: '',
         email: '',
         gioHang: JSON.stringify(gioHang),
@@ -74,7 +74,7 @@ export default function ThanhToan() {
                 </Paper>
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
                     <Typography fullWidth variant='h6' sx={{ textAlign: 'center' }}>Thông tin đặt hàng</Typography>
-                    <TextField autoFocus name='hoTen' onChange={handleChange} size='small' fullWidth label="Họ và tên" variant="outlined" sx={{ marginY: '10px' }} />
+                    <TextField autoFocus name='tenKhachHang' onChange={handleChange} size='small' fullWidth label="Họ và tên" variant="outlined" sx={{ marginY: '10px' }} />
                     <TextField name='soDienThoai' onChange={handleChange} size='small' fullWidth label="Số điện thoại" variant="outlined" sx={{ marginY: '10px' }} />
                     <TextField name='email' onChange={handleChange} size='small' fullWidth label="Email" variant="outlined" sx={{ marginY: '10px' }} />
                 </Paper>

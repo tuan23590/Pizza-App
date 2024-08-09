@@ -71,7 +71,7 @@ type Mutation {
     trangThai: String): SanPham,
 
     themDonHang(
-    hoTen: String,
+    tenKhachHang: String,
     soDienThoai: String,
     email: String,
     gioHang: String,

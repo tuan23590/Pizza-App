@@ -108,7 +108,7 @@ export const resolvers = {
             donHang.tongTien = parseFloat(args.tongTien);
             donHang.tamTinh = parseFloat(args.tamTinh);
             donHang.giamGia = parseFloat(args.giamGia);
-            donHang.ngayDatHang = new Date().toISOString();
+            donHang.ngayDatHang = Date.now();
             return donHang.save();
         },
     }

@@ -81,6 +81,7 @@ type Mutation {
     tongTien: Float,
     giamGia: Float,
     tamTinh: Float
-    ): DonHang
+    ): DonHang,
+    capNhatTrangThaiDonHang(maDonHang: String, trangThai: String): DonHang
 }
 `;

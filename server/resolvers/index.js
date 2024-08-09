@@ -26,7 +26,11 @@ export const resolvers = {
             const duLieuTimKiem = args.duLieuTimKiem.trim().toUpperCase();
             const donHang = await donHangModel.find({ $or: [{ maDonHang: duLieuTimKiem }, { soDienThoai: duLieuTimKiem }] });
             return donHang;
-        },        
+        },  
+        danhSachDonHang: async () => {
+            const danhSachDonHang = await donHangModel.find();
+            return danhSachDonHang;
+        }      
     },
     SanPham: {
         kichThuoc: async (parent) => {
@@ -109,7 +113,21 @@ export const resolvers = {
             donHang.tamTinh = parseFloat(args.tamTinh);
             donHang.giamGia = parseFloat(args.giamGia);
             donHang.ngayDatHang = Date.now();
-            return donHang.save();
+            const danhSachIdSanPham = JSON.parse(args.gioHang)
+            console.log(danhSachIdSanPham);
+            try{
+                for (let i = 0; i < danhSachIdSanPham.length; i++) {
+                    await sanPhamModel.findOneAndUpdate({ _id: danhSachIdSanPham[i].id }, { $inc: { soLuong: -danhSachIdSanPham[i].soLuong } }, { new: true });
+                }
+                return donHang.save();
+            }catch(err){
+                console.log(err);
+            }
+            
         },
+        capNhatTrangThaiDonHang: async (parent, args) => {
+            const donHang = await donHangModel.findOneAndUpdate({ maDonHang: args.maDonHang }, { trangThai: args.trangThai }, { new: true });
+            return donHang;
+        }
     }
 };

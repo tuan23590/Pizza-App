@@ -10,6 +10,7 @@ import QuanLy from './../pages/QuanLy';
 import QuanLySanPham from "../components/QuanLy/QuanLySanPham";
 import ThanhToan from "../pages/ThanhToan";
 import TheoDoiDonHang from "../pages/TheoDoiDonHang";
+import QuanlyDonHang from "../components/QuanLy/QuanlyDonHang";
 const KhachHangProvider = () => {
     return <>
     <AuthProvider>
@@ -60,6 +61,11 @@ export default createBrowserRouter(
                     {
                         element: <QuanLySanPham/>,
                         path: "/QuanLy/QuanLySanPham",
+                        
+                    },
+                    {
+                        element: <QuanlyDonHang/>,
+                        path: "/QuanLy/QuanlyDonHang",
                         
                     },
                 ]

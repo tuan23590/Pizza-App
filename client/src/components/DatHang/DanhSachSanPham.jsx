@@ -5,6 +5,7 @@ import SanPham from './SanPham';
 
 export default function DanhSachSanPham() {
   const danhSachSanPham = useLoaderData();
+  console.log(danhSachSanPham);
   return (
     <Box 
       sx={{

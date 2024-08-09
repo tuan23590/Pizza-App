@@ -1,6 +1,7 @@
 import { Box, Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { APIDonHangTheoMaDonHangHoacSoDienThoai } from '../utils/donHangUtils'
+import ChiTietDonHang from '../components/QuanLy/ChiTietDonHang'
 
 export default function TheoDoiDonHang() {
     const [duLieuTimKiem, setDuLieuTimKiem] = useState('')
@@ -83,7 +84,7 @@ export default function TheoDoiDonHang() {
                         error={!!error}  // Hiển thị trạng thái lỗi nếu có
                         helperText={error} // Hiển thị thông báo lỗi nếu có
                     />
-                    <Button fullWidth sx={{ marginTop: '20px' }} variant="contained" color='success' onClick={handleSearch}>
+                    <Button fullWidth sx={{ marginY: '10px' }} variant="contained" color='success' onClick={handleSearch}>
                         Tìm kiếm
                     </Button>
                     {noResult && (
@@ -156,87 +157,7 @@ export default function TheoDoiDonHang() {
                 </Paper>
             </Box>
 
-            <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
-                <DialogTitle>Chi tiết đơn hàng</DialogTitle>
-                <DialogContent>
-                    {selectedOrder && (
-                        <Grid container spacing={1} sx={{ padding: '10px' }}>
-                            <Grid item sm={12} display={'flex'} justifyContent={'space-between'} textAlign={'center'}>
-                                <Typography variant='h6'>Mã đơn hàng: {selectedOrder.maDonHang}</Typography>
-                                <Typography
-                                    backgroundColor={selectedOrder.trangThai === 'Đang xử lý' ? '#ff9100' : selectedOrder.trangThai === 'Đang giao hàng' ? '#1e88e5' : selectedOrder.trangThai === 'Đã giao hàng' ? '#0a8020' : '#e53935'}
-                                    borderRadius={2}
-                                    color={'white'}
-                                    fontWeight={'600'}
-                                    paddingX={'5px'}
-                                    paddingY={'1px'}
-                                    fontSize={'12px'}
-                                    alignItems={'center'}
-                                    display={'flex'}
-                                >{selectedOrder.trangThai}</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Ngày đặt hàng:</b> {fomatDate(selectedOrder.ngayDatHang)}</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Tên khách hàng:</b> {selectedOrder.tenKhachHang}</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Số điện thoại:</b> {selectedOrder.soDienThoai}</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Email:</b> {selectedOrder.email}</Typography>
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Typography><b>Địa chỉ giao hàng:</b> {selectedOrder.diaChiGiaoHang}</Typography>
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Typography><b>Danh sách sản phẩm:</b></Typography>
-                                <Box>
-                                    <Divider />
-                                    {JSON.parse(selectedOrder.danhSachSanPham).map((sanPham, index) => (
-                                        <Grid container spacing={1} key={index} sx={{ padding: '10px' }}>
-                                            <Grid item xs={1}>
-                                                <Typography><b>{index + 1}</b></Typography>
-                                            </Grid>
-                                            <Grid item xs={7}>
-                                                <Typography>{sanPham.tenSanPham}</Typography>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <Typography>{sanPham.soLuong}</Typography>
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <Typography>{sanPham.donGia.toLocaleString()}₫</Typography>
-                                            </Grid>
-                                        </Grid>
-                                    ))}
-                                </Box>
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Typography><b>Thời gian giao hàng dự kiến:</b> {fomatDate(selectedOrder.thoiGianGiao)}</Typography>
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Typography><b>Ghi chú:</b> {selectedOrder.ghiChu}</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Tạm tính:</b> {selectedOrder.tamTinh.toLocaleString()}₫</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Giảm giá:</b> {selectedOrder.giamGia.toLocaleString()}₫</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Tổng tiền:</b> {selectedOrder.tongTien.toLocaleString()}₫</Typography>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Typography><b>Phương thức thanh toán:</b> {selectedOrder.phuongThucThanhToan}</Typography>
-                            </Grid>
-                        </Grid>
-                    )}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">Đóng</Button>
-                </DialogActions>
-            </Dialog>
+           <ChiTietDonHang openDialog={openDialog} handleCloseDialog={handleCloseDialog} selectedOrder={selectedOrder} />
         </>
     )
 }

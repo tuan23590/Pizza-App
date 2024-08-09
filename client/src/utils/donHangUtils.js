@@ -31,3 +31,37 @@ export const APIDonHangTheoMaDonHangHoacSoDienThoai = async (duLieuTimKiem) => {
   const {donHangTheoMaDonHangHoacSoDienThoai} = await GraphQLrequest({query, variables: duLieuTimKiem});
   return donHangTheoMaDonHangHoacSoDienThoai;
 };
+
+
+export const APIDanhSachDonHang = async () => {
+  const query = `query DanhSachDonHang {
+  danhSachDonHang {
+    id
+    maDonHang
+    tenKhachHang
+    soDienThoai
+    email
+    ngayDatHang
+    thoiGianGiao
+    diaChiGiaoHang
+    tamTinh
+    giamGia
+    tongTien
+    phuongThucThanhToan
+    trangThai
+    danhSachSanPham
+  }
+}`;
+  const {danhSachDonHang} = await GraphQLrequest({query});
+  return danhSachDonHang;
+};
+
+export const APICapNhatTrangThaiDonHang = async ({maDonHang,trangThai}) => {
+  const query = `mutation CapNhatTrangThaiDonHang($maDonHang: String, $trangThai: String) {
+  capNhatTrangThaiDonHang(maDonHang: $maDonHang, trangThai: $trangThai) {
+    maDonHang
+  }
+}`;
+  const {capNhatTrangThaiDonHang} = await GraphQLrequest({query, variables: {maDonHang, trangThai}});
+  return capNhatTrangThaiDonHang;
+};

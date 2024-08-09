@@ -3,6 +3,7 @@ export const APIDanhSachSanPhamTheoMaDanhMuc = async ({params}) => {
     const query = `query DanhSachSanPhamTheoMaDanhMuc($maDanhMuc: String) {
   danhSachSanPhamTheoMaDanhMuc(maDanhMuc: $maDanhMuc) {
     maSanPham
+    id
     tenSanPham
      danhMuc {
       id

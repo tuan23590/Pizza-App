@@ -1,12 +1,15 @@
 import { Box, Card, CardContent, Divider, List, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import User from '../User';
 
 const DanhMucQuanLy = ({ DanhSachDanhMuc }) => {
 
     const selectedPath = useLocation().pathname.split('/')[2];
-
+    const navigate = useNavigate();
+    const handleItemClick = (link) => {
+        navigate(`/QuanLy/${link}`);
+    }
     return (
         <List
             sx={{
@@ -27,11 +30,10 @@ const DanhMucQuanLy = ({ DanhSachDanhMuc }) => {
             }
         >
             {DanhSachDanhMuc.map(({ link, text, tab }, index) => (
-                <Link
-                    to={`./${link}`}
-                    style={{ textDecoration: 'none' }}
+                <Box
+                    sx={{cursor: 'pointer'}}
                     key={index}
-                    onClick={() => handleItemClick(index)}
+                    onClick={()=>handleItemClick(link)}
                 >
                     <Card
                         sx={{
@@ -49,7 +51,7 @@ const DanhMucQuanLy = ({ DanhSachDanhMuc }) => {
                             </Typography>
                         </CardContent>
                     </Card>
-                </Link>
+                </Box>
             ))}
         </List>
     );

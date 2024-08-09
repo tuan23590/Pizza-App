@@ -18,6 +18,7 @@ export default function SanPham({ sanPham }) {
         return updatedGioHang;
       } else {
         const updatedGioHang = [...prevGioHang, {
+          id: sanPham.id,
           maSanPham: sanPham.maSanPham,
           tenSanPham: sanPham.tenSanPham,
           kichThuocBanh: kichThuocBanh,

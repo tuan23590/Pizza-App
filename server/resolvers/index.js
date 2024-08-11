@@ -71,7 +71,6 @@ export const resolvers = {
             const soCuoi = parseInt(maSanPhamCuoi.replace("SP", ""), 10);
             maSanPhamMoi = "SP" + (soCuoi + 1);
         } else {
-
             maSanPhamMoi = "SP1";
         }
         const sanPham = new sanPhamModel({

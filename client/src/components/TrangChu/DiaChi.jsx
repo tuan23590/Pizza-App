@@ -6,8 +6,7 @@ import { APIDanhSachQuanHuyen, APIDanhSachTinhTp, APIDanhSachXaPhuong } from '..
 import { GioHangContext } from '../../context/GioHangProvider';
 
 export default function DiaChi() {
-    console.log('DiaChi:', useContext(GioHangContext));
-    
+    const { gioHang,setGioHang } = useContext(GioHangContext);
     const [danhSachTinhTp, setDanhSachTinhTp] = useState([]);
     const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState([]);
     const [danhSachXaPhuong, setDanhSachXaPhuong] = useState([]);
@@ -76,6 +75,11 @@ export default function DiaChi() {
 
     const navigate = useNavigate();
 
+    const handleXacNhanDiaChi = () => {
+        const stringDiaChi = `${diaChiData.soNhaTenDuong}, ${diaChiData.xaPhuong.path_with_type}`;
+        // setGioHang && setGioHang({ ...gioHang, diaChiGiaoHang: stringDiaChi });
+        navigate('/DatHang');
+    };
     return (
         <Box sx={{
             width: '30vw',
@@ -163,7 +167,7 @@ export default function DiaChi() {
                     <TextField label="Số nhà, tên đường" variant="outlined" size="small" fullWidth value={diaChiData.soNhaTenDuong} onChange={(e) => setDiaChiData({ ...diaChiData, soNhaTenDuong: e.target.value })} />
 
                 </Box>
-                <Button variant='contained' fullWidth color='success' sx={{marginTop: '10px'}} onClick={() => { navigate('/DatHang'); }}>Bắt đầu đặt hàng</Button>
+                <Button variant='contained' fullWidth color='success' sx={{marginTop: '10px'}} onClick={handleXacNhanDiaChi}>Bắt đầu đặt hàng</Button>
             </Box>
         </Box>
     );

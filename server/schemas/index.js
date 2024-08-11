@@ -46,7 +46,34 @@ type SanPham {
     loaiDe: [LoaiDe],
     giaSanPham: Float,
     soLuong: Int
-}
+},
+type TinhTp {
+    name: String,
+    slug: String,
+    type: String,
+    name_with_type: String,
+    code: String,
+},
+type QuanHuyen{
+    name: String,
+    type: String,
+    slug: String,
+    name_with_type: String,
+    path: String,
+    path_with_type: String,
+    code: String,
+    parent_code: String,
+},
+type XaPhuong {
+    name: String,
+    type: String,
+    slug: String,
+    name_with_type: String,
+    path: String,
+    path_with_type: String,
+    code: String,
+    parent_code: String,
+},
 
 type Query {
     danhSachSanPham: [SanPham],
@@ -55,7 +82,10 @@ type Query {
     danhSachKichThuoc: [KichThuoc],
     danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham],
     danhSachDonHang: [DonHang],
-    donHangTheoMaDonHangHoacSoDienThoai(duLieuTimKiem: String): [DonHang]
+    donHangTheoMaDonHangHoacSoDienThoai(duLieuTimKiem: String): [DonHang],
+    danhSachTinhTp: [TinhTp],
+    danhSachQuanHuyen(idTinhTP: String): [QuanHuyen],
+    danhSachXaPhuong(idQuanHuyen: String): [XaPhuong],
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,

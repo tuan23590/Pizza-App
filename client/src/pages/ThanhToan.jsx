@@ -1,14 +1,15 @@
 import { Badge, Box, Button, Container, Divider, FormControl, FormControlLabel, Paper, Radio, RadioGroup, TextField, Typography } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined';
 import { useNavigate } from 'react-router-dom';
 import { APIThemDonHang } from '../utils/donHangUtils';
+import { GioHangContext } from '../context/GioHangProvider';
 
 export default function ThanhToan() {
-    const gioHang = localStorage.getItem('gioHang') ? JSON.parse(localStorage.getItem('gioHang')) : [];
+    const {gioHang} = useContext(GioHangContext)
     const tongTien = gioHang?.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0)
     const navigate = useNavigate();
     const formData = {

@@ -1,42 +1,101 @@
-import React, { useState } from 'react';
-import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { Autocomplete, Box, Button, TextField, Typography } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import MapIcon from '@mui/icons-material/Map';
-import CancelIcon from '@mui/icons-material/Cancel';
 import { useNavigate } from 'react-router-dom';
+import { APIDanhSachQuanHuyen, APIDanhSachTinhTp, APIDanhSachXaPhuong } from '../../utils/diaChiUtils';
+import { GioHangContext } from '../../context/GioHangProvider';
 
 export default function DiaChi() {
-    const [selectedOption, setSelectedOption] = useState('Giao hàng tận nơi');
-    const [address, setAddress] = useState('');
-    const navigate = useNavigate();
-    const handleOptionClick = (option) => {
-        setSelectedOption(option);
+    console.log('DiaChi:', useContext(GioHangContext));
+    
+    const [danhSachTinhTp, setDanhSachTinhTp] = useState([]);
+    const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState([]);
+    const [danhSachXaPhuong, setDanhSachXaPhuong] = useState([]);
+    const [diaChiData, setDiaChiData] = useState({
+        tinhTp: null,
+        quanHuyen: null,
+        xaPhuong: null,
+        soNhaTenDuong: '',
+    });
+
+    useEffect(() => {
+        const fetchDanhSachTinhTp = async () => {
+            const data = await APIDanhSachTinhTp();
+            setDanhSachTinhTp(data);
+        };
+        fetchDanhSachTinhTp();
+    }, []);
+
+    useEffect(() => {
+        const fetchDanhSachQuanHuyen = async () => {
+            if (diaChiData.tinhTp) {
+                const data = await APIDanhSachQuanHuyen(diaChiData.tinhTp.code);
+                setDanhSachQuanHuyen(data);
+            } else {
+                setDanhSachQuanHuyen([]);
+            }
+        };
+        fetchDanhSachQuanHuyen();
+    }, [diaChiData.tinhTp]);
+
+    useEffect(() => {
+        const fetchDanhSachXaPhuong = async () => {
+            if (diaChiData.quanHuyen) {
+                const data = await APIDanhSachXaPhuong(diaChiData.quanHuyen.code);
+                setDanhSachXaPhuong(data);
+            } else {
+                setDanhSachXaPhuong([]);
+            }
+        };
+        fetchDanhSachXaPhuong();
+    }, [diaChiData.quanHuyen]);
+
+    const handleTinhTpChange = (event, value) => {
+        setDiaChiData({
+            tinhTp: value,
+            quanHuyen: null, // Reset selected QuanHuyen and XaPhuong when TinhTp changes
+            xaPhuong: null,
+            soNhaTenDuong: diaChiData.soNhaTenDuong,
+        });
     };
 
-    const handleClearAddress = () => {
-        setAddress('');
+    const handleQuanHuyenChange = (event, value) => {
+        setDiaChiData({
+            ...diaChiData,
+            quanHuyen: value,
+            xaPhuong: null, // Reset selected XaPhuong when QuanHuyen changes
+        });
     };
+
+    const handleXaPhuongChange = (event, value) => {
+        setDiaChiData({
+            ...diaChiData,
+            xaPhuong: value,
+        });
+    };
+
+    const navigate = useNavigate();
 
     return (
         <Box sx={{
-            width: '500px',
+            width: '30vw',
+            minWidth: '300px',
             borderRadius: '10px',
             textAlign: 'center',
-            position: 'absolute',
-            top: '20vw',
             boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.4)',
+            position: 'absolute', 
+            top: "80%", 
+            zIndex: 10,
         }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography
-                    onClick={() => handleOptionClick('Giao hàng tận nơi')}
                     sx={{
                         cursor: 'pointer',
-                        backgroundColor: selectedOption === 'Giao hàng tận nơi' ? 'white' : '#f0f0f0',
-                        color: selectedOption === 'Giao hàng tận nơi' ? 'red' : 'black',
+                        backgroundColor: '#f0f0f0',
+                        color: 'red',
                         padding: '10px',
                         borderRadius: '10px 10px 0px 0px',
-                        width: '49.5%',
+                        width: '100%',
                         fontWeight: 'bold',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -46,66 +105,66 @@ export default function DiaChi() {
                     <LocalShippingIcon sx={{ marginX: '5px' }} />
                     Giao hàng tận nơi
                 </Typography>
-                <Typography
-                    onClick={() => handleOptionClick('Mua mang về')}
-                    sx={{
-                        cursor: 'pointer',
-                        backgroundColor: selectedOption === 'Mua mang về' ? 'white' : '#f0f0f0',
-                        color: selectedOption === 'Mua mang về' ? 'red' : 'black',
-                        padding: '10px',
-                        borderRadius: '10px 10px 0px 0px',
-                        width: '49.5%',
-                        fontWeight: 'bold',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        display: 'flex',
-                    }}
-                >
-                    <ShoppingBagIcon sx={{ marginX: '5px' }} />
-                    Mua mang về
-                </Typography>
             </Box>
-            {selectedOption && (
-                <Box sx={{ padding: '10px' ,backgroundColor: 'white'}}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                        <TextField
-                            fullWidth
-                            placeholder="Vui lòng cho chúng tôi biết địa chỉ của bạn!"
-                            size='small'
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            sx={{
-                                '& .MuiInputBase-input': {
-                                    border: '2px solid green',
-                                    borderRadius: '5px',
-                                    padding: '5px 10px',
-                                },
-                                '&:hover .MuiInputBase-input': {
-                                    border: '2px solid green',
-                                },
-                                '&.Mui-focused .MuiInputBase-input': {
-                                    border: '2px solid green',
-                                },
-                            }}
-                        />
-                        {address && (
-                            <IconButton
-                                onClick={handleClearAddress}
-                                sx={{
-                                   color: 'green',
-                                   paddingLeft: '10px',
-                                }}
-                            >
-                                <CancelIcon />
-                            </IconButton>
+            <Box sx={{ padding: '10px', backgroundColor: 'white' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <Autocomplete
+                        autoFocus
+                        fullWidth
+                        options={danhSachTinhTp}
+                        getOptionLabel={(option) => option.name_with_type}
+                        value={diaChiData.tinhTp}
+                        onChange={handleTinhTpChange}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Tỉnh/Thành phố"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                            />
                         )}
-                        <IconButton>
-                        <MapIcon sx={{ color: 'green', cursor: 'pointer'}} />
-                        </IconButton>
-                    </Box>
-                    <Button variant='contained' fullWidth color='success' onClick={()=>{navigate('/DatHang');}}>Bắt đầu đặt hàng</Button>
+                    />
+
+                    <Autocomplete
+                        fullWidth
+                        options={danhSachQuanHuyen}
+                        getOptionLabel={(option) => option.name_with_type}
+                        value={diaChiData.quanHuyen}
+                        onChange={handleQuanHuyenChange}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Quận/Huyện"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                            />
+                        )}
+                    />
+
+                    <Autocomplete
+                        fullWidth
+                        options={danhSachXaPhuong}
+                        getOptionLabel={(option) => option.name_with_type}
+                        value={diaChiData.xaPhuong}
+                        onChange={handleXaPhuongChange}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Xã/Phường"
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                            />
+                        )}
+                    />
+
+                    <TextField label="Số nhà, tên đường" variant="outlined" size="small" fullWidth value={diaChiData.soNhaTenDuong} onChange={(e) => setDiaChiData({ ...diaChiData, soNhaTenDuong: e.target.value })} />
+
                 </Box>
-            )}
+                <Button variant='contained' fullWidth color='success' sx={{marginTop: '10px'}} onClick={() => { navigate('/DatHang'); }}>Bắt đầu đặt hàng</Button>
+            </Box>
         </Box>
     );
 }

@@ -10,7 +10,7 @@ const imageUrls = [
 
 export default function KhuyenMai() {
     return (
-        <Container maxWidth={'lg'} sx={{ width: '100%'}}>
+        <Container maxWidth={'lg'} sx={{ width: '100%',marginTop: '25vh'}}>
             <Divider>
                 <Typography variant='h5' fontWeight={'500'}>KHUYẾN MẠI</Typography>
             </Divider>

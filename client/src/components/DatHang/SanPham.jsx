@@ -1,6 +1,6 @@
 import { Box, Button, MenuItem, Paper, Select, Typography } from '@mui/material'
 import React, { useContext } from 'react'
-import { GioHangContext } from '../../pages/DatHang';
+import { GioHangContext } from '../../context/GioHangProvider';
 
 export default function SanPham({ sanPham }) {
   const { setGioHang } = useContext(GioHangContext);

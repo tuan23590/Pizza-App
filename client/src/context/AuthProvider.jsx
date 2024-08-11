@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from 'react'
 import { getAuth } from 'firebase/auth'
 
 
-const AuthContext = createContext()
+export const AuthContext = createContext()
 
 
 export default function AuthProvider({ children }) {

@@ -11,66 +11,74 @@ import QuanLySanPham from "../components/QuanLy/QuanLySanPham";
 import ThanhToan from "../pages/ThanhToan";
 import TheoDoiDonHang from "../pages/TheoDoiDonHang";
 import QuanlyDonHang from "../components/QuanLy/QuanlyDonHang";
+import GioHangProvider from "../context/GioHangProvider";
+import DiaChi from "../components/TrangChu/DiaChi";
 const KhachHangProvider = () => {
     return <>
-    <AuthProvider>
-   <Header/>
-   <Outlet/>
-   </AuthProvider>
+        <AuthProvider>
+            <GioHangProvider>
+                <Header />
+                <Outlet />
+            </GioHangProvider>
+        </AuthProvider>
     </>
 }
 
-
 export default createBrowserRouter(
-  [
-    {
-        element: <KhachHangProvider/>,
-        children:[
-            {
-                element: <DangNhap/>,
-                path: "/DangNhap"
-            },
-            {
-                element: <TrangChu/>,
-                path: "/"
-            },
-            {
-                element: <DatHang/>,
-                path: "/DatHang",
-                children:[
-                    {
-                        element: <DanhSachSanPham/>,
-                        path: "/DatHang/:maDanhMuc",
-                        loader: APIDanhSachSanPhamTheoMaDanhMuc
-                    },
-                    
-                ]
-            },
-            {
-                element: <ThanhToan/>,
-                path: "/ThanhToan"
-            },
-            {
-                element: <TheoDoiDonHang/>,
-                path: "/TheoDoiDonHang"
-            },
-            {
-                element: <QuanLy />,
-                path: "/QuanLy",
-                children:[
-                    {
-                        element: <QuanLySanPham/>,
-                        path: "/QuanLy/QuanLySanPham",
-                        
-                    },
-                    {
-                        element: <QuanlyDonHang/>,
-                        path: "/QuanLy/QuanlyDonHang",
-                        
-                    },
-                ]
-            }
-        ]
-    }
-  ]
+    [
+        {
+            element: <KhachHangProvider />,
+            children: [
+                {
+                    element: <DangNhap />,
+                    path: "/DangNhap"
+                },
+                {
+                    element: <TrangChu />,
+                    path: "/"
+                },
+
+                {
+                    element: <TheoDoiDonHang />,
+                    path: "/TheoDoiDonHang"
+                },
+                {
+                    element: <DatHang />,
+                    path: "/DatHang",
+                    children: [
+                        {
+                            element: <DanhSachSanPham />,
+                            path: "/DatHang/:maDanhMuc",
+                            loader: APIDanhSachSanPhamTheoMaDanhMuc
+                        },
+
+                    ]
+                },
+                {
+                    element: <ThanhToan />,
+                    path: "/ThanhToan"
+                },
+                {
+                    element: <DiaChi />,
+                }
+                ,
+                {
+                    element: <QuanLy />,
+                    path: "/QuanLy",
+                    children: [
+                        {
+                            element: <QuanLySanPham />,
+                            path: "/QuanLy/QuanLySanPham",
+
+                        },
+                        {
+                            element: <QuanlyDonHang />,
+                            path: "/QuanLy/QuanlyDonHang",
+
+                        },
+                    ]
+                },
+            ]
+        }
+    ]
 );

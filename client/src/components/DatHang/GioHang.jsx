@@ -1,10 +1,10 @@
 import { Box, Button, Typography } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
-import { GioHangContext } from '../../pages/DatHang';
 import SanPhamTrongGioHang from './SanPhamTrongGioHang';
 import RequestPageOutlinedIcon from '@mui/icons-material/RequestPageOutlined';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from 'react-router-dom';
+import { GioHangContext } from '../../context/GioHangProvider';
 
 export default function GioHang() {
   const { gioHang } = useContext(GioHangContext);

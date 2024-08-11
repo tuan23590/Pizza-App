@@ -7,14 +7,7 @@ import { Outlet } from 'react-router-dom';
 export const GioHangContext = createContext();
 
 export default function DatHang() {
-  const [gioHang, setGioHang] = useState(() => {
-    return JSON.parse(localStorage.getItem('gioHang')) || []
-  });
-  useEffect(() => {
-    localStorage.setItem('gioHang', JSON.stringify(gioHang));
-  }, [gioHang]);
   return (
-    <GioHangContext.Provider value={{gioHang, setGioHang}}>
       <Grid container>
         <Grid item xs={9}>
           <DanhMuc/>
@@ -24,6 +17,5 @@ export default function DatHang() {
           <GioHang/>
         </Grid>
       </Grid>
-    </GioHangContext.Provider>
   );
 }

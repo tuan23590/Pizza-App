@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Tooltip, Typography } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
-import { GioHangContext } from '../../pages/DatHang';
+import { GioHangContext } from './../../context/GioHangProvider';
 
 export default function SanPhamTrongGioHang({ sanPham }) {
   const { setGioHang } = useContext(GioHangContext);

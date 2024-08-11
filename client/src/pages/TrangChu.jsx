@@ -8,15 +8,9 @@ import Footer from '../components/Footer';
 export default function TrangChu() {
   return (
    <>
-    <Box sx={{
-      position: 'relative',
-      alignItems: 'center',
-      justifyContent: 'center',
-      display: 'flex',
-    }}>
+    <Box sx={{ position: 'relative',display:'flex', justifyContent: 'center' }}> 
     <SlideShow />
     <DiaChi />
-   
     </Box>
     <Box sx={{marginTop: '130px'}}>
     <KhuyenMai />

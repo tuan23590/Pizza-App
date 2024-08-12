@@ -10,14 +10,22 @@ export default function SanPham({ sanPham }) {
 
   const themSanPhamVaoGioHang = (sanPham) => {
     setGioHang((prevGioHang) => {
-      const existingProductIndex = prevGioHang.findIndex(item => item.maSanPham === sanPham.maSanPham && item.kichThuocBanh === kichThuocBanh && item.loaiDe === loaiDe);
+      // Đảm bảo prevGioHang.danhSachSanPham là một mảng
+      const danhSachSanPham = prevGioHang?.danhSachSanPham || [];
+  
+      const existingProductIndex = danhSachSanPham.findIndex(item => 
+        item.maSanPham === sanPham.maSanPham && 
+        item.kichThuocBanh === kichThuocBanh && 
+        item.loaiDe === loaiDe
+      );
+  
+      let updatedDanhSachSanPham;
+  
       if (existingProductIndex !== -1) {
-        const updatedGioHang = [...prevGioHang];
-        updatedGioHang[existingProductIndex].soLuong += 1;
-        localStorage.setItem('gioHang', JSON.stringify(updatedGioHang));
-        return updatedGioHang;
+        updatedDanhSachSanPham = [...danhSachSanPham];
+        updatedDanhSachSanPham[existingProductIndex].soLuong += 1;
       } else {
-        const updatedGioHang = [...prevGioHang, {
+        updatedDanhSachSanPham = [...danhSachSanPham, {
           id: sanPham.id,
           maSanPham: sanPham.maSanPham,
           tenSanPham: sanPham.tenSanPham,
@@ -26,12 +34,17 @@ export default function SanPham({ sanPham }) {
           gia: sanPham.giaSanPham,
           soLuong: 1
         }];
-        localStorage.setItem('gioHang', JSON.stringify(updatedGioHang));
-        return updatedGioHang;
       }
+  
+      const updatedGioHang = {
+        ...prevGioHang,
+        danhSachSanPham: updatedDanhSachSanPham
+      };
+  
+      localStorage.setItem('gioHang', JSON.stringify(updatedGioHang));
+      return updatedGioHang;
     });
   };
-  
 
   return (
     <Paper

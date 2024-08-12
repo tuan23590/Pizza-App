@@ -9,32 +9,26 @@ import { APIThemDonHang } from '../utils/donHangUtils';
 import { GioHangContext } from '../context/GioHangProvider';
 
 export default function ThanhToan() {
-    const {gioHang} = useContext(GioHangContext)
-    const tongTien = gioHang?.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0)
+    const {gioHang,setGioHang} = useContext(GioHangContext)
     const navigate = useNavigate();
-    const formData = {
-        tenKhachHang: '',
-        soDienThoai: '',
-        email: '',
-        gioHang: JSON.stringify(gioHang),
-        phuongThucThanhToan: 'cash',
-        diaChiGiaoHang: 'Hồ Gươm Plaza, 110 Trần Phú, quận Hà Đông, TP. Hà Nội',
-        thoiGianGiao: Date.now().toString(),
-        tongTien: parseFloat(tongTien),
-        tamTinh: parseFloat(tongTien),
-        giamGia : 0.0
-    }
     const handleChange = (e) => {
-        formData[e.target.name] = e.target.value;
+        const { name, value } = e.target;
+        setGioHang((prevGioHang) => {
+            return {
+                ...prevGioHang,
+                [name]: value
+            }
+        })  
     }
     const handleThanhToan = async () => {
-        const data = await APIThemDonHang(formData);
-        console.log(data);
-        if (data) {
-            localStorage.setItem('gioHang', JSON.stringify([]));
-            alert('Đặt hàng thành công');
-            navigate('/');
-        }
+        console.log(gioHang);
+        // const data = await APIThemDonHang(gioHang);
+        // console.log(data);
+        // if (data) {
+        //     localStorage.setItem('gioHang', JSON.stringify([]));
+        //     alert('Đặt hàng thành công');
+        //     navigate('/');
+        // }
     }
     return (
         <>
@@ -43,7 +37,7 @@ export default function ThanhToan() {
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
                     <Box display={'flex'} justifyContent={'space-between'} sx={{ cursor: 'pointer' }} onClick={() => { navigate('/DatHang') }}>
                         <Box display={'flex'} alignItems="center">
-                            <Badge badgeContent={gioHang.length} color="error">
+                            <Badge badgeContent={gioHang.danhSachSanPham.length} color="error">
                                 <ShoppingCartOutlinedIcon />
                             </Badge>
                             <Typography sx={{ marginLeft: '10px' }}>Xem chi tiết giỏ hàng của bạn</Typography>
@@ -82,14 +76,14 @@ export default function ThanhToan() {
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
                     <Typography fullWidth variant='h6' sx={{ textAlign: 'center' }}>Phương thức thanh toán</Typography>
                     <FormControl sx={{ marginY: '20px' }}>
-                        <RadioGroup onChange={handleChange} name='phuongThucThanhToan' value={formData.phuongThucThanhToan}>
-                            <FormControlLabel value="cash" control={<Radio />} label={
+                        <RadioGroup onChange={handleChange} name='phuongThucThanhToan' value={gioHang.phuongThucThanhToan}>
+                            <FormControlLabel value="Tiền mặt" control={<Radio />} label={
                                 <Box display={'flex'} alignItems={'center'} border={1} borderColor={'green'} borderRadius={2} p={2} my={1} width={'550px'}>
                                     <Box component={'img'} sx={{ width: '40px' }} src='https://cdn.pizzahut.vn/images/Web_V3/Payment/cash.png' />
                                     <Typography sx={{ marginX: '10px' }}>Thanh toán bằng tiền mặt</Typography>
                                 </Box>
                             } />
-                            <FormControlLabel value="momo" control={<Radio />} label={
+                            <FormControlLabel value="Momo" control={<Radio />} label={
                                 <Box display={'flex'} alignItems={'center'} border={1} borderColor={'green'} borderRadius={2} p={2} my={1} width={'550px'}>
                                     <Box component={'img'} sx={{ width: '40px' }} src='https://cdn.pizzahut.vn/images/Web_V3/Payment/momo.png' />
                                     <Typography sx={{ marginX: '10px' }}>Thanh toán Momo</Typography>
@@ -98,7 +92,7 @@ export default function ThanhToan() {
                         </RadioGroup>
                     </FormControl>
                     <Button fullWidth variant='contained' color='success' onClick={handleThanhToan}>
-                        Đặt hàng {tongTien.toLocaleString('vi-VN')} ₫
+                        Đặt hàng {gioHang.tongTien.toLocaleString('vi-VN')} ₫
                     </Button>
                 </Paper>
             </Box>

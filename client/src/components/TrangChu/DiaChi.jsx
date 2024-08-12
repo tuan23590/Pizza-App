@@ -77,7 +77,12 @@ export default function DiaChi() {
 
     const handleXacNhanDiaChi = () => {
         const stringDiaChi = `${diaChiData.soNhaTenDuong}, ${diaChiData.xaPhuong.path_with_type}`;
-        // setGioHang && setGioHang({ ...gioHang, diaChiGiaoHang: stringDiaChi });
+        setGioHang((prevGioHang) => {
+            return {
+                ...prevGioHang,
+                diaChiGiaoHang: stringDiaChi,
+            }
+        });
         navigate('/DatHang');
     };
     return (

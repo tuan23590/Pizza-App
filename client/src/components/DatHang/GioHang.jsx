@@ -8,7 +8,6 @@ import { GioHangContext } from '../../context/GioHangProvider';
 
 export default function GioHang() {
   const { gioHang } = useContext(GioHangContext);
-  const tongTien = gioHang?.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0).toLocaleString('vi-VN')
   const navigate = useNavigate();
   return (
     <Box sx={{ border: 1, borderColor: 'gray', height: '93vh' }}>
@@ -22,7 +21,7 @@ export default function GioHang() {
         }}>
           Giỏ hàng
         </Typography>
-        {gioHang?.map((sanPham, index) => (
+        {gioHang.danhSachSanPham.map((sanPham, index) => (
           <SanPhamTrongGioHang key={index} sanPham={sanPham} />
         ))
         }
@@ -40,7 +39,7 @@ export default function GioHang() {
             <Typography>Tạm tính</Typography>
           </Box>
           <Typography>
-            {tongTien} ₫
+            {gioHang.tamTinh} ₫
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
@@ -61,8 +60,8 @@ export default function GioHang() {
           onClick={()=>{navigate('/ThanhToan')}}
           disabled={gioHang.length === 0}
           >
-            <Typography >Thanh Toán - {gioHang.length} món</Typography>
-            <Typography>{tongTien} ₫</Typography>
+            <Typography >Thanh Toán - {gioHang.danhSachSanPham.length} món</Typography>
+            <Typography>{gioHang.tongTien.toLocaleString('vi-VN')} ₫</Typography>
           </Button>
         </Box>
       </Box>

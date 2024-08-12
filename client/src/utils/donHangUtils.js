@@ -1,11 +1,23 @@
 import { GraphQLrequest } from './request';
 export const APIThemDonHang = async (formData) => {
-    const query = `mutation ThemDonHang($soDienThoai: String, $email: String, $gioHang: String, $phuongThucThanhToan: String, $diaChiGiaoHang: String, $thoiGianGiao: String, $tongTien: Float, $giamGia: Float, $tamTinh: Float, $tenKhachHang: String) {
-  themDonHang(soDienThoai: $soDienThoai, email: $email, gioHang: $gioHang, phuongThucThanhToan: $phuongThucThanhToan, diaChiGiaoHang: $diaChiGiaoHang, thoiGianGiao: $thoiGianGiao, tongTien: $tongTien, giamGia: $giamGia, tamTinh: $tamTinh, tenKhachHang: $tenKhachHang) {
+    const query = `mutation ThemDonHang($soDienThoai: String, $email: String, $danhSachSanPham: String, $phuongThucThanhToan: String, $diaChiGiaoHang: String, $thoiGianGiaoHang: String, $tongTien: Float, $giamGia: Float, $tamTinh: Float, $tenKhachHang: String, $ghiChuDiaChi: String) {
+  themDonHang(soDienThoai: $soDienThoai, email: $email, danhSachSanPham: $danhSachSanPham, phuongThucThanhToan: $phuongThucThanhToan, diaChiGiaoHang: $diaChiGiaoHang, thoiGianGiaoHang: $thoiGianGiaoHang, tongTien: $tongTien, giamGia: $giamGia, tamTinh: $tamTinh, tenKhachHang: $tenKhachHang, ghiChuDiaChi: $ghiChuDiaChi) {
     maDonHang
   }
 }`;
-    const {themDonHang} = await GraphQLrequest({query, variables: formData});
+    const {themDonHang} = await GraphQLrequest({query, variables: {
+        soDienThoai: formData.soDienThoai,
+        email: formData.email,
+        danhSachSanPham: JSON.stringify(formData.danhSachSanPham),
+        phuongThucThanhToan: formData.phuongThucThanhToan,
+        diaChiGiaoHang: formData.diaChiGiaoHang,
+        ghiChuDiaChi: formData.ghiChuDiaChi,
+        thoiGianGiaoHang: formData.thoiGianGiaoHang,
+        tongTien: formData.tongTien,
+        giamGia: formData.giamGia,
+        tamTinh: formData.tamTinh,
+        tenKhachHang: formData.tenKhachHang
+    }});
     return themDonHang;
 };
 
@@ -18,7 +30,7 @@ export const APIDonHangTheoMaDonHangHoacSoDienThoai = async (duLieuTimKiem) => {
     soDienThoai
     email
     ngayDatHang
-    thoiGianGiao
+    thoiGianGiaoHang
     diaChiGiaoHang
     tamTinh
     giamGia
@@ -42,7 +54,7 @@ export const APIDanhSachDonHang = async () => {
     soDienThoai
     email
     ngayDatHang
-    thoiGianGiao
+    thoiGianGiaoHang
     diaChiGiaoHang
     tamTinh
     giamGia

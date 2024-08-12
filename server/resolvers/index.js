@@ -136,16 +136,17 @@ export const resolvers = {
             donHang.soDienThoai = args.soDienThoai;
             donHang.email = args.email;
             donHang.maDonHang = maDonHangMoi;
-            donHang.danhSachSanPham = args.gioHang;
+            donHang.danhSachSanPham = args.danhSachSanPham;
             donHang.phuongThucThanhToan = args.phuongThucThanhToan;
             donHang.trangThai = "Đang xử lý";
             donHang.diaChiGiaoHang = args.diaChiGiaoHang;
-            donHang.thoiGianGiao = args.thoiGianGiao;
+            donHang.thoiGianGiaoHang = args.thoiGianGiaoHang;
             donHang.tongTien = parseFloat(args.tongTien);
             donHang.tamTinh = parseFloat(args.tamTinh);
             donHang.giamGia = parseFloat(args.giamGia);
+            donHang.ghiChuDiaChi = args.ghiChuDiaChi;
             donHang.ngayDatHang = Date.now();
-            const danhSachIdSanPham = JSON.parse(args.gioHang)
+            const danhSachIdSanPham = JSON.parse(args.danhSachSanPham)
             console.log(danhSachIdSanPham);
             try{
                 for (let i = 0; i < danhSachIdSanPham.length; i++) {

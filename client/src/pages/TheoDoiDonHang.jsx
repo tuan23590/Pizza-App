@@ -147,7 +147,7 @@ export default function TheoDoiDonHang() {
                                             <Typography><b>Địa chỉ giao hàng:</b> {donHang.diaChiGiaoHang}</Typography>
                                         </Grid>
                                         <Grid item sm={12}>
-                                            <Typography><b>Thời gian giao hàng dự kiến:</b> {fomatDate(donHang.thoiGianGiao)}</Typography>
+                                            <Typography><b>Thời gian giao hàng dự kiến:</b> {fomatDate(donHang.thoiGianGiaoHang)}</Typography>
                                         </Grid>
                                     </Grid>
                                 ))}

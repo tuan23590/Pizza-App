@@ -8,11 +8,12 @@ type DonHang {
     soDienThoai: String,
     email: String,
     ngayDatHang: String,
-    thoiGianGiao: String,
+    thoiGianGiaoHang: String,
     diaChiGiaoHang: String,
     tamTinh: Float,
     giamGia: Float,
     tongTien: Float,
+    ghiChuDiaChi: String,
     phuongThucThanhToan: String,
     trangThai: String,
     danhSachSanPham: String
@@ -104,14 +105,16 @@ type Mutation {
     tenKhachHang: String,
     soDienThoai: String,
     email: String,
-    gioHang: String,
+    danhSachSanPham: String,
     phuongThucThanhToan: String,
     diaChiGiaoHang: String,
-    thoiGianGiao: String,
+    ghiChuDiaChi: String,
+    thoiGianGiaoHang: String,
     tongTien: Float,
     giamGia: Float,
     tamTinh: Float
     ): DonHang,
+
     capNhatTrangThaiDonHang(maDonHang: String, trangThai: String): DonHang
 }
 `;

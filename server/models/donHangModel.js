@@ -16,10 +16,13 @@ const DonHangSchema = new mongoose.Schema({
     ngayDatHang: {
         type: String,
     },
-    thoiGianGiao: {
+    thoiGianGiaoHang: {
         type: String,
     },
     diaChiGiaoHang: {
+        type: String,
+    },
+    ghiChuDiaChi: {
         type: String,
     },
     tamTinh: {

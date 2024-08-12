@@ -22,13 +22,13 @@ export default function ThanhToan() {
     }
     const handleThanhToan = async () => {
         console.log(gioHang);
-        // const data = await APIThemDonHang(gioHang);
-        // console.log(data);
-        // if (data) {
-        //     localStorage.setItem('gioHang', JSON.stringify([]));
-        //     alert('Đặt hàng thành công');
-        //     navigate('/');
-        // }
+        const data = await APIThemDonHang(gioHang);
+        console.log(data);
+        if (data) {
+            localStorage.setItem('gioHang', JSON.stringify([]));
+            alert('Đặt hàng thành công');
+            navigate('/');
+        }
     }
     return (
         <>
@@ -48,14 +48,12 @@ export default function ThanhToan() {
                     <Divider sx={{ marginY: '20px' }} />
                     <Box display={'flex'} justifyContent={'space-between'} >
                         <Box display={'flex'} alignItems="center">
-
                             <LocationOnOutlinedIcon />
-
-                            <Typography sx={{ marginLeft: '10px' }}>Mua mang về: <b>Hồ Gươm Plaza, 110 Trần Phú, quận Hà Đông, TP. Hà Nội</b></Typography>
+                            <Typography sx={{ marginLeft: '10px' }}>Mua mang về: <b>{gioHang.diaChiGiaoHang}</b></Typography>
                         </Box>
                         <Typography color={'green'}>Thay đổi</Typography>
                     </Box>
-
+                    <TextField name='ghiChuDiaChi' onChange={handleChange} size='small' fullWidth label="Ghi chú địa chỉ" variant="outlined" sx={{ marginTop: '20px' }} />
                     <Divider sx={{ marginY: '20px' }} />
                     <Box display={'flex'} gap={1} >
                         <Box display={'flex'} alignItems="center">

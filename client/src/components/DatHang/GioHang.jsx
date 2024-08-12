@@ -39,7 +39,7 @@ export default function GioHang() {
             <Typography>Tạm tính</Typography>
           </Box>
           <Typography>
-            {gioHang.tamTinh} ₫
+            {gioHang.tamTinh.toLocaleString('vi-VN')} ₫
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
@@ -47,7 +47,7 @@ export default function GioHang() {
             <Typography>Giảm khuyến mại</Typography>
           </Box>
           <Typography>
-            0 ₫
+          {gioHang.giamGia.toLocaleString('vi-VN')} ₫
           </Typography>
         </Box>
         <Box sx={{ borderTop: 1, padding: '5px'}}>

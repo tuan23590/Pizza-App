@@ -16,7 +16,7 @@ export default function Header() {
           style={{ width: '150px', height: 'auto' }}
         />
       </Link>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginRight: '20px', width: '350px', }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginRight: '20px', width: 'auto', }}>
         <Box sx={{
           cursor: 'pointer',
           paddingTop: '5px',

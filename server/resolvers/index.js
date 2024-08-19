@@ -23,9 +23,8 @@ export const resolvers = {
             const danhSachKichThuoc = await kichThuocModel.find();
             return danhSachKichThuoc;
         },
-        donHangTheoMaDonHangHoacSoDienThoai: async (parent, args) => {
-            const duLieuTimKiem = args.duLieuTimKiem.trim().toUpperCase();
-            const donHang = await donHangModel.find({ $or: [{ maDonHang: duLieuTimKiem }, { soDienThoai: duLieuTimKiem }] });
+        donHangTheoEmail: async (parent, args) => {
+            const donHang = await donHangModel.find({ email: args.email });
             return donHang;
         },  
         danhSachDonHang: async () => {

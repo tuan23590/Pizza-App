@@ -1,5 +1,5 @@
-import { Badge, Box, Button, Container, Divider, FormControl, FormControlLabel, Paper, Radio, RadioGroup, TextField, Typography } from '@mui/material'
-import React, { useContext } from 'react'
+import { Badge, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material'
+import React, { useContext, useState } from 'react'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -11,6 +11,10 @@ import { GioHangContext } from '../context/GioHangProvider';
 export default function ThanhToan() {
     const {gioHang,setGioHang} = useContext(GioHangContext)
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+    const [selectedOption1, setSelectedOption1] = useState('');
+    const [selectedOption2, setSelectedOption2] = useState('');
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setGioHang((prevGioHang) => {
@@ -30,6 +34,14 @@ export default function ThanhToan() {
             navigate('/');
         }
     }
+
+    const handleDialogOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDialogClose = () => {
+        setOpen(false);
+    };
     return (
         <>
             <Typography fullWidth variant='h5' py={5} sx={{ textAlign: 'center' }}>THANH TOÁN</Typography>
@@ -62,7 +74,7 @@ export default function ThanhToan() {
 
                             <Typography sx={{ marginLeft: '10px' }}>Giao vào lúc: </Typography>
                         </Box>
-                        <Typography color={'green'}>Hôm nay 10:00</Typography>
+                        <Typography color={'green'} onClick={handleDialogOpen} sx={{cursor: 'pointer'}}>Hôm nay 10:00</Typography>
                     </Box>
                 </Paper>
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
@@ -94,6 +106,33 @@ export default function ThanhToan() {
                     </Button>
                 </Paper>
             </Box>
+
+
+            <Dialog open={open} onClose={handleDialogClose}>
+                <DialogTitle>Chọn thời gian giao hàng</DialogTitle>
+                <DialogContent>
+                    <FormControl fullWidth sx={{ marginY: 2 }}>
+                        <Select value={selectedOption1} onChange={(e) => setSelectedOption1(e.target.value)} displayEmpty>
+                            <MenuItem value="" disabled>Chọn thời gian</MenuItem>
+                            <MenuItem value="10:00">10:00</MenuItem>
+                            <MenuItem value="12:00">12:00</MenuItem>
+                            <MenuItem value="14:00">14:00</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <FormControl fullWidth sx={{ marginY: 2 }}>
+                        <Select value={selectedOption2} onChange={(e) => setSelectedOption2(e.target.value)} displayEmpty>
+                            <MenuItem value="" disabled>Chọn thời gian</MenuItem>
+                            <MenuItem value="10:00">10:00</MenuItem>
+                            <MenuItem value="12:00">12:00</MenuItem>
+                            <MenuItem value="14:00">14:00</MenuItem>
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>Hủy</Button>
+                    <Button onClick={handleDialogClose} color="primary">Xác nhận</Button>
+                </DialogActions>
+            </Dialog>
         </>
     )
 }

@@ -14,9 +14,11 @@ export default function DanhMuc() {
         const dataDM = await APIDanhSachDanhMuc();
         setDanhSachDanhMuc(dataDM);
     };
-    const chuyenHuong = (danhMuc) => {
-        navigate(`/datHang/${danhMuc.maDanhMuc}`);
-    }
+    useEffect(() => {
+        if (danhSachDanhMuc.length > 0) {
+            navigate(`/datHang/${danhSachDanhMuc[0].maDanhMuc}`);
+        }
+    }, [danhSachDanhMuc]);
     return (
         <Box sx={{borderTop: 1,borderBottom: 1,borderColor: 'gray',display: 'flex',}}>
             {danhSachDanhMuc.map((danhMuc) => (
@@ -30,7 +32,7 @@ export default function DanhMuc() {
                     cursor: 'pointer',
                     color: curntPath == danhMuc.maDanhMuc ? 'white' : 'red',
                   }}}
-                onClick={() => chuyenHuong(danhMuc)}>
+                onClick={() => {navigate(`/datHang/${danhMuc.maDanhMuc}`)}}>
                         <Typography sx={{fontWeight: '500'}}>
                             {danhMuc.tenDanhMuc.toUpperCase()}
                         </Typography>   

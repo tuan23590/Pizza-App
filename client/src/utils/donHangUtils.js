@@ -21,9 +21,9 @@ export const APIThemDonHang = async (formData) => {
     return themDonHang;
 };
 
-export const APIDonHangTheoMaDonHangHoacSoDienThoai = async (duLieuTimKiem) => {
-  const query = `query DonHangTheoMaDonHangHoacSoDienThoai($duLieuTimKiem: String) {
-  donHangTheoMaDonHangHoacSoDienThoai(duLieuTimKiem: $duLieuTimKiem) {
+export const APIDonHangTheoMaDonHangHoacSoDienThoai = async (email) => {
+  const query = `query DonHangTheoEmail($email: String) {
+  donHangTheoEmail(email: $email) {
     id
     maDonHang
     tenKhachHang
@@ -60,8 +60,8 @@ export const APIDonHangTheoMaDonHangHoacSoDienThoai = async (duLieuTimKiem) => {
     }
   }
 }`;
-  const {donHangTheoMaDonHangHoacSoDienThoai} = await GraphQLrequest({query, variables: duLieuTimKiem});
-  return donHangTheoMaDonHangHoacSoDienThoai;
+  const {donHangTheoEmail} = await GraphQLrequest({query, variables: {email}});
+  return donHangTheoEmail;
 };
 
 

@@ -58,7 +58,7 @@ export default function GioHang() {
           fullWidth 
           sx={{display: 'flex',justifyContent: 'space-between'}} 
           onClick={()=>{navigate('/ThanhToan')}}
-          disabled={gioHang.length === 0}
+          disabled={gioHang.danhSachSanPham.length === 0}
           >
             <Typography >Thanh Toán - {gioHang.danhSachSanPham.length} món</Typography>
             <Typography>{gioHang.tongTien.toLocaleString('vi-VN')} ₫</Typography>

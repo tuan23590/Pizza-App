@@ -6,12 +6,9 @@ import { AuthContext } from './../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
 export default function TheoDoiDonHang() {
-    const {user} = useContext(AuthContext)
-    const [duLieuTimKiem, setDuLieuTimKiem] = useState('')
+    const { user } = useContext(AuthContext)
     const [danhSachDonHang, setDanhSachDonHang] = useState([])
     const [filteredDonHang, setFilteredDonHang] = useState([]); // Danh sách đơn hàng đã được lọc
-    const [error, setError] = useState('')
-    const [noResult, setNoResult] = useState(false)
     const [selectedOrder, setSelectedOrder] = useState(null)
     const [openDialog, setOpenDialog] = useState(false)
     const [status, setStatus] = useState('Tất cả')
@@ -30,43 +27,28 @@ export default function TheoDoiDonHang() {
     }
 
     const handleSearch = async () => {
-        if (!duLieuTimKiem.trim()) {
-            setError('Vui lòng nhập số điện thoại hoặc mã đơn hàng.')
-            return
-        }
-        setError('')
-        setNoResult(false)
-
-        const data = await APIDonHangTheoMaDonHangHoacSoDienThoai({ duLieuTimKiem })
-        console.log(data)
+        const data = await APIDonHangTheoMaDonHangHoacSoDienThoai(user.email)
         const sortedData = data.sort((a, b) => b.ngayDatHang - a.ngayDatHang);
         setDanhSachDonHang(sortedData);
-        setFilteredDonHang(sortedData); // Khởi tạo với danh sách đầy đủ
-
-        if (data.length === 0) {
-            setNoResult(true)
-        }
+        setFilteredDonHang(sortedData);
     }
 
-   useEffect(() => {
+    useEffect(() => {
         if (status === 'Tất cả') {
             setFilteredDonHang(danhSachDonHang);
         } else {
             const filtered = danhSachDonHang.filter(donHang => donHang.trangThai === status);
             setFilteredDonHang(filtered);
         }
-   }, [status])
+    }, [status])
 
-   useEffect(() => {
-        if (!user) {
+    useEffect(() => {
+        if (!localStorage.getItem('accessToken')) {
             navigate('/DangNhap')
+            return
         }
+        handleSearch()
     }, [user])
-
-    const handleChange = (e) => {
-        setDuLieuTimKiem(e.target.value)
-        setError('')
-    }
 
     const handleOpenDialog = (order) => {
         setSelectedOrder(order)
@@ -82,37 +64,17 @@ export default function TheoDoiDonHang() {
             <Typography fullWidth variant='h5' py={5} sx={{ textAlign: 'center' }}>THEO DÕI ĐƠN HÀNG</Typography>
             <Box sx={{ marginX: 'auto', width: '33%' }}>
                 <Paper sx={{ padding: '20px' }} elevation={3}>
-                    <TextField
-                        name='duLieuTimKiem'
-                        size='small'
-                        color='success'
-                        autoFocus
-                        fullWidth
-                        label="Nhập số điện thoại hoặc mã đơn hàng"
-                        variant="outlined"
-                        onChange={handleChange}
-                        error={!!error}  // Hiển thị trạng thái lỗi nếu có
-                        helperText={error} // Hiển thị thông báo lỗi nếu có
-                    />
-                    <Button fullWidth sx={{ marginY: '10px' }} variant="contained" color='success' onClick={handleSearch}>
-                        Tìm kiếm
-                    </Button>
-                    {noResult && (
-                        <Typography fullWidth py={1} sx={{ textAlign: 'center' }}>
-                            Không tìm thấy đơn hàng
-                        </Typography>
-                    )}
                     {danhSachDonHang.length > 0 && (
                         <Box sx={{ marginX: 'auto' }}>
                             <Box>
-                                {['Tất cả','Đang xử lý', 'Đang giao hàng', 'Đã giao hàng', 'Đã hủy'].map((trangThai, index) => (
-                                    <Button 
-                                        key={index} 
-                                        sx={{ margin: '5px' }} 
-                                        variant="contained" 
-                                        color={status === trangThai ? 'success' : 'inherit'} 
+                                {['Tất cả', 'Đang xử lý', 'Đang giao hàng', 'Đã giao hàng', 'Đã hủy'].map((trangThai, index) => (
+                                    <Button
+                                        key={index}
+                                        sx={{ margin: '5px' }}
+                                        variant="contained"
+                                        color={status === trangThai ? 'success' : 'inherit'}
                                         size='small'
-                                        onClick={() => {setStatus(trangThai)}}
+                                        onClick={() => { setStatus(trangThai) }}
                                     >
                                         {trangThai}
                                     </Button>
@@ -164,10 +126,13 @@ export default function TheoDoiDonHang() {
                             </Box>
                         </Box>
                     )}
+                    {danhSachDonHang.length == 0 && (
+                        <Typography fullWidth sx={{ textAlign: 'center' }}>Không tìm thấy đơn hàng nào</Typography>
+                    )}
                 </Paper>
             </Box>
 
-           <ChiTietDonHang openDialog={openDialog} handleCloseDialog={handleCloseDialog} selectedOrder={selectedOrder} />
+            <ChiTietDonHang openDialog={openDialog} handleCloseDialog={handleCloseDialog} selectedOrder={selectedOrder} />
         </>
     )
 }

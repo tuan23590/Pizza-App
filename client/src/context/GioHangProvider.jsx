@@ -20,8 +20,8 @@ export default function GioHangProvider({ children }) {
         setGioHang((prevGioHang) => {
             return {
                 ...prevGioHang,
-                tamTinh: prevGioHang.danhSachSanPham.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0),
-                tongTien: prevGioHang.danhSachSanPham.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0) - prevGioHang.giamGia,
+                tamTinh: prevGioHang.danhSachSanPham.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuoc?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0),
+                tongTien: prevGioHang.danhSachSanPham.reduce((tongTien, sanPham) => tongTien + sanPham.soLuong * (sanPham.gia + ((sanPham.kichThuoc?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)), 0) - prevGioHang.giamGia,
             }
         })
     }, [gioHang.danhSachSanPham])

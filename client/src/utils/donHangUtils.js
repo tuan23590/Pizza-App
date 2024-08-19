@@ -35,9 +35,29 @@ export const APIDonHangTheoMaDonHangHoacSoDienThoai = async (duLieuTimKiem) => {
     tamTinh
     giamGia
     tongTien
+    ghiChuDiaChi
     phuongThucThanhToan
     trangThai
-    danhSachSanPham
+    danhSachSanPham {
+      maSanPham
+      tenSanPham
+      soLuong
+      ghiChu
+      moTa
+      hinhAnh
+      danhMuc
+      giaSanPham
+      kichThuoc {
+        id
+        tenKichThuoc
+        giaKichThuoc
+      }
+      loaiDe {
+        id
+        tenLoaiDe
+        giaLoaiDe
+      }
+    }
   }
 }`;
   const {donHangTheoMaDonHangHoacSoDienThoai} = await GraphQLrequest({query, variables: duLieuTimKiem});
@@ -59,9 +79,29 @@ export const APIDanhSachDonHang = async () => {
     tamTinh
     giamGia
     tongTien
+    ghiChuDiaChi
     phuongThucThanhToan
     trangThai
-    danhSachSanPham
+    danhSachSanPham {
+      maSanPham
+      tenSanPham
+      soLuong
+      ghiChu
+      moTa
+      hinhAnh
+      danhMuc
+      giaSanPham
+      kichThuoc {
+        id
+        tenKichThuoc
+        giaKichThuoc
+      }
+      loaiDe {
+        id
+        tenLoaiDe
+        giaLoaiDe
+      }
+    }
   }
 }`;
   const {danhSachDonHang} = await GraphQLrequest({query});

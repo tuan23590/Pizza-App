@@ -6,7 +6,7 @@ import { GioHangContext } from './../../context/GioHangProvider';
 export default function SanPhamTrongGioHang({ sanPham }) {
   const { setGioHang } = useContext(GioHangContext);
   const [openDialog, setOpenDialog] = useState(false);
-  const giaCuaSanPham = (sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)) * sanPham.soLuong;
+  const giaCuaSanPham = (sanPham.gia + ((sanPham.kichThuoc?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)) * sanPham.soLuong;
   const xoaSanPham = () => {
     setGioHang((gioHang) => gioHang.filter((sp) => sp != sanPham));
     setOpenDialog(false);
@@ -36,13 +36,13 @@ export default function SanPhamTrongGioHang({ sanPham }) {
           </Tooltip>
         </Grid>
 
-        {sanPham.kichThuocBanh && (
+        {sanPham.kichThuoc && (
           <>
             <Grid item xs={1} >
             </Grid>
             <Grid item xs={10} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuocBanh?.tenKichThuoc}</Typography>
-              <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuocBanh?.giaKichThuoc.toLocaleString('vi-VN')}₫</Typography>
+              <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuoc?.tenKichThuoc}</Typography>
+              <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuoc?.giaKichThuoc.toLocaleString('vi-VN')}₫</Typography>
             </Grid>
             <Grid item xs={1}>
             </Grid>

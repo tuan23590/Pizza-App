@@ -52,22 +52,22 @@ export default function ChiTietDonHang({ openDialog, handleCloseDialog, selected
                     <Typography><b>Danh sách sản phẩm:</b></Typography>
                     <Box>
                         <Divider />
-                        {JSON.parse(selectedOrder.danhSachSanPham).map((sanPham, index) => (
+                        {selectedOrder.danhSachSanPham.map((sanPham, index) => (
                             <Grid container spacing={1} key={index} sx={{ padding: '10px' }}>
                                 <Grid item xs={1}>
                                     <Typography sx={{ marginRight: '5px', backgroundColor: '#e8ebe9', color: '#0a8020', paddingX: '4px', borderRadius: '2px', fontWeight: '600', textAlign: 'center' }}>{sanPham.soLuong}x</Typography>
                                 </Grid>
                                 <Grid item xs={11} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography sx={{ fontWeight: '600' }}>{sanPham.tenSanPham}</Typography>
-                                    <Typography sx={{ fontWeight: '600', marginRight: '2px' }}>{((sanPham.gia + ((sanPham.kichThuocBanh?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)) * sanPham.soLuong).toLocaleString('vi-VN')}₫</Typography>
+                                    <Typography sx={{ fontWeight: '600', marginRight: '2px' }}>{((sanPham.giaSanPham + ((sanPham.kichThuoc?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)) * sanPham.soLuong).toLocaleString('vi-VN')}₫</Typography>
                                 </Grid>
-                                {sanPham.kichThuocBanh && (
+                                {sanPham.kichThuoc && (
                                     <>
                                         <Grid item xs={1}>
                                         </Grid>
                                         <Grid item xs={11} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuocBanh?.tenKichThuoc}</Typography>
-                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuocBanh?.giaKichThuoc.toLocaleString('vi-VN')}₫</Typography>
+                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuoc?.tenKichThuoc}</Typography>
+                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuoc?.giaKichThuoc.toLocaleString('vi-VN')}₫</Typography>
                                         </Grid>
                                     </>
                                 )}

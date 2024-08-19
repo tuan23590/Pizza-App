@@ -1,4 +1,4 @@
-import { danhMucModel, donHangModel, kichThuocModel, loaiDeModel, sanPhamModel } from "../models/index.js";
+import { danhMucModel, donHangModel, kichThuocModel, loaiDeModel, sanPhamDaMuaModel, sanPhamModel } from "../models/index.js";
 import fs from 'fs';
 
 export const resolvers = {
@@ -64,6 +64,22 @@ export const resolvers = {
                 return [];
             }
         },      
+    },
+    SanPhamDaMua: {
+        kichThuoc: async (parent) => {
+            const kichThuoc = await kichThuocModel.findOne({ _id: parent.kichThuoc });
+            return kichThuoc;
+        },
+        loaiDe: async (parent) => {
+            const loaiDe = await loaiDeModel.findOne({ _id: parent.loaiDe });
+            return loaiDe;
+        }
+    },
+    DonHang: {
+        danhSachSanPham: async (parent) => {
+            const danhSachSanPham = await sanPhamDaMuaModel.find({ _id: { $in: parent.danhSachSanPham } });
+            return danhSachSanPham;
+        }
     },
     SanPham: {
         kichThuoc: async (parent) => {
@@ -131,27 +147,24 @@ export const resolvers = {
     
                 maDonHangMoi = "DH1";
             }
-            const donHang = new donHangModel();
-            donHang.tenKhachHang = args.tenKhachHang;
-            donHang.soDienThoai = args.soDienThoai;
-            donHang.email = args.email;
+            const donHang = new donHangModel(args);
             donHang.maDonHang = maDonHangMoi;
-            donHang.danhSachSanPham = args.danhSachSanPham;
-            donHang.phuongThucThanhToan = args.phuongThucThanhToan;
             donHang.trangThai = "Đang xử lý";
-            donHang.diaChiGiaoHang = args.diaChiGiaoHang;
-            donHang.thoiGianGiaoHang = args.thoiGianGiaoHang;
-            donHang.tongTien = parseFloat(args.tongTien);
-            donHang.tamTinh = parseFloat(args.tamTinh);
-            donHang.giamGia = parseFloat(args.giamGia);
-            donHang.ghiChuDiaChi = args.ghiChuDiaChi;
             donHang.ngayDatHang = Date.now();
-            const danhSachIdSanPham = JSON.parse(args.danhSachSanPham)
-            console.log(danhSachIdSanPham);
+            donHang.thoiGianGiaoHang = Date.now() + 2 * 60 * 60 * 1000;
+            const danhSachSanPham = JSON.parse(args.danhSachSanPham)
+            console.log(danhSachSanPham);
+            let danhSachIdSanPhamDaMua = [];  
             try{
-                for (let i = 0; i < danhSachIdSanPham.length; i++) {
-                    await sanPhamModel.findOneAndUpdate({ _id: danhSachIdSanPham[i].id }, { $inc: { soLuong: -danhSachIdSanPham[i].soLuong } }, { new: true });
+                for (let i = 0; i < danhSachSanPham.length; i++) {
+                    const sanPhamDaMua = new sanPhamDaMuaModel(danhSachSanPham[i]);
+                    sanPhamDaMua.loaiDe = danhSachSanPham[i]?.loaiDe?.id || null;
+                    sanPhamDaMua.kichThuoc = danhSachSanPham[i]?.kichThuoc?.id || null;
+                    await sanPhamDaMua.save();
+                    danhSachIdSanPhamDaMua.push(sanPhamDaMua._id);
+                    await sanPhamModel.findOneAndUpdate({ _id: danhSachSanPham[i].id }, { $inc: { soLuong: -danhSachSanPham[i].soLuong } }, { new: true });
                 }
+                donHang.danhSachSanPham = danhSachIdSanPhamDaMua;
                 return donHang.save();
             }catch(err){
                 console.log(err);

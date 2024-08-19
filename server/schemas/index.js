@@ -1,6 +1,5 @@
 export const typeDefs = `#graphql
 
-
 type DonHang {
     id: String,
     maDonHang: String,
@@ -16,7 +15,7 @@ type DonHang {
     ghiChuDiaChi: String,
     phuongThucThanhToan: String,
     trangThai: String,
-    danhSachSanPham: String
+    danhSachSanPham: [SanPhamDaMua]
 },
 type KichThuoc {
     id: String,
@@ -48,6 +47,20 @@ type SanPham {
     giaSanPham: Float,
     soLuong: Int
 },
+
+type SanPhamDaMua {
+    maSanPham: String,
+    tenSanPham: String,
+    kichThuoc: KichThuoc,
+    soLuong: Int,
+    ghiChu: String,
+    moTa: String,
+    hinhAnh: String,
+    danhMuc: String,
+    giaSanPham: Float,
+    loaiDe: LoaiDe,
+},
+
 type TinhTp {
     name: String,
     slug: String,

@@ -1,9 +1,12 @@
 import { Box, Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { APIDonHangTheoMaDonHangHoacSoDienThoai } from '../utils/donHangUtils'
 import ChiTietDonHang from '../components/QuanLy/ChiTietDonHang'
+import { AuthContext } from './../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 export default function TheoDoiDonHang() {
+    const {user} = useContext(AuthContext)
     const [duLieuTimKiem, setDuLieuTimKiem] = useState('')
     const [danhSachDonHang, setDanhSachDonHang] = useState([])
     const [filteredDonHang, setFilteredDonHang] = useState([]); // Danh sách đơn hàng đã được lọc
@@ -12,6 +15,7 @@ export default function TheoDoiDonHang() {
     const [selectedOrder, setSelectedOrder] = useState(null)
     const [openDialog, setOpenDialog] = useState(false)
     const [status, setStatus] = useState('Tất cả')
+    const navigate = useNavigate()
 
     const fomatDate = (date) => {
         const d = new Date(parseFloat(date));
@@ -52,6 +56,12 @@ export default function TheoDoiDonHang() {
             setFilteredDonHang(filtered);
         }
    }, [status])
+
+   useEffect(() => {
+        if (!user) {
+            navigate('/DangNhap')
+        }
+    }, [user])
 
     const handleChange = (e) => {
         setDuLieuTimKiem(e.target.value)

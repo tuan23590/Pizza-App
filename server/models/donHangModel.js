@@ -41,7 +41,7 @@ const DonHangSchema = new mongoose.Schema({
         type: String,
     },
     danhSachSanPham: {
-        type: String,
+        type: [String],
     },
 
 },{timestamps: true});

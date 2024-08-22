@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { APIDanhSachSanPham } from '../../../utils/sanPhamUtils';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select, MenuItem, TextField, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CircularProgress } from '@mui/material';
 import ChiTietSanPham from '.././ChiTietSanPham';
-import { APIDanhSachDanhMuc, APIThemDanhMuc } from '../../../utils/danhMucUtils';
+import { APIDanhSachDanhMuc } from '../../../utils/danhMucUtils';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -22,7 +22,7 @@ export default function QuanLySanPham() {
     const dataSP = await APIDanhSachSanPham();
     setSanPham(dataSP);
     const dataDM = await APIDanhSachDanhMuc();
-    setDanhMuc(dataDM);
+    setDanhMuc(dataDM.sort((a, b) => b.soLuongSanPham - a.soLuongSanPham));
     setLoading(false);
   };
 
@@ -80,7 +80,7 @@ export default function QuanLySanPham() {
             >
               <MenuItem value={null}>Tất cả</MenuItem>
               {danhMuc.map((dm) => (
-                <MenuItem key={dm.id} value={dm.id}>{dm.tenDanhMuc} ({dm.soLuongSanPham}) </MenuItem>
+                <MenuItem key={dm.id} value={dm.id}>{dm?.tenDanhMuc} ({dm.soLuongSanPham}) </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -121,7 +121,7 @@ export default function QuanLySanPham() {
               <TableCell>{row.tenSanPham}</TableCell>
               <TableCell>{row?.giaSanPham?.toLocaleString()} VND</TableCell>
               <TableCell>{row.soLuong || 0}</TableCell>
-              <TableCell>{row.danhMuc.tenDanhMuc.toUpperCase()}</TableCell>
+              <TableCell>{row.danhMuc?.tenDanhMuc.toUpperCase()}</TableCell>
               <TableCell
                 sx={{
                   color: row.trangThai == 'Ngừng kinh doanh' ? 'red' : 'green',

@@ -20,6 +20,11 @@ export const resolvers = {
             }
             return danhSachDanhMuc;
         },
+        danhSachDanhMucChoNguoiDung: async () => {
+            // loai bo danh muc "DMXOA"
+            const danhSachDanhMuc = await danhMucModel.find({ maDanhMuc: { $ne: "DMXOA" } });
+            return danhSachDanhMuc;
+        },
         danhSachLoaiDe: async () => {
             const danhSachLoaiDe = await loaiDeModel.find();
             return danhSachLoaiDe;
@@ -101,7 +106,7 @@ export const resolvers = {
     },
     Mutation:{
         themDanhMuc: async (parent, args) => {
-            const danhMucCuoi = await danhMucModel.findOne().sort({ _id: -1 }).exec();
+            const danhMucCuoi = await danhMucModel.findOne({ maDanhMuc: { $ne: "DMXOA" } }).sort({ _id: -1 }).exec();
             let maDanhMucMoi;
             if (danhMucCuoi) {
                 const maDanhMucCuoi = danhMucCuoi.maDanhMuc;
@@ -114,10 +119,14 @@ export const resolvers = {
             danhMuc.maDanhMuc = maDanhMucMoi;
             return danhMuc.save();
         },
+        capNhatDanhMuc: async (parent, args) => {
+            const danhMuc = await danhMucModel.findOneAndUpdate({ _id: args.id }, { tenDanhMuc: args.tenDanhMuc }, { new: true });
+            return danhMuc;
+        },
         xoaDanhMuc: async (parent, args) => {
             const danhMuc = await danhMucModel.findOneAndDelete({ _id: args.id });
-            //tìm tất cả sản phẩm thuộc danh mục đó và chuyến danh mục của nó thành "DMXOA"
-            await sanPhamModel.updateMany({ danhMuc: args.id }, { danhMuc: "DMXOA" });
+            //tìm tất cả sản phẩm thuộc danhMuc và chuyến danh mục của nó thành "DMXOA" và trang thái thành "Ngừng kinh doanh"
+            await sanPhamModel.updateMany({ danhMuc: danhMuc.maDanhMuc }, { danhMuc: "DMXOA", trangThai: "Ngừng kinh doanh" });
             return 'Xóa danh mục thành công';
         },
         themSanPham: async (parent, args) => {

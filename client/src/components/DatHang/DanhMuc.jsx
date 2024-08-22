@@ -1,6 +1,6 @@
 import { Box, Typography,Link } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { APIDanhSachDanhMuc } from '../../utils/danhMucUtils';
+import { APIDanhSachDanhMucChoNguoiDung } from '../../utils/danhMucUtils';
 import { useNavigate } from 'react-router-dom';
 
 export default function DanhMuc() {
@@ -11,7 +11,7 @@ export default function DanhMuc() {
         fetchData();
     }, []);
     const fetchData = async () => {
-        const dataDM = await APIDanhSachDanhMuc();
+        const dataDM = await APIDanhSachDanhMucChoNguoiDung();
         setDanhSachDanhMuc(dataDM);
     };
     useEffect(() => {

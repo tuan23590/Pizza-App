@@ -4,7 +4,7 @@ import {
   CircularProgress, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText,
   DialogTitle, TextField, Snackbar, Alert
 } from '@mui/material';
-import { APIDanhSachDanhMuc, APIThemDanhMuc, APIXoaDanhMuc } from '../../../utils/danhMucUtils';
+import { APICapNhatDanhMuc, APIDanhSachDanhMuc, APIThemDanhMuc, APIXoaDanhMuc } from '../../../utils/danhMucUtils';
 import { AuthContext } from './../../../context/AuthProvider';
 
 export default function QuanLyDanhMuc() {
@@ -48,8 +48,15 @@ export default function QuanLyDanhMuc() {
   const handleAddOrEditDanhMuc = async () => {
     try {
       if (isEdit) {
-        // Update the category
-        // await APICapNhatDanhMuc(currentDanhMuc.id, currentDanhMuc);
+        const data = await APICapNhatDanhMuc(currentDanhMuc.id,currentDanhMuc.tenDanhMuc);
+        if (data) {
+          setNotificationMessage('Sửa danh mục thành công');
+          setNotificationSeverity('success');
+        } else {
+          setNotificationMessage('Sửa danh mục thất bại');
+          setNotificationSeverity('error');
+        }
+        setNotifyOpen(true);
       } else {
         const data = await APIThemDanhMuc(currentDanhMuc.tenDanhMuc);
         if (data) {
@@ -126,7 +133,7 @@ export default function QuanLyDanhMuc() {
             {danhMuc.map((dm) => (
               <TableRow key={dm.id}>
                 <TableCell>{dm.maDanhMuc}</TableCell>
-                <TableCell>{dm.tenDanhMuc}</TableCell>
+                <TableCell>{dm.tenDanhMuc.toUpperCase()}</TableCell>
                 <TableCell>{dm.soLuongSanPham} sản phẩm</TableCell>
                 {dm.maDanhMuc !== 'DMXOA' && (
                   <TableCell>
@@ -177,7 +184,9 @@ export default function QuanLyDanhMuc() {
         <DialogTitle>Xác Nhận Xóa</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Bạn có chắc chắn muốn xóa danh mục này? Hành động này không thể hoàn tác.
+            Bạn có chắc chắn muốn xóa danh mục này?
+            <br /> 
+            <i>* Sản phẩm của danh mục này sẽ được chuyển vào mục sản phẩm đã xóa!</i>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

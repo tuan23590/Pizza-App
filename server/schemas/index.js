@@ -93,6 +93,7 @@ type XaPhuong {
 type Query {
     danhSachSanPham: [SanPham],
     danhSachDanhMuc: [DanhMuc],
+    danhSachDanhMucChoNguoiDung: [DanhMuc],
     danhSachLoaiDe: [LoaiDe],
     danhSachKichThuoc: [KichThuoc],
     danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham],
@@ -106,6 +107,8 @@ type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,
 
     xoaDanhMuc(id: String): String,
+    
+    capNhatDanhMuc(id: String, tenDanhMuc: String): DanhMuc,
     
     themSanPham(
     tenSanPham: String, 

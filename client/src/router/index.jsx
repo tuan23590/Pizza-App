@@ -7,12 +7,12 @@ import DatHang from "../pages/DatHang";
 import DanhSachSanPham from "../components/DatHang/DanhSachSanPham";
 import { APIDanhSachSanPhamTheoMaDanhMuc } from "../utils/sanPhamUtils";
 import QuanLy from './../pages/QuanLy';
-import QuanLySanPham from "../components/QuanLy/QuanLySanPham";
 import ThanhToan from "../pages/ThanhToan";
 import TheoDoiDonHang from "../pages/TheoDoiDonHang";
 import QuanlyDonHang from "../components/QuanLy/QuanlyDonHang";
 import GioHangProvider from "../context/GioHangProvider";
 import DiaChi from "../components/TrangChu/DiaChi";
+import QuanLyHangHoa from './../components/QuanLy/QuanLyHangHoa/QuanLyHangHoa';
 const KhachHangProvider = () => {
     return <>
         <AuthProvider>
@@ -67,8 +67,8 @@ export default createBrowserRouter(
                     path: "/QuanLy",
                     children: [
                         {
-                            element: <QuanLySanPham />,
-                            path: "/QuanLy/QuanLySanPham",
+                            element: <QuanLyHangHoa />,
+                            path: "/QuanLy/QuanLyHangHoa",
 
                         },
                         {

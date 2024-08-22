@@ -13,6 +13,11 @@ export const resolvers = {
         },
         danhSachDanhMuc: async () => {
             const danhSachDanhMuc = await danhMucModel.find();
+            // thêm trường số lượng sản phẩm vào danh mục
+            for (let i = 0; i < danhSachDanhMuc.length; i++) {
+                const soLuongSanPham = await sanPhamModel.countDocuments({ danhMuc: danhSachDanhMuc[i].maDanhMuc });
+                danhSachDanhMuc[i].soLuongSanPham = soLuongSanPham;
+            }
             return danhSachDanhMuc;
         },
         danhSachLoaiDe: async () => {

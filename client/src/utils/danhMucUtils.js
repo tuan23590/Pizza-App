@@ -5,6 +5,7 @@ export const APIDanhSachDanhMuc = async () => {
     id
     tenDanhMuc
     maDanhMuc
+    soLuongSanPham
   }
 }`;
     const {danhSachDanhMuc} = await GraphQLrequest({query});

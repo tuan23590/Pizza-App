@@ -30,7 +30,8 @@ type LoaiDe {
 type DanhMuc {
     id: String,
     tenDanhMuc: String,
-    maDanhMuc: String
+    maDanhMuc: String,
+    soLuongSanPham: Int
 },
 
 type SanPham {

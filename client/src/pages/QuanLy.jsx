@@ -14,7 +14,7 @@ export default function QuanLy() {
             }}>
     <Grid item xs={2} sx={{height: '93vh'}}>
          <DanhMucQuanLy DanhSachDanhMuc={[
-            {'link':'QuanLySanPham','text':'Quản Lý Sản Phẩm', 'phanQuyen': []},
+            {'link':'QuanLyHangHoa','text':'Quản Lý Hàng Hóa', 'phanQuyen': []},
             {'link':'QuanLyDonHang','text':'Quản Lý Dơn Hàng', 'phanQuyen': []},
             {'link':'QuanLyDanhThu','text':'Quản Lý Danh Thu', 'phanQuyen': []},
             {'link':'QuanLyTonKho','text':'Quản Lý Tồn Kho', 'phanQuyen': []},

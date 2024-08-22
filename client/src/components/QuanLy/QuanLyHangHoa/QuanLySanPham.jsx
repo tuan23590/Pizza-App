@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { APIDanhSachSanPham } from '../../utils/sanPhamUtils';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select, MenuItem, TextField, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import ChiTietSanPham from './ChiTietSanPham';
-import { APIDanhSachDanhMuc, APIThemDanhMuc } from '../../utils/danhMucUtils';
+import { APIDanhSachSanPham } from '../../../utils/sanPhamUtils';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select, MenuItem, TextField, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CircularProgress } from '@mui/material';
+import ChiTietSanPham from '.././ChiTietSanPham';
+import { APIDanhSachDanhMuc, APIThemDanhMuc } from '../../../utils/danhMucUtils';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+
 
 export default function QuanLySanPham() {
   const [sanPham, setSanPham] = useState([]);
@@ -12,16 +13,17 @@ export default function QuanLySanPham() {
   const [selectDanhMuc, setSelectDanhMuc] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
-  const [mode, setMode] = useState('view'); // 'view' or 'add'
+  const [mode, setMode] = useState('view');
   const [selectedSanPham, setSelectedSanPham] = useState(null);
-  const [openDanhMucDialog, setOpenDanhMucDialog] = useState(false);
-  const [tenDanhMuc, setTenDanhMuc] = useState('');
+  const [loading, setLoading] = useState(true);
+
 
   const fetchData = async () => {
     const dataSP = await APIDanhSachSanPham();
     setSanPham(dataSP);
     const dataDM = await APIDanhSachDanhMuc();
     setDanhMuc(dataDM);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -39,35 +41,9 @@ export default function QuanLySanPham() {
     setSelectedSanPham(null);
   };
 
-  const handleOpenDanhMucDialog = () => {
-    setOpenDanhMucDialog(true);
-  };
-
-  const handleCloseDanhMucDialog = () => {
-    setOpenDanhMucDialog(false);
-    setTenDanhMuc('');
-  };
-
-  const handleSaveDanhMuc = async () => {
-    if (!tenDanhMuc) {
-      alert('Vui lòng nhập tên danh mục');
-      return;
-    }
-    const res = await APIThemDanhMuc(tenDanhMuc);
-    if (res) {
-      alert('Thêm danh mục thành công');
-      fetchData();
-      handleCloseDanhMucDialog();
-    } else {
-      alert('Thêm danh mục thất bại');
-    }
-  };
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-
-  // Filter products based on the selected category and search term
   const filteredSanPham = sanPham.filter((sp) => {
     const matchesCategory = selectDanhMuc ? sp.danhMuc.id === selectDanhMuc : true;
     const matchesSearch = sp.maSanPham.toLowerCase().includes(searchTerm.toLowerCase());
@@ -82,7 +58,6 @@ export default function QuanLySanPham() {
         </Typography>
         <Box sx={{ gap: 2, display: 'flex' }}>
           <TextField
-            id="outlined-basic"
             label="Tìm kiếm mã sản phẩm"
             variant="outlined"
             size="small"
@@ -109,11 +84,17 @@ export default function QuanLySanPham() {
               ))}
             </Select>
           </FormControl>
-          <Button variant="outlined" color="primary" onClick={handleOpenDanhMucDialog}>Thêm danh mục</Button>
-          <Button variant="outlined" color="warning" onClick={() => handleClickOpen({}, 'add')}>Thêm sản phẩm</Button>
-          <Button variant="outlined" color="warning" onClick={fetchData}>Tạo phiếu nhập</Button>
+          <Button variant="contained" color="info" onClick={() => handleClickOpen({}, 'add')}>
+            Thêm sản phẩm
+            </Button>
         </Box>
       </Box>
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+          <CircularProgress /> {/* Display loading spinner while fetching data */}
+        </Box>
+      ) : (
+
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -128,9 +109,11 @@ export default function QuanLySanPham() {
         </TableHead>
         <TableBody>
           {filteredSanPham.map((row) => (
-            <TableRow key={row.id} onClick={() => handleClickOpen(row, 'view')} sx={{ cursor: 'pointer',':hover':{
-              backgroundColor: '#f5f5f5'
-            } }}>
+            <TableRow key={row.id} onClick={() => handleClickOpen(row, 'view')} sx={{
+              cursor: 'pointer', ':hover': {
+                backgroundColor: '#f5f5f5'
+              }
+            }}>
               <TableCell>{row.maSanPham}</TableCell>
               <TableCell>
                 <img src={row.hinhAnh} alt={row.tenSanPham} width="50" />
@@ -140,15 +123,16 @@ export default function QuanLySanPham() {
               <TableCell>{row.soLuong || 0}</TableCell>
               <TableCell>{row.danhMuc.tenDanhMuc.toUpperCase()}</TableCell>
               <TableCell
-              sx={{
-                color: row.trangThai == 'Ngừng kinh doanh' ? 'red' : 'green',
-                fontWeight: '500'
-              }}
+                sx={{
+                  color: row.trangThai == 'Ngừng kinh doanh' ? 'red' : 'green',
+                  fontWeight: '500'
+                }}
               >{row.trangThai}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      )}
 
       <ChiTietSanPham
         open={open}
@@ -156,28 +140,6 @@ export default function QuanLySanPham() {
         mode={mode}
         sanPham={selectedSanPham}
       />
-
-      <Dialog open={openDanhMucDialog} onClose={handleCloseDanhMucDialog}>
-        <DialogTitle>Thêm danh mục</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Nhập tên danh mục mới.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Tên danh mục"
-            type="text"
-            fullWidth
-            value={tenDanhMuc}
-            onChange={(e) => setTenDanhMuc(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDanhMucDialog}>Hủy</Button>
-          <Button onClick={handleSaveDanhMuc}>Lưu</Button>
-        </DialogActions>
-      </Dialog>
     </TableContainer>
   );
 }

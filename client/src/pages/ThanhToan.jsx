@@ -1,5 +1,5 @@
-import { Badge, Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import { Badge, Box, Button, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Radio, RadioGroup, Select, TextField, Typography } from '@mui/material'
+import React, { useContext, useEffect, useState } from 'react'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -7,31 +7,33 @@ import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined';
 import { useNavigate } from 'react-router-dom';
 import { APIThemDonHang } from '../utils/donHangUtils';
 import { GioHangContext } from '../context/GioHangProvider';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 export default function ThanhToan() {
-    const {gioHang,setGioHang} = useContext(GioHangContext)
+    const { gioHang, setGioHang } = useContext(GioHangContext);
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
-    const [selectedOption1, setSelectedOption1] = useState('');
-    const [selectedOption2, setSelectedOption2] = useState('');
-    
+    const [ngaySelected, setNgaySelected] = useState('Hôm nay');
+    const [gioSelected, setGioSelected] = useState('');
+    const [danhSachGio, setDanhSachGio] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setGioHang((prevGioHang) => {
-            return {
-                ...prevGioHang,
-                [name]: value
-            }
-        })  
+        setGioHang((prevGioHang) => ({
+            ...prevGioHang,
+            [name]: value
+        }));
     }
+
     const handleThanhToan = async () => {
-        console.log(gioHang);
+        setLoading(true);
         const data = await APIThemDonHang(gioHang);
-        console.log(data);
+        setLoading(false);
         if (data) {
             localStorage.setItem('gioHang', JSON.stringify([]));
-            alert('Đặt hàng thành công');
-            navigate('/');
+            setSuccessDialogOpen(true);
         }
     }
 
@@ -42,8 +44,68 @@ export default function ThanhToan() {
     const handleDialogClose = () => {
         setOpen(false);
     };
+
+    const handleDialogConform = () => {
+        if (ngaySelected === 'Càng sớm càng tốt') {
+            setGioHang((prevGioHang) => ({
+                ...prevGioHang,
+                thoiGianGiaoHang: 'Càng sớm càng tốt'
+            }));
+        } else {
+            setGioHang((prevGioHang) => ({
+                ...prevGioHang,
+                thoiGianGiaoHang: new Date().setHours(parseInt(gioSelected.split(':')[0]), parseInt(gioSelected.split(':')[1]), 0, 0)
+            }));
+        }
+        setOpen(false);
+    };
+
+    useEffect(() => {
+        if (ngaySelected === 'Hôm nay') {
+            const date = new Date();
+            const hour = date.getHours() + 2;
+            const minute = date.getMinutes();
+            const danhSachGio = [];
+            const startHour = 7;
+            const endHour = 21;
+
+            for (let i = Math.max(hour, startHour); i <= endHour; i++) {
+                for (let j = 0; j < 60; j += 15) {
+                    if (i === hour && j < minute) {
+                        continue;
+                    }
+                    const formattedTime = `${i}:${j.toString().padStart(2, '0')}`;
+                    danhSachGio.push(formattedTime);
+                }
+            }
+            setDanhSachGio(danhSachGio);
+            setGioSelected(danhSachGio[0]);
+        } else {
+            setDanhSachGio([]);
+        }
+    }, [ngaySelected]);
+
     return (
         <>
+        {/* tạo đối tượng chp hiệu ứng loading toàn màng hình */}
+            {loading && (
+                <Box
+                    sx={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        zIndex: 9999,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}
+                >
+                    <CircularProgress color='success' />
+                </Box>
+            )}
             <Typography fullWidth variant='h5' py={5} sx={{ textAlign: 'center' }}>THANH TOÁN</Typography>
             <Box sx={{ marginX: 'auto', width: '33%' }}>
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
@@ -69,12 +131,12 @@ export default function ThanhToan() {
                     <Divider sx={{ marginY: '20px' }} />
                     <Box display={'flex'} gap={1} >
                         <Box display={'flex'} alignItems="center">
-
                             <AccessAlarmOutlinedIcon />
-
                             <Typography sx={{ marginLeft: '10px' }}>Giao vào lúc: </Typography>
                         </Box>
-                        <Typography color={'green'} onClick={handleDialogOpen} sx={{cursor: 'pointer'}}>Hôm nay 10:00</Typography>
+                        <Typography color={'green'} onClick={handleDialogOpen} sx={{ cursor: 'pointer' }}>
+                            {gioHang.thoiGianGiaoHang === 'Càng sớm càng tốt' ? 'Càng sớm càng tốt' : 'Hôm nay ' + new Date(gioHang.thoiGianGiaoHang).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                        </Typography>
                     </Box>
                 </Paper>
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
@@ -107,30 +169,53 @@ export default function ThanhToan() {
                 </Paper>
             </Box>
 
-
-            <Dialog open={open} onClose={handleDialogClose}>
+            {/* Dialog for selecting delivery time */}
+            <Dialog open={open} onClose={handleDialogClose} fullWidth maxWidth='xs' >
                 <DialogTitle>Chọn thời gian giao hàng</DialogTitle>
                 <DialogContent>
-                    <FormControl fullWidth sx={{ marginY: 2 }}>
-                        <Select value={selectedOption1} onChange={(e) => setSelectedOption1(e.target.value)} displayEmpty>
-                            <MenuItem value="" disabled>Chọn thời gian</MenuItem>
-                            <MenuItem value="10:00">10:00</MenuItem>
-                            <MenuItem value="12:00">12:00</MenuItem>
-                            <MenuItem value="14:00">14:00</MenuItem>
+                    <FormControl fullWidth sx={{ marginTop: 2 }}>
+                        <InputLabel>Chọn ngày</InputLabel>
+                        <Select
+                            label="Chọn ngày"
+                            value={ngaySelected}
+                            onChange={(e) => setNgaySelected(e.target.value)}
+                        >
+                            <MenuItem value="Hôm nay">Hôm nay</MenuItem>
+                            <MenuItem value="Càng sớm càng tốt">Càng sớm càng tốt</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl fullWidth sx={{ marginY: 2 }}>
-                        <Select value={selectedOption2} onChange={(e) => setSelectedOption2(e.target.value)} displayEmpty>
-                            <MenuItem value="" disabled>Chọn thời gian</MenuItem>
-                            <MenuItem value="10:00">10:00</MenuItem>
-                            <MenuItem value="12:00">12:00</MenuItem>
-                            <MenuItem value="14:00">14:00</MenuItem>
-                        </Select>
-                    </FormControl>
+                    {ngaySelected !== 'Càng sớm càng tốt' && (
+                        <FormControl fullWidth sx={{ marginTop: 2 }}>
+                            <InputLabel>Chọn giờ</InputLabel>
+                            <Select
+                                label="Chọn giờ"
+                                value={gioSelected}
+                                onChange={(e) => setGioSelected(e.target.value)}
+                            >
+                                {danhSachGio.map(gio => (
+                                    <MenuItem key={gio} value={gio}>{gio}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleDialogClose}>Hủy</Button>
-                    <Button onClick={handleDialogClose} color="primary">Xác nhận</Button>
+                    <Button variant='outlined' onClick={handleDialogClose}>Đóng</Button>
+                    <Button variant='contained' onClick={handleDialogConform}>Xác nhận</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Success Dialog */}
+            <Dialog open={successDialogOpen} onClose={() => setSuccessDialogOpen(false)} fullWidth maxWidth='xs'>
+                <DialogTitle>Đặt hàng thành công!</DialogTitle>
+                <DialogContent>
+                    <Box display='flex' justifyContent='center'>
+                        <CheckCircleOutlineIcon color='success' sx={{ fontSize: '100px' }} />
+                    </Box>
+                    <Typography>Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn sẽ được xử lý và giao hàng sớm nhất.</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='contained' onClick={() => { navigate('/') }}>Về trang chủ</Button>
                 </DialogActions>
             </Dialog>
         </>

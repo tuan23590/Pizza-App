@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Grid, Paper, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
-import { APIDonHangTheoMaDonHangHoacSoDienThoai } from '../utils/donHangUtils'
+import { APIDonHangTheoEmail } from '../utils/donHangUtils'
 import ChiTietDonHang from '../components/QuanLy/ChiTietDonHang'
 import { AuthContext } from './../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +27,7 @@ export default function TheoDoiDonHang() {
     }
 
     const handleSearch = async () => {
-        const data = await APIDonHangTheoMaDonHangHoacSoDienThoai(user.email)
+        const data = await APIDonHangTheoEmail(user.email)
         const sortedData = data.sort((a, b) => b.ngayDatHang - a.ngayDatHang);
         setDanhSachDonHang(sortedData);
         setFilteredDonHang(sortedData);

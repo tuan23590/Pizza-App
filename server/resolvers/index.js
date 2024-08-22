@@ -134,6 +134,10 @@ export const resolvers = {
         },
         themDonHang: async (parent, args) => {
 
+            //sleep 5s
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return args;
+           
             const donHangCuoi = await donHangModel.findOne().sort({ _id: -1 }).exec();
         
             let maDonHangMoi;
@@ -150,7 +154,8 @@ export const resolvers = {
             donHang.maDonHang = maDonHangMoi;
             donHang.trangThai = "Đang xử lý";
             donHang.ngayDatHang = Date.now();
-            donHang.thoiGianGiaoHang = Date.now() + 2 * 60 * 60 * 1000;
+            // nếu args.thoiGianGiaoHang = "Càng sớm càng tốt" thì lấy Date.now() + 2 giờ ngược lại lấy args.thoiGianGiaoHang
+            donHang.thoiGianGiaoHang = args.thoiGianGiaoHang == 'Càng sớm càng tốt' ? Date.now() + 2 * 60 * 60 * 1000 : args.thoiGianGiaoHang;
             const danhSachSanPham = JSON.parse(args.danhSachSanPham)
             console.log(danhSachSanPham);
             let danhSachIdSanPhamDaMua = [];  

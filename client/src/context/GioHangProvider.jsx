@@ -11,7 +11,7 @@ export default function GioHangProvider({ children }) {
         danhSachSanPham: [],
         phuongThucThanhToan: 'Tiền mặt',
         diaChiGiaoHang: '',
-        thoiGianGiao: Date.now().toString(),
+        thoiGianGiaoHang: 'Càng sớm càng tốt',
         tongTien: 0,
         tamTinh: 0,
         giamGia : 0

@@ -12,7 +12,7 @@ export const APIThemDonHang = async (formData) => {
         phuongThucThanhToan: formData.phuongThucThanhToan,
         diaChiGiaoHang: formData.diaChiGiaoHang,
         ghiChuDiaChi: formData.ghiChuDiaChi,
-        thoiGianGiaoHang: formData.thoiGianGiaoHang,
+        thoiGianGiaoHang: formData.thoiGianGiaoHang.toString(),
         tongTien: formData.tongTien,
         giamGia: formData.giamGia,
         tamTinh: formData.tamTinh,
@@ -21,7 +21,7 @@ export const APIThemDonHang = async (formData) => {
     return themDonHang;
 };
 
-export const APIDonHangTheoMaDonHangHoacSoDienThoai = async (email) => {
+export const APIDonHangTheoEmail = async (email) => {
   const query = `query DonHangTheoEmail($email: String) {
   donHangTheoEmail(email: $email) {
     id

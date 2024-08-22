@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,
   CircularProgress, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText,
   DialogTitle, TextField, Snackbar, Alert
 } from '@mui/material';
 import { APIDanhSachDanhMuc, APIThemDanhMuc, APIXoaDanhMuc } from '../../../utils/danhMucUtils';
+import { AuthContext } from './../../../context/AuthProvider';
 
 export default function QuanLyDanhMuc() {
+  const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
   const [danhMuc, setDanhMuc] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false); // State for add/edit dialog
   const [confirmOpen, setConfirmOpen] = useState(false); // State for confirmation dialog
-  const [notifyOpen, setNotifyOpen] = useState(false); // State for success/failure notification Snackbar
   const [isEdit, setIsEdit] = useState(false); // State to control if we are editing
   const [currentDanhMuc, setCurrentDanhMuc] = useState({ id: '', maDanhMuc: '', tenDanhMuc: '' }); // State for the current category
   const [deleteId, setDeleteId] = useState(null); // State to store the id of the category to delete
-  const [notificationMessage, setNotificationMessage] = useState(''); // State for notification message
-  const [notificationSeverity, setNotificationSeverity] = useState('success'); // Severity of the notification
 
   const fetchData = async () => {
     const dataDM = await APIDanhSachDanhMuc();
@@ -97,8 +96,6 @@ export default function QuanLyDanhMuc() {
   };
 
   const handleCancelDelete = () => setConfirmOpen(false);
-
-  const handleCloseNotification = () => setNotifyOpen(false);
 
   return (
     <TableContainer component={Paper}>
@@ -192,24 +189,6 @@ export default function QuanLyDanhMuc() {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Snackbar for success or failure notifications */}
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={notifyOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseNotification}
-        message={notificationMessage}
-        action={
-          <Button color="inherit" onClick={handleCloseNotification}>
-            Đóng
-          </Button>
-        }
-      >
-        <Alert onClose={handleCloseNotification} severity={notificationSeverity} sx={{ width: '100%' }}>
-          {notificationMessage}
-        </Alert>
-      </Snackbar>
     </TableContainer>
   );
 }

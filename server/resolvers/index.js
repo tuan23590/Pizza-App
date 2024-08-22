@@ -114,6 +114,12 @@ export const resolvers = {
             danhMuc.maDanhMuc = maDanhMucMoi;
             return danhMuc.save();
         },
+        xoaDanhMuc: async (parent, args) => {
+            const danhMuc = await danhMucModel.findOneAndDelete({ _id: args.id });
+            //tìm tất cả sản phẩm thuộc danh mục đó và chuyến danh mục của nó thành "DMXOA"
+            await sanPhamModel.updateMany({ danhMuc: args.id }, { danhMuc: "DMXOA" });
+            return 'Xóa danh mục thành công';
+        },
         themSanPham: async (parent, args) => {
         const sanPhamCuoi = await sanPhamModel.findOne().sort({ _id: -1 }).exec();
         

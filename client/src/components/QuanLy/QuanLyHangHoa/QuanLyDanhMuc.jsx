@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,
   CircularProgress, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText,
-  DialogTitle, TextField
+  DialogTitle, TextField, Snackbar, Alert
 } from '@mui/material';
-import { APIDanhSachDanhMuc } from '../../../utils/danhMucUtils';
+import { APIDanhSachDanhMuc, APIThemDanhMuc, APIXoaDanhMuc } from '../../../utils/danhMucUtils';
 
 export default function QuanLyDanhMuc() {
   const [danhMuc, setDanhMuc] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false); // State for add/edit dialog
   const [confirmOpen, setConfirmOpen] = useState(false); // State for confirmation dialog
+  const [notifyOpen, setNotifyOpen] = useState(false); // State for success/failure notification Snackbar
   const [isEdit, setIsEdit] = useState(false); // State to control if we are editing
   const [currentDanhMuc, setCurrentDanhMuc] = useState({ id: '', maDanhMuc: '', tenDanhMuc: '' }); // State for the current category
   const [deleteId, setDeleteId] = useState(null); // State to store the id of the category to delete
+  const [notificationMessage, setNotificationMessage] = useState(''); // State for notification message
+  const [notificationSeverity, setNotificationSeverity] = useState('success'); // Severity of the notification
 
   const fetchData = async () => {
     const dataDM = await APIDanhSachDanhMuc();
@@ -44,15 +47,28 @@ export default function QuanLyDanhMuc() {
   };
 
   const handleAddOrEditDanhMuc = async () => {
-    if (isEdit) {
-      // Update the category
-      // await APICapNhatDanhMuc(currentDanhMuc.id, currentDanhMuc);
-    } else {
-      // Add the new category
-      // await APICapNhatDanhMuc(currentDanhMuc.id, currentDanhMuc);
+    try {
+      if (isEdit) {
+        // Update the category
+        // await APICapNhatDanhMuc(currentDanhMuc.id, currentDanhMuc);
+      } else {
+        const data = await APIThemDanhMuc(currentDanhMuc.tenDanhMuc);
+        if (data) {
+          setNotificationMessage('Thêm danh mục thành công');
+          setNotificationSeverity('success');
+        } else {
+          setNotificationMessage('Thêm danh mục thất bại');
+          setNotificationSeverity('error');
+        }
+        setNotifyOpen(true);
+      }
+      handleClose();
+      fetchData();
+    } catch (error) {
+      setNotificationMessage('Có lỗi xảy ra. Thử lại.');
+      setNotificationSeverity('error');
+      setNotifyOpen(true);
     }
-    handleClose();
-    fetchData();
   };
 
   const handleDelete = (id) => {
@@ -61,13 +77,28 @@ export default function QuanLyDanhMuc() {
   };
 
   const handleConfirmDelete = async () => {
-    // Delete the category
-    // await APIDeleteDanhMuc(deleteId);
-    setConfirmOpen(false);
-    fetchData(); // Refresh the list
+    try {
+      const data = await APIXoaDanhMuc(deleteId);
+      if (data) {
+        setNotificationMessage('Xóa danh mục thành công');
+        setNotificationSeverity('success');
+      } else {
+        setNotificationMessage('Xóa danh mục thất bại');
+        setNotificationSeverity('error');
+      }
+      setNotifyOpen(true);
+      setConfirmOpen(false);
+      fetchData();
+    } catch (error) {
+      setNotificationMessage('Xóa danh mục thất bại');
+      setNotificationSeverity('error');
+      setNotifyOpen(true);
+    }
   };
 
   const handleCancelDelete = () => setConfirmOpen(false);
+
+  const handleCloseNotification = () => setNotifyOpen(false);
 
   return (
     <TableContainer component={Paper}>
@@ -76,7 +107,7 @@ export default function QuanLyDanhMuc() {
           Quản Lý Danh Mục
         </Typography>
         <Button variant="contained" color="primary" sx={{ margin: '20px' }} onClick={() => handleOpen(null)}>
-         Thêm Danh Mục
+          Thêm Danh Mục
         </Button>
       </Box>
 
@@ -101,7 +132,7 @@ export default function QuanLyDanhMuc() {
                 <TableCell>{dm.tenDanhMuc}</TableCell>
                 <TableCell>{dm.soLuongSanPham} sản phẩm</TableCell>
                 {dm.maDanhMuc !== 'DMXOA' && (
-                    <TableCell>
+                  <TableCell>
                     <Button variant="contained" sx={{ marginX: '10px' }} color="primary" onClick={() => handleOpen(dm)}>
                       Sửa
                     </Button>
@@ -161,6 +192,24 @@ export default function QuanLyDanhMuc() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar for success or failure notifications */}
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={notifyOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        message={notificationMessage}
+        action={
+          <Button color="inherit" onClick={handleCloseNotification}>
+            Đóng
+          </Button>
+        }
+      >
+        <Alert onClose={handleCloseNotification} severity={notificationSeverity} sx={{ width: '100%' }}>
+          {notificationMessage}
+        </Alert>
+      </Snackbar>
     </TableContainer>
   );
 }

@@ -80,7 +80,7 @@ export default function QuanLySanPham() {
             >
               <MenuItem value={null}>Tất cả</MenuItem>
               {danhMuc.map((dm) => (
-                <MenuItem key={dm.id} value={dm.id}>{dm.tenDanhMuc}</MenuItem>
+                <MenuItem key={dm.id} value={dm.id}>{dm.tenDanhMuc} ({dm.soLuongSanPham}) </MenuItem>
               ))}
             </Select>
           </FormControl>

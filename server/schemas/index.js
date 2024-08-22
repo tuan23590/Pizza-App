@@ -105,6 +105,8 @@ type Query {
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,
 
+    xoaDanhMuc(id: String): String,
+    
     themSanPham(
     tenSanPham: String, 
     kichThuoc: [String],

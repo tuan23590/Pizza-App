@@ -13,7 +13,6 @@ export const APIDanhSachDanhMuc = async () => {
 };
 
 export const APIThemDanhMuc = async (tenDanhMuc) => {
-  console.log('APIThemDanhMuc', tenDanhMuc);
     const query = `mutation ThemDanhMuc($tenDanhMuc: String) {
   themDanhMuc(tenDanhMuc: $tenDanhMuc) {
     id
@@ -23,4 +22,12 @@ export const APIThemDanhMuc = async (tenDanhMuc) => {
 }`;
     const {themDanhMuc} = await GraphQLrequest({query, variables: {tenDanhMuc}});
     return themDanhMuc;
+};
+
+export const APIXoaDanhMuc = async (deleteId) => {
+    const query = `mutation XoaDanhMuc($xoaDanhMucId: String) {
+  xoaDanhMuc(id: $xoaDanhMucId)
+}`;
+    const {xoaDanhMuc} = await GraphQLrequest({query, variables: {xoaDanhMucId: deleteId}});
+    return xoaDanhMuc;
 };

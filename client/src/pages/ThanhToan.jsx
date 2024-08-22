@@ -123,7 +123,7 @@ export default function ThanhToan() {
                     <Box display={'flex'} justifyContent={'space-between'} >
                         <Box display={'flex'} alignItems="center">
                             <LocationOnOutlinedIcon />
-                            <Typography sx={{ marginLeft: '10px' }}>Mua mang về: <b>{gioHang.diaChiGiaoHang}</b></Typography>
+                            <Typography sx={{ marginLeft: '10px' }}>Giao hàng tận nơi: <b>{gioHang.diaChiGiaoHang}</b></Typography>
                         </Box>
                         <Typography color={'green'}>Thay đổi</Typography>
                     </Box>

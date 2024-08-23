@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 import {typeDefs} from './schemas/index.js';
 import {resolvers} from './resolvers/index.js';
-
+import './FileServer.js';
 
 
 const app = express();

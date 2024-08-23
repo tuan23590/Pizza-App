@@ -17,18 +17,23 @@ export default function QuanLySanPham() {
   const [selectedSanPham, setSelectedSanPham] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
   const fetchData = async () => {
     const dataSP = await APIDanhSachSanPham();
     setSanPham(dataSP);
     const dataDM = await APIDanhSachDanhMuc();
     setDanhMuc(dataDM.sort((a, b) => b.soLuongSanPham - a.soLuongSanPham));
     setLoading(false);
+    console.log(dataSP);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(() => {
+    if (!open) {
+      fetchData();
+    }
+  }, [open]);
 
   const handleClickOpen = (sanPham, mode) => {
     setSelectedSanPham(sanPham);
@@ -86,7 +91,7 @@ export default function QuanLySanPham() {
           </FormControl>
           <Button variant="contained" color="info" onClick={() => handleClickOpen({}, 'add')}>
             Thêm sản phẩm
-            </Button>
+          </Button>
         </Box>
       </Box>
       {loading ? (
@@ -95,43 +100,51 @@ export default function QuanLySanPham() {
         </Box>
       ) : (
 
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Mã Sản Phẩm</TableCell>
-            <TableCell>Hình Ảnh</TableCell>
-            <TableCell>Tên Sản Phẩm</TableCell>
-            <TableCell>Giá Sản Phẩm</TableCell>
-            <TableCell>Số lượng</TableCell>
-            <TableCell>Danh Mục</TableCell>
-            <TableCell>Trạng Thái</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {filteredSanPham.map((row) => (
-            <TableRow key={row.id} onClick={() => handleClickOpen(row, 'view')} sx={{
-              cursor: 'pointer', ':hover': {
-                backgroundColor: '#f5f5f5'
-              }
-            }}>
-              <TableCell>{row.maSanPham}</TableCell>
-              <TableCell>
-                <img src={row.hinhAnh} alt={row.tenSanPham} width="50" />
-              </TableCell>
-              <TableCell>{row.tenSanPham}</TableCell>
-              <TableCell>{row?.giaSanPham?.toLocaleString()} VND</TableCell>
-              <TableCell>{row.soLuong || 0}</TableCell>
-              <TableCell>{row.danhMuc?.tenDanhMuc.toUpperCase()}</TableCell>
-              <TableCell
-                sx={{
-                  color: row.trangThai == 'Ngừng kinh doanh' ? 'red' : 'green',
-                  fontWeight: '500'
-                }}
-              >{row.trangThai}</TableCell>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Mã Sản Phẩm</TableCell>
+              <TableCell>Hình Ảnh</TableCell>
+              <TableCell>Tên Sản Phẩm</TableCell>
+              <TableCell>Giá Sản Phẩm</TableCell>
+              <TableCell>Số lượng</TableCell>
+              <TableCell>Danh Mục</TableCell>
+              <TableCell>Trạng Thái</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {filteredSanPham.map((row) => (
+              <TableRow key={row.id} onClick={() => handleClickOpen(row, 'edit')} sx={{
+                cursor: 'pointer', ':hover': {
+                  backgroundColor: '#f5f5f5'
+                }
+              }}>
+                <TableCell>{row.maSanPham}</TableCell>
+                <TableCell>
+                  <Box
+                    component="img"
+                    sx={{
+                      
+                      width: 30,
+                    }}
+                    alt={row.tenSanPham}
+                    src={row.hinhAnh}
+                  />
+                </TableCell>
+                <TableCell>{row.tenSanPham}</TableCell>
+                <TableCell>{row?.giaSanPham?.toLocaleString()} VND</TableCell>
+                <TableCell>{row.soLuong || 0}</TableCell>
+                <TableCell>{row.danhMuc?.tenDanhMuc.toUpperCase()}</TableCell>
+                <TableCell
+                  sx={{
+                    color: row.trangThai == 'Ngừng kinh doanh' ? 'red' : 'green',
+                    fontWeight: '500'
+                  }}
+                >{row.trangThai}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       )}
 
       <ChiTietSanPham

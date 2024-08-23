@@ -36,27 +36,19 @@ export const APIDanhSachSanPham = async () => {
     id
     maSanPham
     tenSanPham
-    kichThuoc {
-      id
-      tenKichThuoc
-      giaKichThuoc
-    }
     ghiChu
     moTa
     hinhAnh
     danhMuc {
+      maDanhMuc
       id
       tenDanhMuc
-      maDanhMuc
     }
     trangThai
-    soLuong
-    loaiDe {
-      id
-      tenLoaiDe
-      giaLoaiDe
-    }
     giaSanPham
+    soLuong
+    kichThuoc
+    loaiDe
   }
 }`;
     const {danhSachSanPham} = await GraphQLrequest({query});
@@ -87,12 +79,17 @@ export const APIDanhKichThuoc = async () => {
   return danhSachKichThuoc;
 };
 
-export const APIThemSanPham = async ({formData, selectedLoaiDe, selectedKichThuoc}) => {
-  const query = `mutation ThemSanPham($tenSanPham: String, $kichThuoc: [String], $loaiDe: [String], $ghiChu: String, $moTa: String, $hinhAnh: String, $danhMuc: String, $trangThai: String) {
-  themSanPham(tenSanPham: $tenSanPham, kichThuoc: $kichThuoc, loaiDe: $loaiDe, ghiChu: $ghiChu, moTa: $moTa, hinhAnh: $hinhAnh, danhMuc: $danhMuc, trangThai: $trangThai) {
+export const APIThemSanPham = async (formData) => {
+  const query = `mutation ThemSanPham($danhMuc: String, $tenSanPham: String, $danhSachKichThuoc: String, $danhSachLoaiDe: String, $giaSanPham: Float, $ghiChu: String, $moTa: String, $hinhAnh: String, $trangThai: String) {
+  themSanPham(danhMuc: $danhMuc, tenSanPham: $tenSanPham, danhSachKichThuoc: $danhSachKichThuoc, danhSachLoaiDe: $danhSachLoaiDe, giaSanPham: $giaSanPham, ghiChu: $ghiChu, moTa: $moTa, hinhAnh: $hinhAnh, trangThai: $trangThai) {
     maSanPham
   }
 }`;
-  const {themSanPham} = await GraphQLrequest({query, variables: {...formData, kichThuoc: selectedKichThuoc, loaiDe: selectedLoaiDe}});
+  const {themSanPham} = await GraphQLrequest({query, variables: {
+    ...formData,
+    danhSachKichThuoc: JSON.stringify(formData.danhSachKichThuoc),
+    danhSachLoaiDe: JSON.stringify(formData.danhSachLoaiDe),
+    giaSanPham: parseFloat(formData.giaSanPham)
+  }});
   return themSanPham;
 };

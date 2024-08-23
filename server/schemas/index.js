@@ -38,13 +38,13 @@ type SanPham {
     id: String,
     maSanPham: String,
     tenSanPham: String,
-    kichThuoc: [KichThuoc],
+    kichThuoc: String,
     ghiChu: String,
     moTa: String,
     hinhAnh: String,
     danhMuc: DanhMuc,
     trangThai: String,
-    loaiDe: [LoaiDe],
+    loaiDe: String,
     giaSanPham: Float,
     soLuong: Int
 },
@@ -111,13 +111,15 @@ type Mutation {
     capNhatDanhMuc(id: String, tenDanhMuc: String): DanhMuc,
     
     themSanPham(
+    danhMuc: String, 
     tenSanPham: String, 
-    kichThuoc: [String],
-    loaiDe: [String], 
-    ghiChu: String, 
+    danhSachKichThuoc: String,
+    danhSachLoaiDe: String,
+    giaSanPham: Float,
+    ghiChu: String,  
     moTa: String, 
     hinhAnh: String, 
-    danhMuc: String, 
+    
     trangThai: String): SanPham,
 
     themDonHang(

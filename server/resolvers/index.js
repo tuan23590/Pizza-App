@@ -5,6 +5,10 @@ export const resolvers = {
     Query: {
         danhSachSanPham: async () => {
             const danhSachSanPham = await sanPhamModel.find();
+            // thêm DB_URL vào hình ảnh 
+            for (let i = 0; i < danhSachSanPham.length; i++) {
+                danhSachSanPham[i].hinhAnh = process.env.DB_URL + danhSachSanPham[i].hinhAnh;
+            }
             return danhSachSanPham;
         },
         danhSachSanPhamTheoMaDanhMuc: async (parent, args) => {
@@ -91,18 +95,10 @@ export const resolvers = {
         }
     },
     SanPham: {
-        kichThuoc: async (parent) => {
-            const danhSachKichThuoc = await kichThuocModel.find({ _id: { $in: parent.kichThuoc } });
-            return danhSachKichThuoc;
-        },
         danhMuc: async (parent) => {
             const danhSachDanhMuc = await danhMucModel.findOne({maDanhMuc: parent.danhMuc});
             return danhSachDanhMuc;
         },
-        loaiDe: async (parent) => {
-            const danhSachLoaiDe = await loaiDeModel.find({ _id: { $in: parent.loaiDe } });
-            return danhSachLoaiDe;
-        }
     },
     Mutation:{
         themDanhMuc: async (parent, args) => {
@@ -145,9 +141,9 @@ export const resolvers = {
             ...args,
             giaSanPham: parseFloat(args.giaSanPham),
             maSanPham: maSanPhamMoi,
-            kichThuoc: args.kichThuoc,
-            loaiDe: args.loaiDe,
-            trangThai: "Đang kinh doanh",
+            kichThuoc: args.danhSachKichThuoc,
+            loaiDe: args.danhSachLoaiDe,
+            trangThai: "Ngừng kinh doanh",
             soLuong: 0
         });
         return await sanPham.save();

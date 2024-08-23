@@ -135,7 +135,8 @@ export default function QuanLyDanhMuc() {
                 <TableCell>{dm.maDanhMuc}</TableCell>
                 <TableCell>{dm.tenDanhMuc.toUpperCase()}</TableCell>
                 <TableCell>{dm.soLuongSanPham} sản phẩm</TableCell>
-                {dm.maDanhMuc !== 'DMXOA' && (
+                {dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1'
+                 && (
                   <TableCell>
                     <Button variant="contained" sx={{ marginX: '10px' }} color="primary" onClick={() => handleOpen(dm)}>
                       Sửa

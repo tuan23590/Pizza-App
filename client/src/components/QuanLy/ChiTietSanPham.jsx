@@ -9,7 +9,7 @@ import FileUpload from '../FileUpload';
 import { APICapNhatSanPham, APIThemSanPham } from '../../utils/sanPhamUtils';
 import { AuthContext } from './../../context/AuthProvider';
 
-export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
+export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
   const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
   const [danhMuc, setDanhMuc] = useState([]);
   const [formData, setFormData] = useState({
@@ -17,23 +17,20 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
     moTa: '',
     ghiChu: '',
     hinhAnh: '',
-    danhMuc: '',
+    danhMuc: danhMuc[0]?.maDanhMuc || '',
     giaSanPham: '',
-    danhSachKichThuoc: {},
-    danhSachLoaiDe: {}
+    danhSachKichThuoc: [],
+    danhSachLoaiDe: [],
   });
 
   useEffect(() => {
-    const convertArrayToObject = (array, keyProp, valueProp) => {
-      return array.reduce((acc, item) => {
-        acc[item[keyProp]] = item[valueProp];
-        return acc;
-      }, {});
-    };
     if (mode === 'edit' && sanPham) {
-      const kichThuocParsed = convertArrayToObject(JSON.parse(sanPham.kichThuoc || '[]'), 'tenKichThuoc', 'giaKichThuoc');
-      const loaiDeParsed = convertArrayToObject(JSON.parse(sanPham.loaiDe || '[]'), 'tenLoaiDe', 'giaLoaiDe');
-      
+      const kichThuocParsed = JSON.parse(sanPham.kichThuoc || '[]');
+      const loaiDeParsed = JSON.parse(sanPham.loaiDe || '[]');
+  
+      console.log('kichThuocParsed', kichThuocParsed);
+      console.log('loaiDeParsed', loaiDeParsed);
+  
       setFormData({
         id: sanPham.id,
         tenSanPham: sanPham.tenSanPham || '',
@@ -48,33 +45,38 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
         soLuong: sanPham.soLuong || 0
       });
   
+      // Kiểm tra trạng thái checkbox cho Kích Thước
       const kichThuocCheckedState = danhSachKichThuoc.reduce((acc, kichThuoc, index) => {
-        acc[index] = kichThuocParsed[kichThuoc] !== undefined;
+        acc[index] = kichThuocParsed.some(item => item.tenKichThuoc === kichThuoc);
         return acc;
       }, {});
       setKichThuocChecked(kichThuocCheckedState);
   
+      // Kiểm tra trạng thái checkbox cho Loại Đế
       const deCheckedState = danhSachDe.reduce((acc, de, index) => {
-        acc[index] = loaiDeParsed[de] !== undefined;
+        acc[index] = loaiDeParsed.some(item => item.tenLoaiDe === de);
         return acc;
       }, {});
       setDeChecked(deCheckedState);
+  
     } else {
+      // Reset lại formData và trạng thái checkbox nếu không phải chế độ 'edit'
       setFormData({
         tenSanPham: '',
         moTa: '',
         ghiChu: '',
         hinhAnh: '',
-        danhMuc: '',
+        danhMuc: danhMuc[0]?.maDanhMuc || '',
         giaSanPham: '',
-        danhSachKichThuoc: {},
-        danhSachLoaiDe: {}
+        danhSachKichThuoc: [],
+        danhSachLoaiDe: [],
       });
       setKichThuocChecked({});
       setDeChecked({});
     }
   }, [sanPham, mode]);
   
+
 
   const [kichThuocChecked, setKichThuocChecked] = useState({});
   const [deChecked, setDeChecked] = useState({});
@@ -106,93 +108,114 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
     setKichThuocChecked((prev) => {
       const newChecked = !prev[index];
       setFormData((prevData) => {
-        const newDanhSachKichThuoc = { ...prevData.danhSachKichThuoc };
-  
+        let newDanhSachKichThuoc;
+
         if (newChecked) {
-          // Thêm phần tử vào danh sách
-          newDanhSachKichThuoc[kichThuoc] = '';
+          newDanhSachKichThuoc = [
+            ...prevData.danhSachKichThuoc,
+            { tenKichThuoc: kichThuoc, giaKichThuoc: 0 }
+          ];
         } else {
-          // Xóa phần tử khỏi danh sách
-          delete newDanhSachKichThuoc[kichThuoc];
+          newDanhSachKichThuoc = prevData.danhSachKichThuoc.filter(
+            item => item.tenKichThuoc !== kichThuoc
+          );
         }
-  
+
         return {
           ...prevData,
           danhSachKichThuoc: newDanhSachKichThuoc,
         };
       });
-  
+
       if (newChecked) {
         setTimeout(() => {
           kichThuocRefs.current[index]?.focus();
         }, 100);
       }
-  
+
       return {
         ...prev,
         [index]: newChecked,
       };
     });
   };
-  
+
   const handleDeChange = (index) => {
     const de = danhSachDe[index];
     setDeChecked((prev) => {
       const newChecked = !prev[index];
       setFormData((prevData) => {
-        const newDanhSachLoaiDe = { ...prevData.danhSachLoaiDe };
-  
+        let newDanhSachLoaiDe;
+
         if (newChecked) {
-          // Thêm phần tử vào danh sách
-          newDanhSachLoaiDe[de] = '';
+          newDanhSachLoaiDe = [
+            ...prevData.danhSachLoaiDe,
+            { tenLoaiDe: de, giaLoaiDe: 0 }
+          ];
         } else {
-          // Xóa phần tử khỏi danh sách
-          delete newDanhSachLoaiDe[de];
+          newDanhSachLoaiDe = prevData.danhSachLoaiDe.filter(
+            item => item.tenLoaiDe !== de
+          );
         }
-  
+
         return {
           ...prevData,
           danhSachLoaiDe: newDanhSachLoaiDe,
         };
       });
-  
+
       if (newChecked) {
         setTimeout(() => {
           deRefs.current[index]?.focus();
         }, 100);
       }
-  
+
       return {
         ...prev,
         [index]: newChecked,
       };
     });
   };
-  
+
+
+
 
   const handleKichThuocGiaChange = (index, e) => {
     const kichThuoc = danhSachKichThuoc[index];
     const { value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      danhSachKichThuoc: {
-        ...prevData.danhSachKichThuoc,
-        [kichThuoc]: parseFloat(value)
-      }
-    }));
+
+    setFormData((prevData) => {
+      const newDanhSachKichThuoc = prevData.danhSachKichThuoc.map(item =>
+        item.tenKichThuoc === kichThuoc
+          ? { ...item, giaKichThuoc: parseFloat(value) }
+          : item
+      );
+
+      return {
+        ...prevData,
+        danhSachKichThuoc: newDanhSachKichThuoc,
+      };
+    });
   };
 
   const handleDeGiaChange = (index, e) => {
     const de = danhSachDe[index];
     const { value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      danhSachLoaiDe: {
-        ...prevData.danhSachLoaiDe,
-        [de]: parseFloat(value)
-      }
-    }));
+
+    setFormData((prevData) => {
+      const newDanhSachLoaiDe = prevData.danhSachLoaiDe.map(item =>
+        item.tenLoaiDe === de
+          ? { ...item, giaLoaiDe: parseFloat(value) }
+          : item
+      );
+
+      return {
+        ...prevData,
+        danhSachLoaiDe: newDanhSachLoaiDe,
+      };
+    });
   };
+
 
   const handleImageUploadSuccess = (filePath) => {
     console.log('Uploaded image path: ', filePath);
@@ -206,9 +229,8 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
     if (mode === 'edit') {
       data = await APICapNhatSanPham(formData);
     } else {
-    data = await APIThemSanPham(formData);
+      data = await APIThemSanPham(formData);
     }
-    console.log(data);
     if (data) {
       setNotificationMessage(mode === 'edit' ? 'Cập nhật sản phẩm thành công' : 'Thêm sản phẩm thành công');
       setNotificationSeverity('success');
@@ -229,6 +251,7 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
             <FormControl fullWidth sx={{ marginTop: 1 }}>
               <InputLabel>Danh Mục</InputLabel>
               <Select
+                disabled={mode === 'edit'}
                 name="danhMuc"
                 value={formData.danhMuc}
                 label="Danh Mục"
@@ -282,7 +305,7 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
           </Grid>
           {mode == 'edit' && (
             <Grid item xs={6}>
-            <FormControl fullWidth >
+              <FormControl fullWidth >
                 <InputLabel>Trạng thái</InputLabel>
                 <Select
                   name="trangThai"
@@ -312,73 +335,78 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
           </Grid>
           {formData.danhMuc == 'DM1' && (
             <>
-            <Grid item xs={6}>
-            <FormGroup>
-              <FormLabel component="legend">
-                Kích thước
-                <br />
-                <i>* nhấn chọn kích thước của bánh và nhập giá</i>
-              </FormLabel>
-              {danhSachKichThuoc.map((kt, index) => (
-                <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
-                  <Checkbox
-                    checked={kichThuocChecked[index] || false}
-                    onChange={() => handleKichThuocChange(index)}
-                  />
-                  <TextField
-                    label={kt}
-                    placeholder={`Nhập giá ${kt}`}
-                    variant="outlined"
-                    fullWidth
-                    type="number"
-                    size="small"
-                    inputProps={{ min: 0 }}
-                    disabled={!kichThuocChecked[index]}
-                    inputRef={(el) => (kichThuocRefs.current[index] = el)}
-                    value={formData.danhSachKichThuoc[kt] || ''}
-                    onChange={(e) => handleKichThuocGiaChange(index, e)}
-                  />
-                </Box>
-              ))}
-            </FormGroup>
-          </Grid>
-          <Grid item xs={6}>
-            <FormGroup>
-              <FormLabel component="legend">
-                Loại đế
-                <br />
-                <i>* nhấn chọn loại đế của bánh và nhập giá</i>
-              </FormLabel>
-              {danhSachDe.map((de, index) => (
-                <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
-                  <Checkbox
-                    checked={deChecked[index] || false}
-                    onChange={() => handleDeChange(index)}
-                  />
-                  <TextField
-                    label={de}
-                    placeholder={`Nhập giá ${de}`}
-                    variant="outlined"
-                    fullWidth
-                    type="number"
-                    size="small"
-                    inputProps={{ min: 0 }}
-                    disabled={!deChecked[index]}
-                    inputRef={(el) => (deRefs.current[index] = el)}
-                    value={formData.danhSachLoaiDe[de] || ''}
-                    onChange={(e) => handleDeGiaChange(index, e)}
-                  />
-                </Box>
-              ))}
-            </FormGroup>
-          </Grid>
+              <Grid item xs={6}>
+                <FormGroup>
+                  <FormLabel component="legend">
+                    Kích thước
+                    <br />
+                    <i>* nhấn chọn kích thước của bánh và nhập giá</i>
+                  </FormLabel>
+                  {danhSachKichThuoc.map((kt, index) => (
+                    <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
+                      <Checkbox
+                        checked={kichThuocChecked[index] || false}
+                        onChange={() => handleKichThuocChange(index)}
+                      />
+                      <TextField
+                        label={kt}
+                        placeholder='Măc định là 0đ'
+                        variant="outlined"
+                        fullWidth
+                        type="number"
+                        size="small"
+                        focused={kichThuocChecked[index]}
+                        InputLabelProps={{ shrink: kichThuocChecked[index] }}
+                        inputProps={{ min: 0 }}
+                        disabled={!kichThuocChecked[index]}
+                        inputRef={(el) => (kichThuocRefs.current[index] = el)}
+                        value={(formData.danhSachKichThuoc.find(item => item.tenKichThuoc === kt)?.giaKichThuoc) || ''}
+                        onChange={(e) => handleKichThuocGiaChange(index, e)}
+                      />
+                    </Box>
+                  ))}
+
+                </FormGroup>
+              </Grid>
+              <Grid item xs={6}>
+                <FormGroup>
+                  <FormLabel component="legend">
+                    Loại đế
+                    <br />
+                    <i>* nhấn chọn loại đế của bánh và nhập giá</i>
+                  </FormLabel>
+                  {danhSachDe.map((de, index) => (
+                    <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
+                      <Checkbox
+                        checked={deChecked[index] || false}
+                        onChange={() => handleDeChange(index)}
+                      />
+                      <TextField
+                        label={de}
+                        placeholder='Măc định là 0đ'
+                        variant="outlined"
+                        fullWidth
+                        type="number"
+                        size="small"
+                        focused={deChecked[index]}
+                        InputLabelProps={{ shrink: deChecked[index] }}
+                        inputProps={{ min: 0 }}
+                        disabled={!deChecked[index]}
+                        inputRef={(el) => (deRefs.current[index] = el)}
+                        value={(formData.danhSachLoaiDe.find(item => item.tenLoaiDe === de)?.giaLoaiDe) || ''}
+                        onChange={(e) => handleDeGiaChange(index, e)}
+                      />
+                    </Box>
+                  ))}
+                </FormGroup>
+              </Grid>
             </>
           )}
         </Grid>
       </DialogContent>
       <DialogActions>
         <Button color="warning" onClick={onClose}>Đóng</Button>
-        {mode === 'add' ? (<Button variant="outlined" onClick={onSave} color="info">Lưu</Button>): (
+        {mode === 'add' ? (<Button variant="outlined" onClick={onSave} color="info">Lưu</Button>) : (
           <Button variant="outlined" onClick={onSave} color="info">Cập nhật</Button>
         )}
       </DialogActions>

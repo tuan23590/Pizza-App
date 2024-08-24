@@ -101,8 +101,8 @@ type Mutation {
     themSanPham(
     danhMuc: String, 
     tenSanPham: String, 
-    danhSachKichThuoc: String,
-    danhSachLoaiDe: String,
+    kichThuoc: String,
+    loaiDe: String,
     giaSanPham: Float,
     ghiChu: String,  
     moTa: String, 

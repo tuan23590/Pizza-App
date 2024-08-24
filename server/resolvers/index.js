@@ -6,17 +6,17 @@ export const resolvers = {
         danhSachSanPham: async () => {
             const danhSachSanPham = await sanPhamModel.find();
             // thêm DB_URL vào hình ảnh 
-            // nếu danhSachSanPham[i].hinhAnh đẫ có DB_URL thì không thêm
-            // nếu danhSachSanPham[i].hinhAnh chưa có DB_URL thì thêm
             for (let i = 0; i < danhSachSanPham.length; i++) {
-                if (!danhSachSanPham[i].hinhAnh.includes("http")) {
-                    danhSachSanPham[i].hinhAnh = process.env.DB_URL + danhSachSanPham[i].hinhAnh;
-                }
+                danhSachSanPham[i].hinhAnh = process.env.DB_URL + danhSachSanPham[i].hinhAnh;
             }
             return danhSachSanPham;
         },
         danhSachSanPhamTheoMaDanhMuc: async (parent, args) => {
             const danhSachSanPham = await sanPhamModel.find({ danhMuc: args.maDanhMuc });
+             // thêm DB_URL vào hình ảnh 
+             for (let i = 0; i < danhSachSanPham.length; i++) {
+                danhSachSanPham[i].hinhAnh = process.env.DB_URL + danhSachSanPham[i].hinhAnh;
+            }
             return danhSachSanPham;
         },
         danhSachDanhMuc: async () => {
@@ -127,14 +127,16 @@ export const resolvers = {
             ...args,
             giaSanPham: parseFloat(args.giaSanPham),
             maSanPham: maSanPhamMoi,
-            kichThuoc: args.danhSachKichThuoc,
-            loaiDe: args.danhSachLoaiDe,
             trangThai: "Ngừng kinh doanh",
             soLuong: 0
         });
         return await sanPham.save();
         },
         capNhatSanPham: async (parent, args) => {
+            // nếu args.hinhAnh có chưa http thì xóa httt. ví dụ: http://localhost:3000/uploads/SP1.jpg -> /uploads/SP1.jpg. slip("/")
+            if (args.hinhAnh.includes("http")) {
+                args.hinhAnh = '/' +  args.hinhAnh.split("/").slice(3).join("/");
+            }
             const sanPham = await sanPhamModel.findOneAndUpdate({ _id: args.id }, args, { new: true });
             return sanPham;
         },

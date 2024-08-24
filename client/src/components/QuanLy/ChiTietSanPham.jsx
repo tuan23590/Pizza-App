@@ -225,6 +225,12 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
     }));
   };
   const onSave = async () => {
+    if (formData.tenSanPham === '' || formData.giaSanPham === '' || formData.hinhAnh === ''|| formData.moTa === '') {
+      setNotificationMessage('Vui lòng nhập đủ thông tin');
+      setNotificationSeverity('error');
+      setNotifyOpen(true);
+      return;
+    }
     let data;
     if (mode === 'edit') {
       data = await APICapNhatSanPham(formData);

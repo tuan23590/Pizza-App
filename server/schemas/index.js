@@ -79,6 +79,19 @@ type XaPhuong {
     code: String,
     parent_code: String,
 },
+type NhaCungCap {
+    id: String,
+    maNhaCungCap: String,
+    tenNhaCungCap: String,
+    soDienThoai: String,
+    email: String,
+    ghiChu: String,
+    danhSachDanhMuc: [DanhMuc],
+    tinhTp: String,
+    quanHuyen: String,
+    xaPhuong: String,
+    soNhaTenDuong: String,
+},
 
 type Query {
     danhSachSanPham: [SanPham],
@@ -88,8 +101,10 @@ type Query {
     danhSachDonHang: [DonHang],
     donHangTheoEmail(email: String): [DonHang],
     danhSachTinhTp: [TinhTp],
+    danhSachTinhTpDayDu: [TinhTp],
     danhSachQuanHuyen(idTinhTP: String): [QuanHuyen],
     danhSachXaPhuong(idQuanHuyen: String): [XaPhuong],
+    danhSachNhaCungCap: [NhaCungCap],
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,
@@ -138,6 +153,31 @@ type Mutation {
     tamTinh: Float
     ): DonHang,
 
-    capNhatTrangThaiDonHang(maDonHang: String, trangThai: String): DonHang
+    capNhatTrangThaiDonHang(maDonHang: String, trangThai: String): DonHang,
+
+    themNhaCungCap(
+    tenNhaCungCap: String,
+    soDienThoai: String,
+    email: String,
+    ghiChu: String,
+    danhSachDanhMuc: [String],
+    tinhTp: String,
+    quanHuyen: String,
+    xaPhuong: String,
+    soNhaTenDuong: String
+    ): NhaCungCap,
+
+    capNhatNhaCungCap(
+    id: String,
+    tenNhaCungCap: String,
+    soDienThoai: String,
+    email: String,
+    ghiChu: String,
+    danhSachDanhMuc: [String],
+    tinhTp: String,
+    quanHuyen: String,
+    xaPhuong: String,
+    soNhaTenDuong: String
+    ): NhaCungCap,
 }
 `;

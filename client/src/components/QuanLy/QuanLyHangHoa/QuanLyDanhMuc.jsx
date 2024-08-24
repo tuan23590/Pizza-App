@@ -106,7 +106,7 @@ export default function QuanLyDanhMuc() {
 
   return (
     <TableContainer component={Paper}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
         <Typography variant="h5" p={'20px'}>
           Quản Lý Danh Mục
         </Typography>

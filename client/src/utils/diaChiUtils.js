@@ -10,6 +10,17 @@ export const APIDanhSachTinhTp = async () => {
     return danhSachTinhTp;
 };
 
+export const APIDanhSachTinhTpDayDu = async () => {
+  const query = `query DanhSachTinhTpDayDu {
+danhSachTinhTpDayDu {
+  name_with_type
+  code
+}
+}`;
+  const {danhSachTinhTpDayDu} = await GraphQLrequest({query});
+  return danhSachTinhTpDayDu;
+};
+
 export const APIDanhSachQuanHuyen = async (idTinhTp) => {
     const query = `query DanhSachQuanHuyen($idTinhTp: String) {
     danhSachQuanHuyen(idTinhTP: $idTinhTp) {

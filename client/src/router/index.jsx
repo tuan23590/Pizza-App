@@ -13,7 +13,7 @@ import QuanlyDonHang from "../components/QuanLy/QuanlyDonHang";
 import GioHangProvider from "../context/GioHangProvider";
 import DiaChi from "../components/TrangChu/DiaChi";
 import QuanLyHangHoa from './../components/QuanLy/QuanLyHangHoa/QuanLyHangHoa';
-import QuanLyPhieuNhap from "../components/QuanLy/QuanLyPhieuNhap";
+import QuanLyPhieuNhap from "../components/QuanLy/QuanLyPhieuNhap/QuanLyPhieuNhap";
 const KhachHangProvider = () => {
     return <>
         <AuthProvider>

@@ -1,4 +1,4 @@
-import { danhMucModel, donHangModel, sanPhamDaMuaModel, sanPhamModel } from "../models/index.js";
+import { danhMucModel, donHangModel, nhapCungCapModel, sanPhamDaMuaModel, sanPhamModel } from "../models/index.js";
 import fs from 'fs';
 
 export const resolvers = {
@@ -51,6 +51,16 @@ export const resolvers = {
                 return [];
             }
         },
+        danhSachTinhTpDayDu: (parent, args) => {
+            try {
+                const tinhData = fs.readFileSync('addressData/tinh_tp_day_du.json', 'utf8');
+                const tinhObject = JSON.parse(tinhData);
+                const danhSachTinh = Object.values(tinhObject);
+                return danhSachTinh;
+            } catch (err) {
+                return [];
+            }
+        },
         danhSachQuanHuyen: (parent, args) => {
             const idTinhTP = args.idTinhTP;
             try {
@@ -72,6 +82,10 @@ export const resolvers = {
             } catch (err) {
                 return [];
             }
+        },
+        danhSachNhaCungCap: async () => {
+            const danhSachNhaCungCap = await nhapCungCapModel.find();
+            return danhSachNhaCungCap;
         },      
     },
     DonHang: {
@@ -85,6 +99,13 @@ export const resolvers = {
             const danhSachDanhMuc = await danhMucModel.findOne({maDanhMuc: parent.danhMuc});
             return danhSachDanhMuc;
         },
+    },
+    NhaCungCap: {
+        danhSachDanhMuc: async (parent) => {
+            //tìm theo id danh mục
+            const danhSachDanhMuc = await danhMucModel.find({ _id: { $in: parent.danhSachDanhMuc } });
+            return danhSachDanhMuc;
+        }
     },
     Mutation:{
         themDanhMuc: async (parent, args) => {
@@ -187,6 +208,25 @@ export const resolvers = {
         capNhatTrangThaiDonHang: async (parent, args) => {
             const donHang = await donHangModel.findOneAndUpdate({ maDonHang: args.maDonHang }, { trangThai: args.trangThai }, { new: true });
             return donHang;
-        }
+        },
+        themNhaCungCap: async (parent, args) => {
+            const nhaCungCapCuoi = await nhapCungCapModel.findOne().sort({ _id: -1 }).exec();
+            let maNhaCungCapMoi;
+            if (nhaCungCapCuoi) {
+                const maNhaCungCapCuoi = nhaCungCapCuoi.maNhaCungCap;
+                const soCuoi = parseInt(maNhaCungCapCuoi.replace("NCC", ""), 10);
+                maNhaCungCapMoi = "NCC" + (soCuoi + 1);
+            } else {
+                maNhaCungCapMoi = "NCC1";
+            }
+            const nhaCungCap = new nhapCungCapModel(args);
+            nhaCungCap.maNhaCungCap = maNhaCungCapMoi;
+            return nhaCungCap.save();
+        },
+        capNhatNhaCungCap: async (parent, args) => {
+            console.log(args);
+            const nhaCungCap = await nhapCungCapModel.findOneAndUpdate({ _id: args.id }, args, { new: true });
+            return nhaCungCap;
+        },
     }
 };

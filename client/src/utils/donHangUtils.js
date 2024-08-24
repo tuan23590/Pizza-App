@@ -47,16 +47,8 @@ export const APIDonHangTheoEmail = async (email) => {
       hinhAnh
       danhMuc
       giaSanPham
-      kichThuoc {
-        id
-        tenKichThuoc
-        giaKichThuoc
-      }
-      loaiDe {
-        id
-        tenLoaiDe
-        giaLoaiDe
-      }
+      kichThuoc 
+      loaiDe
     }
   }
 }`;
@@ -91,16 +83,8 @@ export const APIDanhSachDonHang = async () => {
       hinhAnh
       danhMuc
       giaSanPham
-      kichThuoc {
-        id
-        tenKichThuoc
-        giaKichThuoc
-      }
-      loaiDe {
-        id
-        tenLoaiDe
-        giaLoaiDe
-      }
+      kichThuoc
+      loaiDe
     }
   }
 }`;

@@ -1,10 +1,11 @@
-import { Box, Menu, MenuItem, Paper, Select, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
 import SanPham from './SanPham';
 
 export default function DanhSachSanPham() {
-  const danhSachSanPham = useLoaderData();
+  const danhSachSanPham = useLoaderData();  
+
   return (
     <Box 
       sx={{
@@ -16,9 +17,21 @@ export default function DanhSachSanPham() {
         marginTop: '20px',
       }}
     >
-      {danhSachSanPham.map((sanPham) => (
-       <SanPham key={sanPham.maSanPham} sanPham={sanPham} />
-      ))}
+      {danhSachSanPham.map((sanPham) => {
+        const kichThuocParsed = JSON.parse(sanPham.kichThuoc || '[]');
+        const loaiDeParsed = JSON.parse(sanPham.loaiDe || '[]');
+
+        return (
+          <SanPham 
+            key={sanPham.maSanPham} 
+            sanPham={{ 
+              ...sanPham, 
+              kichThuoc: kichThuocParsed,
+              loaiDe: loaiDeParsed
+            }} 
+          />
+        );
+      })}
     </Box>
   );
 }

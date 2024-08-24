@@ -16,6 +16,7 @@ export default function QuanLy() {
          <DanhMucQuanLy DanhSachDanhMuc={[
             {'link':'QuanLyHangHoa','text':'Quản Lý Hàng Hóa', 'phanQuyen': []},
             {'link':'QuanLyDonHang','text':'Quản Lý Dơn Hàng', 'phanQuyen': []},
+            {'link':'QuanLyPhieuNhap','text':'Quản Lý Phiếu Nhập', 'phanQuyen': []},
             {'link':'QuanLyDanhThu','text':'Quản Lý Danh Thu', 'phanQuyen': []},
             {'link':'QuanLyTonKho','text':'Quản Lý Tồn Kho', 'phanQuyen': []},
             {'link':'QuanLyKhuyenMai','text':'Quản Lý Khuyến Mãi', 'phanQuyen': []},

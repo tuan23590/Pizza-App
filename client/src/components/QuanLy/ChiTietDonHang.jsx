@@ -10,6 +10,7 @@ import { Dialog,
 import React from 'react'
 
 export default function ChiTietDonHang({ openDialog, handleCloseDialog, selectedOrder }) {
+    console.log(selectedOrder)
     const fomatDate = (date) => {
         const d = new Date(parseFloat(date));
 

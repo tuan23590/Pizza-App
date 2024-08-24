@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { APICapNhatTrangThaiDonHang, APIDanhSachDonHang } from '../../utils/donHangUtils';
-import { MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { MenuItem, Paper, Select, Table, TableBody,Box, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Typography } from '@mui/material';
 import ChiTietDonHang from './ChiTietDonHang';
 
 export default function QuanlyDonHang() {
     const [danhSachDonHang, setDanhSachDonHang] = useState([]);
     const [openDialog, setOpenDialog] = useState(false)
     const [selectedOrder, setSelectedOrder] = useState(null)
+    const [loading, setLoading] = useState(true)
     const fetctData = async () => {
         const data = await APIDanhSachDonHang();
         setDanhSachDonHang(data);
+        setLoading(false)
     }
     useEffect(() => {
-        fetctData();
+        fetctData(); 
     }, [])
     
     const fomatDate = (date) => {
@@ -45,7 +47,17 @@ export default function QuanlyDonHang() {
     }
   return (
     <>
-    <TableContainer component={Paper}>
+        <TableContainer component={Paper}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="h5" p={'20px'}>
+          Quản Lý Đơn Hàng
+        </Typography>
+      </Box>
+        {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+          <CircularProgress />
+        </Box>
+      ) : (
         <Table>
             <TableHead>
             <TableRow>
@@ -94,9 +106,9 @@ export default function QuanlyDonHang() {
             ))}
             </TableBody>
         </Table>
+      )}
     </TableContainer>
     <ChiTietDonHang openDialog={openDialog} handleCloseDialog={handleCloseDialog} selectedOrder={selectedOrder} />
-    
-    </>
+        </>
   )
 }

@@ -13,6 +13,7 @@ import QuanlyDonHang from "../components/QuanLy/QuanlyDonHang";
 import GioHangProvider from "../context/GioHangProvider";
 import DiaChi from "../components/TrangChu/DiaChi";
 import QuanLyHangHoa from './../components/QuanLy/QuanLyHangHoa/QuanLyHangHoa';
+import QuanLyPhieuNhap from "../components/QuanLy/QuanLyPhieuNhap";
 const KhachHangProvider = () => {
     return <>
         <AuthProvider>
@@ -74,6 +75,11 @@ export default createBrowserRouter(
                         {
                             element: <QuanlyDonHang />,
                             path: "/QuanLy/QuanlyDonHang",
+
+                        },
+                        {
+                            element: <QuanLyPhieuNhap />,
+                            path: "/QuanLy/QuanLyPhieuNhap",
 
                         },
                     ]

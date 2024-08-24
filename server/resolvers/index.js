@@ -1,4 +1,4 @@
-import { danhMucModel, donHangModel, kichThuocModel, loaiDeModel, sanPhamDaMuaModel, sanPhamModel } from "../models/index.js";
+import { danhMucModel, donHangModel, sanPhamDaMuaModel, sanPhamModel } from "../models/index.js";
 import fs from 'fs';
 
 export const resolvers = {
@@ -6,8 +6,12 @@ export const resolvers = {
         danhSachSanPham: async () => {
             const danhSachSanPham = await sanPhamModel.find();
             // thêm DB_URL vào hình ảnh 
+            // nếu danhSachSanPham[i].hinhAnh đẫ có DB_URL thì không thêm
+            // nếu danhSachSanPham[i].hinhAnh chưa có DB_URL thì thêm
             for (let i = 0; i < danhSachSanPham.length; i++) {
-                danhSachSanPham[i].hinhAnh = process.env.DB_URL + danhSachSanPham[i].hinhAnh;
+                if (!danhSachSanPham[i].hinhAnh.includes("http")) {
+                    danhSachSanPham[i].hinhAnh = process.env.DB_URL + danhSachSanPham[i].hinhAnh;
+                }
             }
             return danhSachSanPham;
         },
@@ -28,14 +32,6 @@ export const resolvers = {
             // loai bo danh muc "DMXOA"
             const danhSachDanhMuc = await danhMucModel.find({ maDanhMuc: { $ne: "DMXOA" } });
             return danhSachDanhMuc;
-        },
-        danhSachLoaiDe: async () => {
-            const danhSachLoaiDe = await loaiDeModel.find();
-            return danhSachLoaiDe;
-        },
-        danhSachKichThuoc: async () => {
-            const danhSachKichThuoc = await kichThuocModel.find();
-            return danhSachKichThuoc;
         },
         donHangTheoEmail: async (parent, args) => {
             const donHang = await donHangModel.find({ email: args.email });
@@ -77,16 +73,6 @@ export const resolvers = {
                 return [];
             }
         },      
-    },
-    SanPhamDaMua: {
-        kichThuoc: async (parent) => {
-            const kichThuoc = await kichThuocModel.findOne({ _id: parent.kichThuoc });
-            return kichThuoc;
-        },
-        loaiDe: async (parent) => {
-            const loaiDe = await loaiDeModel.findOne({ _id: parent.loaiDe });
-            return loaiDe;
-        }
     },
     DonHang: {
         danhSachSanPham: async (parent) => {
@@ -148,11 +134,11 @@ export const resolvers = {
         });
         return await sanPham.save();
         },
+        capNhatSanPham: async (parent, args) => {
+            const sanPham = await sanPhamModel.findOneAndUpdate({ _id: args.id }, args, { new: true });
+            return sanPham;
+        },
         themDonHang: async (parent, args) => {
-
-            //sleep 5s
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            return args;
            
             const donHangCuoi = await donHangModel.findOne().sort({ _id: -1 }).exec();
         

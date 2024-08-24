@@ -8,7 +8,16 @@ export default function SanPhamTrongGioHang({ sanPham }) {
   const [openDialog, setOpenDialog] = useState(false);
   const giaCuaSanPham = (sanPham.gia + ((sanPham.kichThuoc?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)) * sanPham.soLuong;
   const xoaSanPham = () => {
-    setGioHang((gioHang) => gioHang.filter((sp) => sp != sanPham));
+    setGioHang((prevGioHang) => { 
+      const danhSachSanPham = prevGioHang?.danhSachSanPham || [];
+      const updatedDanhSachSanPham = danhSachSanPham.filter(item => item.maSanPham !== sanPham.maSanPham);
+      const updatedGioHang = {
+        ...prevGioHang,
+        danhSachSanPham: updatedDanhSachSanPham
+      };
+      localStorage.setItem('gioHang', JSON.stringify(updatedGioHang));
+      return updatedGioHang;
+    });
     setOpenDialog(false);
   }
 

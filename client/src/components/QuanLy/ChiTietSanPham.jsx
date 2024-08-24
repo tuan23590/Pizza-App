@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { APIDanhSachDanhMucChoNguoiDung } from '../../utils/danhMucUtils';
 import FileUpload from '../FileUpload';
-import { APIThemSanPham } from '../../utils/sanPhamUtils';
+import { APICapNhatSanPham, APIThemSanPham } from '../../utils/sanPhamUtils';
 import { AuthContext } from './../../context/AuthProvider';
 
 export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
@@ -24,11 +24,18 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
   });
 
   useEffect(() => {
+    const convertArrayToObject = (array, keyProp, valueProp) => {
+      return array.reduce((acc, item) => {
+        acc[item[keyProp]] = item[valueProp];
+        return acc;
+      }, {});
+    };
     if (mode === 'edit' && sanPham) {
-      const kichThuocParsed = JSON.parse(sanPham.kichThuoc || '{}');
-      const loaiDeParsed = JSON.parse(sanPham.loaiDe || '{}');
+      const kichThuocParsed = convertArrayToObject(JSON.parse(sanPham.kichThuoc || '[]'), 'tenKichThuoc', 'giaKichThuoc');
+      const loaiDeParsed = convertArrayToObject(JSON.parse(sanPham.loaiDe || '[]'), 'tenLoaiDe', 'giaLoaiDe');
       
       setFormData({
+        id: sanPham.id,
         tenSanPham: sanPham.tenSanPham || '',
         moTa: sanPham.moTa || '',
         ghiChu: sanPham.ghiChu || '',
@@ -38,9 +45,9 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
         trangThai: sanPham.trangThai || '',
         danhSachKichThuoc: kichThuocParsed,
         danhSachLoaiDe: loaiDeParsed,
+        soLuong: sanPham.soLuong || 0
       });
   
-      // Set the checked states based on the parsed data
       const kichThuocCheckedState = danhSachKichThuoc.reduce((acc, kichThuoc, index) => {
         acc[index] = kichThuocParsed[kichThuoc] !== undefined;
         return acc;
@@ -98,47 +105,70 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
     const kichThuoc = danhSachKichThuoc[index];
     setKichThuocChecked((prev) => {
       const newChecked = !prev[index];
-      setFormData((prevData) => ({
-        ...prevData,
-        danhSachKichThuoc: {
-          ...prevData.danhSachKichThuoc,
-          [kichThuoc]: newChecked ? '' : undefined
+      setFormData((prevData) => {
+        const newDanhSachKichThuoc = { ...prevData.danhSachKichThuoc };
+  
+        if (newChecked) {
+          // Thêm phần tử vào danh sách
+          newDanhSachKichThuoc[kichThuoc] = '';
+        } else {
+          // Xóa phần tử khỏi danh sách
+          delete newDanhSachKichThuoc[kichThuoc];
         }
-      }));
+  
+        return {
+          ...prevData,
+          danhSachKichThuoc: newDanhSachKichThuoc,
+        };
+      });
+  
       if (newChecked) {
         setTimeout(() => {
           kichThuocRefs.current[index]?.focus();
         }, 100);
       }
+  
       return {
         ...prev,
         [index]: newChecked,
       };
     });
   };
-
+  
   const handleDeChange = (index) => {
     const de = danhSachDe[index];
     setDeChecked((prev) => {
       const newChecked = !prev[index];
-      setFormData((prevData) => ({
-        ...prevData,
-        danhSachLoaiDe: {
-          ...prevData.danhSachLoaiDe,
-          [de]: newChecked ? '' : undefined
+      setFormData((prevData) => {
+        const newDanhSachLoaiDe = { ...prevData.danhSachLoaiDe };
+  
+        if (newChecked) {
+          // Thêm phần tử vào danh sách
+          newDanhSachLoaiDe[de] = '';
+        } else {
+          // Xóa phần tử khỏi danh sách
+          delete newDanhSachLoaiDe[de];
         }
-      }));
+  
+        return {
+          ...prevData,
+          danhSachLoaiDe: newDanhSachLoaiDe,
+        };
+      });
+  
       if (newChecked) {
         setTimeout(() => {
           deRefs.current[index]?.focus();
         }, 100);
       }
+  
       return {
         ...prev,
         [index]: newChecked,
       };
     });
   };
+  
 
   const handleKichThuocGiaChange = (index, e) => {
     const kichThuoc = danhSachKichThuoc[index];
@@ -172,13 +202,19 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
     }));
   };
   const onSave = async () => {
-    const data = await APIThemSanPham(formData);
+    let data;
+    if (mode === 'edit') {
+      data = await APICapNhatSanPham(formData);
+    } else {
+    data = await APIThemSanPham(formData);
+    }
+    console.log(data);
     if (data) {
-      setNotificationMessage('Thêm sản phẩm thành công');
+      setNotificationMessage(mode === 'edit' ? 'Cập nhật sản phẩm thành công' : 'Thêm sản phẩm thành công');
       setNotificationSeverity('success');
       onClose();
     } else {
-      setNotificationMessage('Thêm sản phẩm thất bại');
+      setNotificationMessage(mode === 'edit' ? 'Cập nhật sản phẩm thất bại' : 'Thêm sản phẩm thất bại');
       setNotificationSeverity('error');
     }
     setNotifyOpen(true);
@@ -256,7 +292,7 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
                   variant="outlined"
                 >
                   <MenuItem value="Ngừng kinh doanh">Ngừng kinh doanh</MenuItem>
-                  <MenuItem value="Đang kinh doanh">Đang kinh doanh</MenuItem>
+                  {formData.soLuong > 0 && <MenuItem value="Đang kinh doanh">Đang kinh doanh</MenuItem>}
                 </Select>
               </FormControl>
             </Grid>
@@ -342,7 +378,9 @@ export default function ChiTietSanPham({ open, onClose, sanPham,mode }) {
       </DialogContent>
       <DialogActions>
         <Button color="warning" onClick={onClose}>Đóng</Button>
-        <Button variant="outlined" onClick={onSave} color="info">Lưu</Button>
+        {mode === 'add' ? (<Button variant="outlined" onClick={onSave} color="info">Lưu</Button>): (
+          <Button variant="outlined" onClick={onSave} color="info">Cập nhật</Button>
+        )}
       </DialogActions>
     </Dialog>
   );

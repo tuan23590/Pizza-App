@@ -17,16 +17,6 @@ type DonHang {
     trangThai: String,
     danhSachSanPham: [SanPhamDaMua]
 },
-type KichThuoc {
-    id: String,
-    tenKichThuoc: String,
-    giaKichThuoc: Float
-},
-type LoaiDe {
-    id: String,
-    tenLoaiDe: String,
-    giaLoaiDe: Float
-},
 type DanhMuc {
     id: String,
     tenDanhMuc: String,
@@ -52,14 +42,14 @@ type SanPham {
 type SanPhamDaMua {
     maSanPham: String,
     tenSanPham: String,
-    kichThuoc: KichThuoc,
+    kichThuoc: String,
     soLuong: Int,
     ghiChu: String,
     moTa: String,
     hinhAnh: String,
     danhMuc: String,
     giaSanPham: Float,
-    loaiDe: LoaiDe,
+    loaiDe: String,
 },
 
 type TinhTp {
@@ -94,8 +84,6 @@ type Query {
     danhSachSanPham: [SanPham],
     danhSachDanhMuc: [DanhMuc],
     danhSachDanhMucChoNguoiDung: [DanhMuc],
-    danhSachLoaiDe: [LoaiDe],
-    danhSachKichThuoc: [KichThuoc],
     danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham],
     danhSachDonHang: [DonHang],
     donHangTheoEmail(email: String): [DonHang],
@@ -119,8 +107,20 @@ type Mutation {
     ghiChu: String,  
     moTa: String, 
     hinhAnh: String, 
-    
     trangThai: String): SanPham,
+
+    capNhatSanPham(
+    id: String,
+    danhMuc: String,
+    tenSanPham: String,
+    kichThuoc: String,
+    giaSanPham: Float,
+    ghiChu: String,
+    moTa: String,
+    hinhAnh: String,
+    trangThai: String,
+    soLuong: Int,
+    loaiDe: String): SanPham,
 
     themDonHang(
     tenKhachHang: String,

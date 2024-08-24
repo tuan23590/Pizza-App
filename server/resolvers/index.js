@@ -111,6 +111,11 @@ export const resolvers = {
             await sanPhamModel.updateMany({ danhMuc: danhMuc.maDanhMuc }, { danhMuc: "DMXOA", trangThai: "Ngừng kinh doanh" });
             return 'Xóa danh mục thành công';
         },
+        xoaSanPham: async (parent, args) => {
+            // tìm sanPham theo id và chuyển trạng thái thành "Ngừng kinh doanh" và chuyển danh mục thành "DMXOA"
+            const sanPham = await sanPhamModel.findOneAndUpdate({ _id: args.id }, { trangThai: "Ngừng kinh doanh", danhMuc: "DMXOA" }, { new: true });
+            return 'Xóa sản phẩm thành công';
+        },
         themSanPham: async (parent, args) => {
         const sanPhamCuoi = await sanPhamModel.findOne().sort({ _id: -1 }).exec();
         
@@ -166,8 +171,8 @@ export const resolvers = {
             try{
                 for (let i = 0; i < danhSachSanPham.length; i++) {
                     const sanPhamDaMua = new sanPhamDaMuaModel(danhSachSanPham[i]);
-                    sanPhamDaMua.loaiDe = danhSachSanPham[i]?.loaiDe?.id || null;
-                    sanPhamDaMua.kichThuoc = danhSachSanPham[i]?.kichThuoc?.id || null;
+                    sanPhamDaMua.loaiDe = JSON.stringify(danhSachSanPham[i]?.loaiDe) || null;
+                    sanPhamDaMua.kichThuoc = JSON.stringify(danhSachSanPham[i]?.kichThuoc) || null;
                     await sanPhamDaMua.save();
                     danhSachIdSanPhamDaMua.push(sanPhamDaMua._id);
                     await sanPhamModel.findOneAndUpdate({ _id: danhSachSanPham[i].id }, { $inc: { soLuong: -danhSachSanPham[i].soLuong } }, { new: true });

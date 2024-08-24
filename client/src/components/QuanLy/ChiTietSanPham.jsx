@@ -333,7 +333,9 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
               onChange={handleChange}
             />
           </Grid>
-          {formData.danhMuc == 'DM1' && (
+          {/* Hiển thị nếu formData.danhMuc == 'DM1' hoặc formData.danhSachKichThuoc.length > 0 hoặc formData.danhSachDe.length > 0  */}
+          {(formData.danhMuc === 'DM1' || formData.danhSachKichThuoc.length > 0 || formData.danhSachLoaiDe.length > 0) && 
+           (
             <>
               <Grid item xs={6}>
                 <FormGroup>

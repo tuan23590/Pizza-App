@@ -106,3 +106,13 @@ export const APICapNhatSanPham = async (formData) => {
   }});
   return capNhatSanPham;
 };
+
+export const APIXoaSanPham = async (id) => {
+  const query = `mutation XoaSanPham($xoaSanPhamId: String) {
+  xoaSanPham(id: $xoaSanPhamId)
+}`;
+  const {xoaSanPham} = await GraphQLrequest({query, variables: {
+    xoaSanPhamId: id
+  }});
+  return xoaSanPham;
+};

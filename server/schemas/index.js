@@ -98,6 +98,8 @@ type Mutation {
     
     capNhatDanhMuc(id: String, tenDanhMuc: String): DanhMuc,
     
+    xoaSanPham(id: String): String,
+
     themSanPham(
     danhMuc: String, 
     tenSanPham: String, 

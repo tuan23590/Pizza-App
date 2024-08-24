@@ -10,7 +10,7 @@ import { Dialog,
 import React from 'react'
 
 export default function ChiTietDonHang({ openDialog, handleCloseDialog, selectedOrder }) {
-    console.log(selectedOrder)
+    console.log(selectedOrder);
     const fomatDate = (date) => {
         const d = new Date(parseFloat(date));
 
@@ -67,8 +67,8 @@ export default function ChiTietDonHang({ openDialog, handleCloseDialog, selected
                                         <Grid item xs={1}>
                                         </Grid>
                                         <Grid item xs={11} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuoc?.tenKichThuoc}</Typography>
-                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.kichThuoc?.giaKichThuoc.toLocaleString('vi-VN')}₫</Typography>
+                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{JSON.parse(sanPham.kichThuoc).tenKichThuoc}</Typography>
+                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{JSON.parse(sanPham.kichThuoc).giaKichThuoc.toLocaleString('vi-VN')}₫</Typography>
                                         </Grid>
                                     </>
                                 )}
@@ -78,8 +78,8 @@ export default function ChiTietDonHang({ openDialog, handleCloseDialog, selected
                                         <Grid item xs={1}>
                                         </Grid>
                                         <Grid item xs={11} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.loaiDe?.tenLoaiDe}</Typography>
-                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{sanPham.loaiDe?.giaLoaiDe.toLocaleString('vi-VN')}₫</Typography>
+                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{JSON.parse(sanPham.loaiDe).tenLoaiDe}</Typography>
+                                            <Typography sx={{ color: 'gray', marginLeft: '5px' }}>{JSON.parse(sanPham.loaiDe).giaLoaiDe.toLocaleString('vi-VN')}₫</Typography>
                                         </Grid>
                                     </>
                                 )}

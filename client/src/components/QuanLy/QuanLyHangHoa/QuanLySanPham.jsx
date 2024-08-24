@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { APIDanhSachSanPham } from '../../../utils/sanPhamUtils';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select, MenuItem, TextField, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CircularProgress } from '@mui/material';
+import { APIDanhSachSanPham, APIXoaSanPham } from '../../../utils/sanPhamUtils';
+import {
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select,
+  MenuItem, TextField, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+  CircularProgress
+} from '@mui/material';
 import ChiTietSanPham from '.././ChiTietSanPham';
 import { APIDanhSachDanhMuc } from '../../../utils/danhMucUtils';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-
 
 export default function QuanLySanPham() {
   const [sanPham, setSanPham] = useState([]);
@@ -16,6 +19,8 @@ export default function QuanLySanPham() {
   const [mode, setMode] = useState('view');
   const [selectedSanPham, setSelectedSanPham] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // State to control the confirm dialog
+  const [idToDelete, setIdToDelete] = useState(null); // State to store the ID of the product to delete
 
   const fetchData = async () => {
     const dataSP = await APIDanhSachSanPham();
@@ -23,12 +28,12 @@ export default function QuanLySanPham() {
     const dataDM = await APIDanhSachDanhMuc();
     setDanhMuc(dataDM.sort((a, b) => b.soLuongSanPham - a.soLuongSanPham));
     setLoading(false);
-    console.log(dataSP);
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
   useEffect(() => {
     if (!open) {
       fetchData();
@@ -49,11 +54,33 @@ export default function QuanLySanPham() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
   const filteredSanPham = sanPham.filter((sp) => {
     const matchesCategory = selectDanhMuc ? sp.danhMuc.id === selectDanhMuc : true;
     const matchesSearch = sp.maSanPham.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const handleDelete = async () => {
+    if (idToDelete) {
+      const response = await APIXoaSanPham(idToDelete);
+      if (response) {
+        fetchData();
+      }
+      setOpenConfirmDialog(false); // Close the confirm dialog after deletion
+      setIdToDelete(null); // Clear the ID after deletion
+    }
+  };
+
+  const handleOpenConfirmDialog = (id) => {
+    setIdToDelete(id);
+    setOpenConfirmDialog(true);
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+    setIdToDelete(null);
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -99,7 +126,6 @@ export default function QuanLySanPham() {
           <CircularProgress /> {/* Display loading spinner while fetching data */}
         </Box>
       ) : (
-
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -110,6 +136,7 @@ export default function QuanLySanPham() {
               <TableCell>Số lượng</TableCell>
               <TableCell>Danh Mục</TableCell>
               <TableCell>Trạng Thái</TableCell>
+              <TableCell>Thao tác</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -124,7 +151,6 @@ export default function QuanLySanPham() {
                   <Box
                     component="img"
                     sx={{
-                      
                       width: 30,
                     }}
                     alt={row.tenSanPham}
@@ -137,10 +163,16 @@ export default function QuanLySanPham() {
                 <TableCell>{row.danhMuc?.tenDanhMuc.toUpperCase()}</TableCell>
                 <TableCell
                   sx={{
-                    color: row.trangThai == 'Ngừng kinh doanh' ? 'red' : 'green',
+                    color: row.trangThai === 'Ngừng kinh doanh' ? 'red' : 'green',
                     fontWeight: '500'
                   }}
                 >{row.trangThai}</TableCell>
+                <TableCell>
+                  <Button variant="contained" color="error" onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenConfirmDialog(row.id); // Open confirm dialog
+                  }}>Xóa</Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -153,6 +185,31 @@ export default function QuanLySanPham() {
         mode={mode}
         sanPham={selectedSanPham}
       />
+
+      {/* Confirm Delete Dialog */}
+      <Dialog
+        open={openConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Xác nhận xóa sản phẩm
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
+            Hủy
+          </Button>
+          <Button onClick={handleDelete} color="error" autoFocus>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </TableContainer>
   );
 }

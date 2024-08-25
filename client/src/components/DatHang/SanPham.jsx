@@ -1,13 +1,17 @@
 import { Box, Button, MenuItem, Paper, Select, Typography } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GioHangContext } from '../../context/GioHangProvider';
 
 export default function SanPham({ sanPham }) {
-  console.log(sanPham);
   const { setGioHang } = useContext(GioHangContext);
-  const [kichThuoc, setkichThuoc] = useState(sanPham.kichThuoc[0]);
-  const [loaiDe, setLoaiDe] = useState(sanPham.loaiDe[0]);
+  const [kichThuoc, setkichThuoc] = useState(null);
+  const [loaiDe, setLoaiDe] = useState(null);
   const gia = (loaiDe?.giaLoaiDe || 0) + (kichThuoc?.giaKichThuoc || 0) + sanPham.giaSanPham;
+
+  useEffect(() => {
+    setkichThuoc(sanPham.kichThuoc[0]);
+    setLoaiDe(sanPham.loaiDe[0]);
+  }, [sanPham.kichThuoc, sanPham.loaiDe]);
 
   const themSanPhamVaoGioHang = (sanPham) => {
     setGioHang((prevGioHang) => {

@@ -56,7 +56,7 @@ export default function ChiTietDonHang({ openDialog, handleCloseDialog, selected
                         {selectedOrder.danhSachSanPham.map((sanPham, index) => (
                             <Grid container spacing={1} key={index} sx={{ padding: '10px' }}>
                                 <Grid item xs={1}>
-                                    <Typography sx={{ marginRight: '5px', backgroundColor: '#e8ebe9', color: '#0a8020', paddingX: '4px', borderRadius: '2px', fontWeight: '600', textAlign: 'center' }}>{sanPham.soLuong}x</Typography>
+                                    <Typography sx={{ marginRight: '5px', backgroundColor: '#e8ebe9', color: '#0a8020', paddingX: '4px', borderRadius: '2px', fontWeight: '600',display: 'inline-block'}}>{sanPham.soLuong}x</Typography>
                                 </Grid>
                                 <Grid item xs={11} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                     <Typography sx={{ fontWeight: '600' }}>{sanPham.tenSanPham}</Typography>

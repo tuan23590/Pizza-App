@@ -196,7 +196,7 @@ export default function ChiTietNhaCungCap({ open, onClose, mode, nhaCungCap }) {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Nhập Thông Tin Nhà Cung Cấp</DialogTitle>
+      <DialogTitle>Thông Tin Nhà Cung Cấp</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ paddingTop: '20px' }}>
           <Grid item xs={6}>

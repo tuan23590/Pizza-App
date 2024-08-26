@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import AuthProvider from "../context/AuthProvider";
 import DatHang from "../pages/DatHang";
 import DanhSachSanPham from "../components/DatHang/DanhSachSanPham";
-import { APIDanhSachSanPhamTheoMaDanhMuc } from "../utils/sanPhamUtils";
+import { APIDanhSachSanPhamTheoMaDanhMucNguoiDung } from "../utils/sanPhamUtils";
 import QuanLy from './../pages/QuanLy';
 import ThanhToan from "../pages/ThanhToan";
 import TheoDoiDonHang from "../pages/TheoDoiDonHang";
@@ -14,6 +14,7 @@ import GioHangProvider from "../context/GioHangProvider";
 import DiaChi from "../components/TrangChu/DiaChi";
 import QuanLyHangHoa from './../components/QuanLy/QuanLyHangHoa/QuanLyHangHoa';
 import QuanLyPhieuNhap from "../components/QuanLy/QuanLyPhieuNhap/QuanLyPhieuNhap";
+import Test from "../pages/Test";
 const KhachHangProvider = () => {
     return <>
         <AuthProvider>
@@ -35,6 +36,10 @@ export default createBrowserRouter(
                     path: "/DangNhap"
                 },
                 {
+                    element: <Test />,
+                    path: "/Test"
+                },
+                {
                     element: <TrangChu />,
                     path: "/"
                 },
@@ -50,7 +55,7 @@ export default createBrowserRouter(
                         {
                             element: <DanhSachSanPham />,
                             path: "/DatHang/:maDanhMuc",
-                            loader: APIDanhSachSanPhamTheoMaDanhMuc
+                            loader: APIDanhSachSanPhamTheoMaDanhMucNguoiDung
                         },
 
                     ]

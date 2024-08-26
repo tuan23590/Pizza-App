@@ -13,9 +13,6 @@ const SanPhamSchema = new mongoose.Schema({
     soLuong: {  
         type: Number,
     },
-    ghiChu: {
-        type: String,
-    },
     moTa: {
         type: String,
     },
@@ -32,6 +29,9 @@ const SanPhamSchema = new mongoose.Schema({
         type: String,
     },
     loaiDe: {
+        type: String,
+    },
+    donViTinh: {
         type: String,
     },
 },{timestamps: true});

@@ -14,7 +14,7 @@ import {
   FormLabel,
 } from '@mui/material';
 import { APIDanhSachQuanHuyen, APIDanhSachTinhTpDayDu, APIDanhSachXaPhuong } from '../../../utils/diaChiUtils';
-import { APIDanhSachDanhMucChoNguoiDung } from './../../../utils/danhMucUtils';
+import { APIDanhSachDanhMucThemSanPham } from './../../../utils/danhMucUtils';
 import { APICapNhatNhaCungCap, APIThemNhaCungCap } from '../../../utils/nhaCungCapUtils';
 import { AuthContext } from '../../../context/AuthProvider';
 
@@ -42,7 +42,7 @@ export default function ChiTietNhaCungCap({ open, onClose, mode, nhaCungCap }) {
     const fetchDanhSachTinhTp = async () => {
       const data = await APIDanhSachTinhTpDayDu();
       setDanhSachTinhTp(data);
-      const dataDanhMuc = await APIDanhSachDanhMucChoNguoiDung();
+      const dataDanhMuc = await APIDanhSachDanhMucThemSanPham();
       setDanhSachDanhMuc(dataDanhMuc);
     };
     fetchDanhSachTinhTp();
@@ -78,7 +78,7 @@ export default function ChiTietNhaCungCap({ open, onClose, mode, nhaCungCap }) {
         soNhaTenDuong: '',
       });
     }
-  }, [mode, nhaCungCap]);
+  }, [mode, nhaCungCap,open]);
 
   useEffect(() => {
     const fetchDanhSachQuanHuyen = async () => {
@@ -180,7 +180,6 @@ export default function ChiTietNhaCungCap({ open, onClose, mode, nhaCungCap }) {
     }else {
 
     data = await APIThemNhaCungCap(formData);
-    console.log(data);
     if (data) {
       setNotifyOpen(true);
       setNotificationMessage('Thêm nhà cung cấp thành công');
@@ -322,10 +321,10 @@ export default function ChiTietNhaCungCap({ open, onClose, mode, nhaCungCap }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} color="secondary" variant='outlined'>
           Đóng
         </Button>
-        <Button onClick={handleSubmit} color="primary">
+        <Button onClick={handleSubmit} color="primary" variant='contained'>
           {mode === 'edit' ? 'Cập Nhật' : 'Thêm nhà cung cấp'}
         </Button>
       </DialogActions>

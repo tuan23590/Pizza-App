@@ -1,25 +1,58 @@
 import { GraphQLrequest } from './request';
-export const APIDanhSachSanPhamTheoMaDanhMuc = async ({params}) => {
-    const query = `query DanhSachSanPhamTheoMaDanhMuc($maDanhMuc: String) {
-  danhSachSanPhamTheoMaDanhMuc(maDanhMuc: $maDanhMuc) {
+export const APIDanhSachSanPhamTheoMaDanhMuc = async (maDanhMuc) => {
+  const query = `query DanhSachSanPhamTheoMaDanhMuc($maDanhMuc: String) {
+      danhSachSanPhamTheoMaDanhMuc(maDanhMuc: $maDanhMuc) {
+          maSanPham
+          id
+          tenSanPham
+          danhMuc {
+              id
+              tenDanhMuc
+              maDanhMuc
+          }
+          kichThuoc
+          donViTinh
+          moTa
+          hinhAnh
+          giaSanPham
+          loaiDe
+      }
+  }`;
+
+  const { danhSachSanPhamTheoMaDanhMuc } = await GraphQLrequest({
+      query,
+      variables: { maDanhMuc },
+  });
+
+  return danhSachSanPhamTheoMaDanhMuc;
+};
+
+export const APIDanhSachSanPhamTheoMaDanhMucNguoiDung = async ({params: { maDanhMuc }}) => {
+  const query = `query DanhSachSanPhamTheoMaDanhMucNguoiDung($maDanhMuc: String) {
+  danhSachSanPhamTheoMaDanhMucNguoiDung(maDanhMuc: $maDanhMuc) {
     maSanPham
-    id
-    tenSanPham
-     danhMuc {
-      id
-      tenDanhMuc
-      maDanhMuc
-    }
-    kichThuoc
-    ghiChu
-    moTa
-    hinhAnh
-    giaSanPham
-    loaiDe
+          id
+          tenSanPham
+          danhMuc {
+              id
+              tenDanhMuc
+              maDanhMuc
+          }
+          kichThuoc
+          donViTinh
+          moTa
+          hinhAnh
+          giaSanPham
+          loaiDe
   }
 }`;
-    const {danhSachSanPhamTheoMaDanhMuc} = await GraphQLrequest({query, variables: {maDanhMuc: params.maDanhMuc}});
-    return danhSachSanPhamTheoMaDanhMuc;
+
+  const { danhSachSanPhamTheoMaDanhMucNguoiDung } = await GraphQLrequest({
+      query,
+      variables: { maDanhMuc },
+  });
+
+  return danhSachSanPhamTheoMaDanhMucNguoiDung;
 };
 
 export const APIDanhSachSanPham = async () => {
@@ -28,7 +61,7 @@ export const APIDanhSachSanPham = async () => {
     id
     maSanPham
     tenSanPham
-    ghiChu
+    donViTinh
     moTa
     hinhAnh
     danhMuc {
@@ -47,33 +80,9 @@ export const APIDanhSachSanPham = async () => {
     return danhSachSanPham;
 };
 
-export const APIDanhLoaiDe = async () => {
-  const query = `query DanhSachLoaiDe {
-  danhSachLoaiDe {
-    id
-    tenLoaiDe
-    giaLoaiDe
-  }
-}`;
-  const {danhSachLoaiDe} = await GraphQLrequest({query});
-  return danhSachLoaiDe;
-};
-
-export const APIDanhKichThuoc = async () => {
-  const query = `query DanhSachKichThuoc {
-  danhSachKichThuoc {
-    id
-    tenKichThuoc
-    giaKichThuoc
-  }
-}`;
-  const {danhSachKichThuoc} = await GraphQLrequest({query});
-  return danhSachKichThuoc;
-};
-
 export const APIThemSanPham = async (formData) => {
-  const query = `mutation ThemSanPham($danhMuc: String, $tenSanPham: String, $giaSanPham: Float, $ghiChu: String, $moTa: String, $hinhAnh: String, $trangThai: String, $kichThuoc: String, $loaiDe: String) {
-  themSanPham(danhMuc: $danhMuc, tenSanPham: $tenSanPham, giaSanPham: $giaSanPham, ghiChu: $ghiChu, moTa: $moTa, hinhAnh: $hinhAnh, trangThai: $trangThai, kichThuoc: $kichThuoc, loaiDe: $loaiDe) {
+  const query = `mutation ThemSanPham($danhMuc: String, $tenSanPham: String, $giaSanPham: Float, $moTa: String, $hinhAnh: String, $trangThai: String, $kichThuoc: String, $loaiDe: String, $donViTinh: String) {
+  themSanPham(danhMuc: $danhMuc, tenSanPham: $tenSanPham, giaSanPham: $giaSanPham,  moTa: $moTa, hinhAnh: $hinhAnh, trangThai: $trangThai, kichThuoc: $kichThuoc, loaiDe: $loaiDe, donViTinh: $donViTinh) {
     maSanPham
   }
 }`;
@@ -92,8 +101,8 @@ export const APIThemSanPham = async (formData) => {
 
 
 export const APICapNhatSanPham = async (formData) => {
-  const query = `mutation CapNhatSanPham($capNhatSanPhamId: String, $danhMuc: String, $tenSanPham: String, $kichThuoc: String, $giaSanPham: Float, $ghiChu: String, $moTa: String, $hinhAnh: String, $trangThai: String, $loaiDe: String, $soLuong: Int) {
-  capNhatSanPham(id: $capNhatSanPhamId, danhMuc: $danhMuc, tenSanPham: $tenSanPham, kichThuoc: $kichThuoc, giaSanPham: $giaSanPham, ghiChu: $ghiChu, moTa: $moTa, hinhAnh: $hinhAnh, trangThai: $trangThai, loaiDe: $loaiDe, soLuong: $soLuong) {
+  const query = `mutation CapNhatSanPham($capNhatSanPhamId: String, $danhMuc: String, $tenSanPham: String, $kichThuoc: String, $giaSanPham: Float, $moTa: String, $hinhAnh: String, $trangThai: String, $loaiDe: String, $soLuong: Int, $donViTinh: String) {
+  capNhatSanPham(id: $capNhatSanPhamId, danhMuc: $danhMuc, tenSanPham: $tenSanPham, kichThuoc: $kichThuoc, giaSanPham: $giaSanPham, moTa: $moTa, hinhAnh: $hinhAnh, trangThai: $trangThai, loaiDe: $loaiDe, soLuong: $soLuong, donViTinh: $donViTinh) {
     maSanPham
   }
 }`;

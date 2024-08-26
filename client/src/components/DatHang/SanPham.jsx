@@ -1,8 +1,10 @@
 import { Box, Button, MenuItem, Paper, Select, Typography } from '@mui/material'
 import React, { useContext, useEffect, useState } from 'react'
 import { GioHangContext } from '../../context/GioHangProvider';
+import { AuthContext } from '../../context/AuthProvider';
 
 export default function SanPham({ sanPham }) {
+  const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
   const { setGioHang } = useContext(GioHangContext);
   const [kichThuoc, setkichThuoc] = useState(null);
   const [loaiDe, setLoaiDe] = useState(null);
@@ -54,6 +56,10 @@ export default function SanPham({ sanPham }) {
       localStorage.setItem('gioHang', JSON.stringify(updatedGioHang));
       return updatedGioHang;
     });
+    setNotifyOpen(true);
+    setNotificationMessage('Đã thêm sản phẩm vào giỏ hàng');
+    setNotificationSeverity('success');
+    
   };
 
   return (

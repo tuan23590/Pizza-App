@@ -6,10 +6,25 @@ export const APIDanhSachDanhMuc = async () => {
     tenDanhMuc
     maDanhMuc
     soLuongSanPham
+    trangThai
   }
 }`;
     const {danhSachDanhMuc} = await GraphQLrequest({query});
     return danhSachDanhMuc;
+};
+
+export const APIDanhSachDanhMucThemSanPham = async () => {
+  const query = `query DanhSachDanhMuc {
+danhSachDanhMucThemSanPham {
+  id
+  tenDanhMuc
+  maDanhMuc
+  soLuongSanPham
+  trangThai
+}
+}`;
+  const {danhSachDanhMucThemSanPham} = await GraphQLrequest({query});
+  return danhSachDanhMucThemSanPham;
 };
 
 export const APIDanhSachDanhMucChoNguoiDung = async () => {
@@ -19,6 +34,7 @@ export const APIDanhSachDanhMucChoNguoiDung = async () => {
     tenDanhMuc
     maDanhMuc
     soLuongSanPham
+    trangThai
   }
 }`;
   const {danhSachDanhMucChoNguoiDung} = await GraphQLrequest({query});

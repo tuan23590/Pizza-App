@@ -6,19 +6,13 @@ const DonNhapSchema = new mongoose.Schema({
         type: String,
     },
     ngayNhap: {
-        type: Date,
-    },
-    nhaCungCap: {
         type: String,
     },
     tongTien: {
         type: Number,
     },
-    trangThai: {
-        type: String,
-    },
-    danhSachSanPham: {
-        type: String,
+    chiTietDonNhap: {
+        type: [String],
     },
     ghiChu: {
         type: String,

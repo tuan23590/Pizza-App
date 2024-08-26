@@ -4,8 +4,10 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useNavigate } from 'react-router-dom';
 import { APIDanhSachQuanHuyen, APIDanhSachTinhTp, APIDanhSachXaPhuong } from '../../utils/diaChiUtils';
 import { GioHangContext } from '../../context/GioHangProvider';
+import { AuthContext } from './../../context/AuthProvider';
 
 export default function DiaChi() {
+    const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
     const { gioHang,setGioHang } = useContext(GioHangContext);
     const [danhSachTinhTp, setDanhSachTinhTp] = useState([]);
     const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState([]);
@@ -76,6 +78,12 @@ export default function DiaChi() {
     const navigate = useNavigate();
 
     const handleXacNhanDiaChi = () => {
+        if (!diaChiData.tinhTp || !diaChiData.quanHuyen || !diaChiData.xaPhuong || !diaChiData.soNhaTenDuong) {
+            setNotifyOpen(true);
+            setNotificationMessage('Vui lòng chọn đầy đủ thông tin địa chỉ giao hàng');
+            setNotificationSeverity('error');
+            return;
+        }
         const stringDiaChi = `${diaChiData.soNhaTenDuong}, ${diaChiData.xaPhuong.path_with_type}`;
         setGioHang((prevGioHang) => {
             return {

@@ -7,7 +7,10 @@ const DanhMucSchema = new mongoose.Schema({
     },
     tenDanhMuc: {
         type: String,
-    }
+    },
+    trangThai: {
+        type: String,
+    },
 },{timestamps: true});
 
 const danhMucModel = mongoose.model('DanhMuc',DanhMucSchema);

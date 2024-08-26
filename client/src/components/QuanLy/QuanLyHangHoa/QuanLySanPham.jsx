@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { APIDanhSachSanPham, APIXoaSanPham } from '../../../utils/sanPhamUtils';
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, Select,
   MenuItem, TextField, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-  CircularProgress
+  CircularProgress,
+  TableSortLabel
 } from '@mui/material';
 import ChiTietSanPham from '.././ChiTietSanPham';
 import { APIDanhSachDanhMuc } from '../../../utils/danhMucUtils';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import { AuthContext } from '../../../context/AuthProvider';
 
 export default function QuanLySanPham() {
+  const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
   const [sanPham, setSanPham] = useState([]);
   const [danhMuc, setDanhMuc] = useState([]);
   const [selectDanhMuc, setSelectDanhMuc] = useState(null);
@@ -21,6 +24,8 @@ export default function QuanLySanPham() {
   const [loading, setLoading] = useState(true);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // State to control the confirm dialog
   const [idToDelete, setIdToDelete] = useState(null); // State to store the ID of the product to delete
+  const [orderBy, setOrderBy] = useState('');
+  const [order, setOrder] = useState('asc');
 
   const fetchData = async () => {
     const dataSP = await APIDanhSachSanPham();
@@ -55,7 +60,17 @@ export default function QuanLySanPham() {
     setSearchTerm(event.target.value);
   };
 
-  const filteredSanPham = sanPham.filter((sp) => {
+  const sortedSanPham = [...sanPham].sort((a, b) => {
+    let comparison = 0;
+    if (orderBy === 'giaSanPham' || orderBy === 'soLuong') {
+      comparison = a[orderBy] - b[orderBy];
+    } else {
+      comparison = a[orderBy]?.localeCompare(b[orderBy]);
+    }
+    return order === 'asc' ? comparison : -comparison;
+  });
+
+  const filteredSanPham = sortedSanPham.filter((sp) => {
     const matchesCategory = selectDanhMuc ? sp.danhMuc.id === selectDanhMuc : true;
     const matchesSearch = sp.maSanPham.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -65,7 +80,14 @@ export default function QuanLySanPham() {
     if (idToDelete) {
       const response = await APIXoaSanPham(idToDelete);
       if (response) {
+        setNotifyOpen(true);
+        setNotificationMessage('Xóa sản phẩm thành công');
+        setNotificationSeverity('success');
         fetchData();
+      } else {
+        setNotifyOpen(true);
+        setNotificationMessage('Xóa sản phẩm thất bại');
+        setNotificationSeverity('error');
       }
       setOpenConfirmDialog(false); // Close the confirm dialog after deletion
       setIdToDelete(null); // Clear the ID after deletion
@@ -82,6 +104,11 @@ export default function QuanLySanPham() {
     setIdToDelete(null);
   };
 
+  const handleRequestSort = (property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
   return (
     <TableContainer component={Paper}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
@@ -129,13 +156,66 @@ export default function QuanLySanPham() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Mã Sản Phẩm</TableCell>
+              <TableCell sortDirection={orderBy === 'maSanPham' ? order : false}>
+                <TableSortLabel
+                  active={orderBy === 'maSanPham'}
+                  direction={orderBy === 'maSanPham' ? order : 'asc'}
+                  onClick={() => handleRequestSort('maSanPham')}
+                >
+                  Mã Sản Phẩm
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Hình Ảnh</TableCell>
-              <TableCell>Tên Sản Phẩm</TableCell>
-              <TableCell>Giá Sản Phẩm</TableCell>
-              <TableCell>Số lượng</TableCell>
+              <TableCell sortDirection={orderBy === 'tenSanPham' ? order : false}>
+                <TableSortLabel
+                  active={orderBy === 'tenSanPham'}
+                  direction={orderBy === 'tenSanPham' ? order : 'asc'}
+                  onClick={() => handleRequestSort('tenSanPham')}
+                >
+                  Tên Sản Phẩm
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sortDirection={orderBy === 'giaSanPham' ? order : false}>
+                <TableSortLabel
+                  active={orderBy === 'giaSanPham'}
+                  direction={orderBy === 'giaSanPham' ? order : 'asc'}
+                  onClick={() => handleRequestSort('giaSanPham')}
+                >
+                  Giá Sản Phẩm
+                </TableSortLabel>
+              </TableCell>
+              <TableCell sortDirection={orderBy === 'soLuong' ? order : false}>
+                <TableSortLabel
+                  active={orderBy === 'soLuong'}
+                  direction={orderBy === 'soLuong' ? order : 'asc'}
+                  onClick={() => handleRequestSort('soLuong')}
+                >
+                  Số lượng
+                </TableSortLabel>
+              </TableCell>
+
+              <TableCell
+                sortDirection={orderBy === 'donViTinh' ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === 'donViTinh'}
+                  direction={orderBy === 'donViTinh' ? order : 'asc'}
+                  onClick={() => handleRequestSort('donViTinh')}
+                >
+                  Đơn vị tính
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Danh Mục</TableCell>
-              <TableCell>Trạng Thái</TableCell>
+              <TableCell
+                sortDirection={orderBy === 'trangThai' ? order : false}>
+                <TableSortLabel
+                  active={orderBy === 'trangThai'}
+                  direction={orderBy === 'trangThai' ? order : 'asc'}
+                  onClick={() => handleRequestSort('trangThai')}
+                >
+                  Trạng Thái
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Thao tác</TableCell>
             </TableRow>
           </TableHead>
@@ -160,7 +240,13 @@ export default function QuanLySanPham() {
                 <TableCell>{row.tenSanPham}</TableCell>
                 <TableCell>{row?.giaSanPham?.toLocaleString()} VND</TableCell>
                 <TableCell>{row.soLuong || 0}</TableCell>
-                <TableCell>{row.danhMuc?.tenDanhMuc.toUpperCase()}</TableCell>
+                <TableCell>{row.donViTinh}</TableCell>
+                <TableCell
+                  sx={{
+                    color: row.danhMuc.maDanhMuc === 'DMXOA' ? 'red' : 'black',
+                    fontWeight: '500'
+                  }}
+                >{row.danhMuc?.tenDanhMuc.toUpperCase()}</TableCell>
                 <TableCell
                   sx={{
                     color: row.trangThai === 'Ngừng kinh doanh' ? 'red' : 'green',
@@ -168,10 +254,12 @@ export default function QuanLySanPham() {
                   }}
                 >{row.trangThai}</TableCell>
                 <TableCell>
-                  <Button variant="contained" color="error" onClick={(e) => {
-                    e.stopPropagation();
-                    handleOpenConfirmDialog(row.id); // Open confirm dialog
-                  }}>Xóa</Button>
+                  {row.danhMuc.maDanhMuc !== 'DMXOA' && (
+                    <Button variant="contained" color="error" onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenConfirmDialog(row.id); // Open confirm dialog
+                    }}>Xóa</Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

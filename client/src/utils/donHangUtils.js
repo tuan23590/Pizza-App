@@ -78,13 +78,13 @@ export const APIDanhSachDonHang = async () => {
       maSanPham
       tenSanPham
       soLuong
-      ghiChu
       moTa
       hinhAnh
       danhMuc
       giaSanPham
       kichThuoc
       loaiDe
+      donViTinh
     }
   }
 }`;

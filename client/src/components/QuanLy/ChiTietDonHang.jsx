@@ -8,20 +8,9 @@ import { Dialog,
     Box,
     Divider } from '@mui/material'
 import React from 'react'
+import { FOMATDATE } from '../../function'
 
 export default function ChiTietDonHang({ openDialog, handleCloseDialog, selectedOrder }) {
-    console.log(selectedOrder);
-    const fomatDate = (date) => {
-        const d = new Date(parseFloat(date));
-
-        const hours = d.getHours().toString().padStart(2, '0');
-        const minutes = d.getMinutes().toString().padStart(2, '0');
-        const day = d.getDate().toString().padStart(2, '0');
-        const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Tháng trong JavaScript bắt đầu từ 0
-        const year = d.getFullYear();
-
-        return `${hours}:${minutes} ${day}/${month}/${year}`;
-    }
   return (
     <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
     <DialogTitle>Chi tiết đơn hàng</DialogTitle>
@@ -35,7 +24,7 @@ export default function ChiTietDonHang({ openDialog, handleCloseDialog, selected
                     >{selectedOrder.trangThai}</Typography>
                 </Grid>
                 <Grid item sm={6}>
-                    <Typography><b>Ngày đặt hàng:</b> {fomatDate(selectedOrder.ngayDatHang)}</Typography>
+                    <Typography><b>Ngày đặt hàng:</b> {FOMATDATE(selectedOrder.ngayDatHang)}</Typography>
                 </Grid>
                 <Grid item sm={6}>
                     <Typography><b>Tên khách hàng:</b> {selectedOrder.tenKhachHang}</Typography>
@@ -99,7 +88,7 @@ export default function ChiTietDonHang({ openDialog, handleCloseDialog, selected
         )}
     </DialogContent>
     <DialogActions>
-        <Button onClick={handleCloseDialog} color="primary">Đóng</Button>
+        <Button variant='outlined' onClick={handleCloseDialog} color="warning">Đóng</Button>
     </DialogActions>
 </Dialog>
   )

@@ -59,3 +59,16 @@ export const APICapNhatNhaCungCap = async (formData) => {
   });
   return capNhatNhaCungCap;
 };
+
+export const APIDanhSachNhaCungCapTheoDanhMuc = async (maDanhMuc) => {
+  const query = `query DanhSachNhaCungCapTheoDanhMuc($danhSachNhaCungCapTheoDanhMucId: String) {
+  danhSachNhaCungCapTheoDanhMuc(id: $danhSachNhaCungCapTheoDanhMucId) {
+    id
+    maNhaCungCap
+    tenNhaCungCap
+    soDienThoai
+  }
+}`;
+  const {danhSachNhaCungCapTheoDanhMuc} = await GraphQLrequest({query, variables: {danhSachNhaCungCapTheoDanhMucId: maDanhMuc}});
+  return danhSachNhaCungCapTheoDanhMuc;
+};

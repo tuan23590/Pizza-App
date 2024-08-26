@@ -4,7 +4,7 @@ import {
   FormControl, FormLabel, Checkbox, Box, Select, MenuItem,
   InputLabel, Grid, FormGroup
 } from '@mui/material';
-import { APIDanhSachDanhMucChoNguoiDung } from '../../utils/danhMucUtils';
+import { APIDanhSachDanhMucThemSanPham } from '../../utils/danhMucUtils';
 import FileUpload from '../FileUpload';
 import { APICapNhatSanPham, APIThemSanPham } from '../../utils/sanPhamUtils';
 import { AuthContext } from './../../context/AuthProvider';
@@ -12,30 +12,21 @@ import { AuthContext } from './../../context/AuthProvider';
 export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
   const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
   const [danhMuc, setDanhMuc] = useState([]);
-  const [formData, setFormData] = useState({
-    tenSanPham: '',
-    moTa: '',
-    ghiChu: '',
-    hinhAnh: '',
-    danhMuc: danhMuc[0]?.maDanhMuc || '',
-    giaSanPham: '',
-    danhSachKichThuoc: [],
-    danhSachLoaiDe: [],
-  });
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
     if (mode === 'edit' && sanPham) {
       const kichThuocParsed = JSON.parse(sanPham.kichThuoc || '[]');
       const loaiDeParsed = JSON.parse(sanPham.loaiDe || '[]');
-  
+
       console.log('kichThuocParsed', kichThuocParsed);
       console.log('loaiDeParsed', loaiDeParsed);
-  
+
       setFormData({
         id: sanPham.id,
         tenSanPham: sanPham.tenSanPham || '',
         moTa: sanPham.moTa || '',
-        ghiChu: sanPham.ghiChu || '',
+        donViTinh: sanPham.donViTinh || '',
         hinhAnh: sanPham.hinhAnh || '',
         danhMuc: sanPham.danhMuc.maDanhMuc || '',
         giaSanPham: sanPham.giaSanPham || '',
@@ -44,38 +35,31 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
         danhSachLoaiDe: loaiDeParsed,
         soLuong: sanPham.soLuong || 0
       });
-  
+
       // Kiểm tra trạng thái checkbox cho Kích Thước
       const kichThuocCheckedState = danhSachKichThuoc.reduce((acc, kichThuoc, index) => {
         acc[index] = kichThuocParsed.some(item => item.tenKichThuoc === kichThuoc);
         return acc;
       }, {});
       setKichThuocChecked(kichThuocCheckedState);
-  
+
       // Kiểm tra trạng thái checkbox cho Loại Đế
       const deCheckedState = danhSachDe.reduce((acc, de, index) => {
         acc[index] = loaiDeParsed.some(item => item.tenLoaiDe === de);
         return acc;
       }, {});
       setDeChecked(deCheckedState);
-  
+
     } else {
       // Reset lại formData và trạng thái checkbox nếu không phải chế độ 'edit'
       setFormData({
-        tenSanPham: '',
-        moTa: '',
-        ghiChu: '',
-        hinhAnh: '',
         danhMuc: danhMuc[0]?.maDanhMuc || '',
-        giaSanPham: '',
-        danhSachKichThuoc: [],
-        danhSachLoaiDe: [],
       });
       setKichThuocChecked({});
       setDeChecked({});
     }
   }, [sanPham, mode]);
-  
+
 
 
   const [kichThuocChecked, setKichThuocChecked] = useState({});
@@ -87,7 +71,7 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
   const danhSachDe = ['Đế kéo tay truyền thống', 'Đế giòn xốp', 'Viền phô mai', 'Viền xúc xích', 'Viền phô mai xúc xích', 'Viền phô mai xoắn'];
 
   const fetchDanhMuc = async () => {
-    const danhMuc = await APIDanhSachDanhMucChoNguoiDung();
+    const danhMuc = await APIDanhSachDanhMucThemSanPham();
     setDanhMuc(danhMuc);
   };
 
@@ -225,7 +209,7 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
     }));
   };
   const onSave = async () => {
-    if (formData.tenSanPham === '' || formData.giaSanPham === '' || formData.hinhAnh === ''|| formData.moTa === '') {
+    if (formData.tenSanPham === '' || formData.giaSanPham === '' || formData.hinhAnh === '' || formData.moTa === '') {
       setNotificationMessage('Vui lòng nhập đủ thông tin');
       setNotificationSeverity('error');
       setNotifyOpen(true);
@@ -247,7 +231,6 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
     }
     setNotifyOpen(true);
   }
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Thêm Sản Phẩm</DialogTitle>
@@ -259,7 +242,7 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
               <Select
                 disabled={mode === 'edit'}
                 name="danhMuc"
-                value={formData.danhMuc}
+                value={formData?.danhMuc}
                 label="Danh Mục"
                 onChange={handleChange}
                 variant="outlined"
@@ -272,13 +255,13 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               label="Tên Sản Phẩm"
               variant="outlined"
               name="tenSanPham"
-              value={formData.tenSanPham}
+              value={formData?.tenSanPham}
               onChange={handleChange}
             />
           </Grid>
@@ -288,19 +271,48 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
               label="Mô Tả"
               variant="outlined"
               name="moTa"
-              value={formData.moTa}
+              value={formData?.moTa}
               onChange={handleChange}
             />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel id="donViTinh">Đơn Vị Tính</InputLabel>
+              <Select
+                label="Đơn Vị Tính"
+                value={formData?.donViTinh || ''}
+                onChange={handleChange}
+                name='donViTinh'
+
+              >
+                <MenuItem value='Cái'>Cái</MenuItem>
+                <MenuItem value='Phần'>Phần</MenuItem>
+                <MenuItem value='Chai'>Chai</MenuItem>
+                <MenuItem value='Lon'>Lon</MenuItem>
+                <MenuItem value='Ly'>Ly</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={6}>
             <TextField
               fullWidth
               label="Giá Sản Phẩm"
               variant="outlined"
-              type="number"
+              type="text"
               name="giaSanPham"
-              value={formData.giaSanPham}
-              onChange={handleChange}
+              // value={formData?.giaSanPham}
+              value={
+                formData?.giaSanPham
+                    ? String(formData.giaSanPham).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                    : ''
+            }
+              // onChange={handleChange}
+              onChange={(e) => {
+                const value = e.target.value.replace(/,/g, ''); // Remove any existing commas
+                if (/^\d*\.?\d*$/.test(value)) { // Ensure it's a valid number
+                    setFormData({ ...formData, giaSanPham: value });
+                }
+            }}
             />
           </Grid>
           <Grid item xs={6}>
@@ -310,113 +322,106 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
             />
           </Grid>
           {mode == 'edit' && (
+            <>
             <Grid item xs={6}>
               <FormControl fullWidth >
                 <InputLabel>Trạng thái</InputLabel>
                 <Select
                   name="trangThai"
-                  value={formData.trangThai || ''}
+                  value={formData?.trangThai || ''}
                   label="Trạng thái"
                   onChange={handleChange}
                   variant="outlined"
                 >
                   <MenuItem value="Ngừng kinh doanh">Ngừng kinh doanh</MenuItem>
-                  {formData.soLuong > 0 && <MenuItem value="Đang kinh doanh">Đang kinh doanh</MenuItem>}
+                  {formData?.soLuong > 0 && <MenuItem value="Đang kinh doanh">Đang kinh doanh</MenuItem>}
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item xs={6}></Grid>
+            </>
           )
           }
-          <Grid item xs={12}>
-            <TextField
-              multiline
-              rows={2}
-              fullWidth
-              label="Ghi Chú"
-              variant="outlined"
-              name="ghiChu"
-              value={formData.ghiChu}
-              onChange={handleChange}
-            />
-          </Grid>
-          {/* Hiển thị nếu formData.danhMuc == 'DM1' hoặc formData.danhSachKichThuoc.length > 0 hoặc formData.danhSachDe.length > 0  */}
-          {(formData.danhMuc === 'DM1' || formData.danhSachKichThuoc.length > 0 || formData.danhSachLoaiDe.length > 0) && 
-           (
-            <>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <FormLabel component="legend">
-                    Kích thước
-                    <br />
-                    <i>* nhấn chọn kích thước của bánh và nhập giá</i>
-                  </FormLabel>
-                  {danhSachKichThuoc.map((kt, index) => (
-                    <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
-                      <Checkbox
-                        checked={kichThuocChecked[index] || false}
-                        onChange={() => handleKichThuocChange(index)}
-                      />
-                      <TextField
-                        label={kt}
-                        placeholder='Măc định là 0đ'
-                        variant="outlined"
-                        fullWidth
-                        type="number"
-                        size="small"
-                        focused={kichThuocChecked[index]}
-                        InputLabelProps={{ shrink: kichThuocChecked[index] }}
-                        inputProps={{ min: 0 }}
-                        disabled={!kichThuocChecked[index]}
-                        inputRef={(el) => (kichThuocRefs.current[index] = el)}
-                        value={(formData.danhSachKichThuoc.find(item => item.tenKichThuoc === kt)?.giaKichThuoc) || ''}
-                        onChange={(e) => handleKichThuocGiaChange(index, e)}
-                      />
-                    </Box>
-                  ))}
 
-                </FormGroup>
-              </Grid>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <FormLabel component="legend">
-                    Loại đế
-                    <br />
-                    <i>* nhấn chọn loại đế của bánh và nhập giá</i>
-                  </FormLabel>
-                  {danhSachDe.map((de, index) => (
-                    <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
-                      <Checkbox
-                        checked={deChecked[index] || false}
-                        onChange={() => handleDeChange(index)}
-                      />
-                      <TextField
-                        label={de}
-                        placeholder='Măc định là 0đ'
-                        variant="outlined"
-                        fullWidth
-                        type="number"
-                        size="small"
-                        focused={deChecked[index]}
-                        InputLabelProps={{ shrink: deChecked[index] }}
-                        inputProps={{ min: 0 }}
-                        disabled={!deChecked[index]}
-                        inputRef={(el) => (deRefs.current[index] = el)}
-                        value={(formData.danhSachLoaiDe.find(item => item.tenLoaiDe === de)?.giaLoaiDe) || ''}
-                        onChange={(e) => handleDeGiaChange(index, e)}
-                      />
-                    </Box>
-                  ))}
-                </FormGroup>
-              </Grid>
-            </>
-          )}
+          {/* Hiển thị nếu formData.danhMuc == 'DM1' hoặc formData.danhSachKichThuoc.length > 0 hoặc formData.danhSachDe.length > 0  */}
+          {(formData?.danhMuc === 'DM1' || formData?.danhSachKichThuoc?.length > 0 || formData?.danhSachLoaiDe?.length > 0) &&
+            (
+              <>
+                <Grid item xs={6}>
+                  <FormGroup>
+                    <FormLabel component="legend">
+                      Kích thước
+                      <br />
+                      <i>* nhấn chọn kích thước của bánh và nhập giá</i>
+                    </FormLabel>
+                    {danhSachKichThuoc.map((kt, index) => (
+                      <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
+                        <Checkbox
+                          checked={kichThuocChecked[index] || false}
+                          onChange={() => handleKichThuocChange(index)}
+                        />
+                        <TextField
+                          label={kt}
+                          placeholder='Măc định là 0đ'
+                          variant="outlined"
+                          fullWidth
+                          type="number"
+                          size="small"
+                          focused={kichThuocChecked[index]}
+                          InputLabelProps={{ shrink: kichThuocChecked[index] }}
+                          inputProps={{ min: 0 }}
+                          disabled={!kichThuocChecked[index]}
+                          inputRef={(el) => (kichThuocRefs.current[index] = el)}
+                          value={(formData?.danhSachKichThuoc?.find(item => item.tenKichThuoc === kt)?.giaKichThuoc) || ''}
+                          onChange={(e) => handleKichThuocGiaChange(index, e)}
+                        />
+                      </Box>
+                    ))}
+
+                  </FormGroup>
+                </Grid>
+                <Grid item xs={6}>
+                  <FormGroup>
+                    <FormLabel component="legend">
+                      Loại đế
+                      <br />
+                      <i>* nhấn chọn loại đế của bánh và nhập giá</i>
+                    </FormLabel>
+                    {danhSachDe.map((de, index) => (
+                      <Box key={index} sx={{ marginY: 1, display: 'flex', alignItems: 'center' }}>
+                        <Checkbox
+                          checked={deChecked[index] || false}
+                          onChange={() => handleDeChange(index)}
+                        />
+                        <TextField
+                          label={de}
+                          placeholder='Măc định là 0đ'
+                          variant="outlined"
+                          fullWidth
+                          type="number"
+                          size="small"
+                          focused={deChecked[index]}
+                          InputLabelProps={{ shrink: deChecked[index] }}
+                          inputProps={{ min: 0 }}
+                          disabled={!deChecked[index]}
+                          inputRef={(el) => (deRefs.current[index] = el)}
+                          value={(formData?.danhSachLoaiDe?.find(item => item.tenLoaiDe === de)?.giaLoaiDe) || ''}
+                          onChange={(e) => handleDeGiaChange(index, e)}
+                        />
+                      </Box>
+                    ))}
+                  </FormGroup>
+                </Grid>
+              </>
+            )}
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button color="warning" onClick={onClose}>Đóng</Button>
-        {mode === 'add' ? (<Button variant="outlined" onClick={onSave} color="info">Lưu</Button>) : (
-          <Button variant="outlined" onClick={onSave} color="info">Cập nhật</Button>
-        )}
+        <Button variant='outlined' color="warning" onClick={onClose}>Đóng</Button>
+        {formData?.danhMuc !== 'DMXOA' && (
+          mode === 'add' ? (<Button variant="contained" onClick={onSave} color="info">Lưu</Button>) : (
+            <Button variant="contained" onClick={onSave} color="info">Cập nhật</Button>
+          ))}
       </DialogActions>
     </Dialog>
   );

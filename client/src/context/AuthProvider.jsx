@@ -38,7 +38,7 @@ export default function AuthProvider({ children }) {
       }}>
       {children}
       <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={notifyOpen}
         autoHideDuration={3000}
         onClose={handleCloseNotification}

@@ -2,8 +2,10 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 import React, { useContext, useState } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
 import { GioHangContext } from './../../context/GioHangProvider';
+import { AuthContext } from '../../context/AuthProvider';
 
 export default function SanPhamTrongGioHang({ sanPham }) {
+  const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
   const { setGioHang } = useContext(GioHangContext);
   const [openDialog, setOpenDialog] = useState(false);
   const giaCuaSanPham = (sanPham.gia + ((sanPham.kichThuoc?.giaKichThuoc) ?? 0) + ((sanPham.loaiDe?.giaLoaiDe) ?? 0)) * sanPham.soLuong;
@@ -19,6 +21,9 @@ export default function SanPhamTrongGioHang({ sanPham }) {
       return updatedGioHang;
     });
     setOpenDialog(false);
+    setNotifyOpen(true);
+    setNotificationMessage('Đã xóa sản phẩm khỏi giỏ hàng');
+    setNotificationSeverity('success');
   }
 
   const handleDialogOpen = () => {

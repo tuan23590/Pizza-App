@@ -126,22 +126,41 @@ export default function QuanLyDanhMuc() {
               <TableCell>Mã Danh Mục</TableCell>
               <TableCell>Tên Danh Mục</TableCell>
               <TableCell>Số Lượng Sản Phẩm</TableCell>
+              <TableCell>Trạng thái</TableCell>
               <TableCell>Thao tác</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {danhMuc.map((dm) => (
-              <TableRow key={dm.id}>
+              <TableRow key={dm.id}
+              sx={{
+                cursor: 'pointer',
+                '&:hover': { backgroundColor: '#f5f5f5' },
+              }}
+              onClick={() => {
+                if (dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1') {
+                  handleOpen(dm);
+                }
+              }}
+              >
                 <TableCell>{dm.maDanhMuc}</TableCell>
                 <TableCell>{dm.tenDanhMuc.toUpperCase()}</TableCell>
                 <TableCell>{dm.soLuongSanPham} sản phẩm</TableCell>
+                <TableCell
+                sx={{
+                  color: dm.trangThai === 'Đã xóa' ? 'red' : 'green',
+                  fontWeight: 'bold',
+                }}
+                >{
+                  dm?.trangThai?.toUpperCase()
+                }</TableCell>
                 {dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1'
                  && (
                   <TableCell>
-                    <Button variant="contained" sx={{ marginX: '10px' }} color="primary" onClick={() => handleOpen(dm)}>
-                      Sửa
-                    </Button>
-                    <Button variant="contained" sx={{ marginX: '10px' }} color="error" onClick={() => handleDelete(dm.id)}>
+                    <Button size='small' variant="contained" sx={{ marginX: '10px' }} color="error" onClick={(e) =>{
+                      e.stopPropagation();
+                      handleDelete(dm.id);
+                    }}>
                       Xóa
                     </Button>
                   </TableCell>

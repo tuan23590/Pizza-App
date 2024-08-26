@@ -4,6 +4,7 @@ import donHangModel from './donHangModel.js';
 import sanPhamDaMuaModel from './sanPhamDaMuaModel.js';
 import donNhapModel from './donNhapModel.js';
 import nhapCungCapModel from './nhaCungCapModel.js';
+import ChiTietDonNhapModel from './chiTietDonNhapModel.js';
 
 export {
     sanPhamModel,
@@ -11,5 +12,6 @@ export {
     donHangModel,
     sanPhamDaMuaModel,
     donNhapModel,
+    ChiTietDonNhapModel,
     nhapCungCapModel
 }

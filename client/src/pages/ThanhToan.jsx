@@ -8,8 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import { APIThemDonHang } from '../utils/donHangUtils';
 import { GioHangContext } from '../context/GioHangProvider';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { AuthContext } from './../context/AuthProvider';
 
 export default function ThanhToan() {
+    const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
     const { gioHang, setGioHang } = useContext(GioHangContext);
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -28,6 +30,12 @@ export default function ThanhToan() {
     }
 
     const handleThanhToan = async () => {
+        if (!gioHang.tenKhachHang || !gioHang.soDienThoai || !gioHang.email) {
+            setNotifyOpen(true);
+            setNotificationMessage('Vui lòng điền đầy đủ thông tin đặt hàng');
+            setNotificationSeverity('error');
+            return;
+        }
         setLoading(true);
         const data = await APIThemDonHang(gioHang);
         setLoading(false);
@@ -67,7 +75,7 @@ export default function ThanhToan() {
             const minute = date.getMinutes();
             const danhSachGio = [];
             const startHour = 7;
-            const endHour = 21;
+            const endHour = 20;
 
             for (let i = Math.max(hour, startHour); i <= endHour; i++) {
                 for (let j = 0; j < 60; j += 15) {
@@ -141,9 +149,18 @@ export default function ThanhToan() {
                 </Paper>
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
                     <Typography fullWidth variant='h6' sx={{ textAlign: 'center' }}>Thông tin đặt hàng</Typography>
-                    <TextField autoFocus name='tenKhachHang' onChange={handleChange} size='small' fullWidth label="Họ và tên" variant="outlined" sx={{ marginY: '10px' }} />
-                    <TextField name='soDienThoai' onChange={handleChange} size='small' fullWidth label="Số điện thoại" variant="outlined" sx={{ marginY: '10px' }} />
-                    <TextField name='email' onChange={handleChange} size='small' fullWidth label="Email" variant="outlined" sx={{ marginY: '10px' }} />
+                    <TextField
+                    required
+                    error={!gioHang.tenKhachHang}
+                    autoFocus name='tenKhachHang' onChange={handleChange} size='small' fullWidth label="Họ và tên" variant="outlined" sx={{ marginY: '10px' }} />
+                    <TextField
+                    required
+                    error={!gioHang.soDienThoai}
+                    name='soDienThoai' onChange={handleChange} size='small' fullWidth label="Số điện thoại" variant="outlined" sx={{ marginY: '10px' }} />
+                    <TextField
+                    required
+                    error={!gioHang.email}
+                    name='email' onChange={handleChange} size='small' fullWidth label="Email" variant="outlined" sx={{ marginY: '10px' }} />
                 </Paper>
                 <Paper sx={{ padding: '20px', marginY: '15px' }} elevation={3} >
                     <Typography fullWidth variant='h6' sx={{ textAlign: 'center' }}>Phương thức thanh toán</Typography>

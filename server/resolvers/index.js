@@ -262,7 +262,6 @@ export const resolvers = {
             // nếu args.thoiGianGiaoHang = "Càng sớm càng tốt" thì lấy Date.now() + 2 giờ ngược lại lấy args.thoiGianGiaoHang
             donHang.thoiGianGiaoHang = args.thoiGianGiaoHang == 'Càng sớm càng tốt' ? Date.now() + 2 * 60 * 60 * 1000 : args.thoiGianGiaoHang;
             const danhSachSanPham = JSON.parse(args.danhSachSanPham)
-            console.log(danhSachSanPham);
             let danhSachIdSanPhamDaMua = [];  
             try{
                 for (let i = 0; i < danhSachSanPham.length; i++) {
@@ -276,7 +275,7 @@ export const resolvers = {
                 donHang.danhSachSanPham = danhSachIdSanPhamDaMua;
                 return donHang.save();
             }catch(err){
-                console.log(err);
+                console.error(err);
             }
             
         },
@@ -299,7 +298,6 @@ export const resolvers = {
             return nhaCungCap.save();
         },
         capNhatNhaCungCap: async (parent, args) => {
-            console.log(args);
             const nhaCungCap = await nhapCungCapModel.findOneAndUpdate({ _id: args.id }, args, { new: true });
             return nhaCungCap;
         },

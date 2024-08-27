@@ -42,7 +42,7 @@ export const APIDonHangTheoEmail = async (email) => {
       maSanPham
       tenSanPham
       soLuong
-      ghiChu
+      donViTinh
       moTa
       hinhAnh
       danhMuc

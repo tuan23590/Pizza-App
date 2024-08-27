@@ -38,7 +38,6 @@ export default function QuanlyDonHang() {
     }
     const handleChange = async (e,donHang) => {
         const data = await APICapNhatTrangThaiDonHang({maDonHang: donHang.maDonHang, trangThai: e.target.value})
-        console.log(data)
         if(data){
             fetctData();
         }else{
@@ -97,6 +96,7 @@ export default function QuanlyDonHang() {
                     }}
                     >
                         <MenuItem value={"Đang xử lý"}>Đang xử lý</MenuItem>
+                        <MenuItem value={"Đang chuẩn bị"}>Đang chuẩn bị</MenuItem>
                         <MenuItem value={"Đang giao hàng"}>Đang giao hàng</MenuItem>
                         <MenuItem value={"Đã giao hàng"}>Đã giao hàng</MenuItem>
                         <MenuItem value={"Đã hủy"}>Đã hủy</MenuItem>

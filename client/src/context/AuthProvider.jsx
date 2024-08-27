@@ -12,7 +12,6 @@ export default function AuthProvider({ children }) {
     const [notifyOpen, setNotifyOpen] = useState(false)
     const [notificationMessage, setNotificationMessage] = useState('')
     const [notificationSeverity, setNotificationSeverity] = useState('success')
-
     useEffect(() => {
         const unsub =  auth.onAuthStateChanged((user) => {
             if(user?.uid){
@@ -34,7 +33,7 @@ export default function AuthProvider({ children }) {
       setUser,
       setNotifyOpen,
       setNotificationMessage,
-      setNotificationSeverity
+      setNotificationSeverity,
       }}>
       {children}
       <Snackbar

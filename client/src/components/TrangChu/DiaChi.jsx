@@ -8,7 +8,8 @@ import { AuthContext } from './../../context/AuthProvider';
 
 export default function DiaChi() {
     const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
-    const { gioHang,setGioHang } = useContext(GioHangContext);
+    const { gioHang,setGioHang,setHienThiDiaChi } = useContext(GioHangContext);
+    const curentURL = window.location.href.split('/')[3];
     const [danhSachTinhTp, setDanhSachTinhTp] = useState([]);
     const [danhSachQuanHuyen, setDanhSachQuanHuyen] = useState([]);
     const [danhSachXaPhuong, setDanhSachXaPhuong] = useState([]);
@@ -91,13 +92,16 @@ export default function DiaChi() {
                 diaChiGiaoHang: stringDiaChi,
             }
         });
-        navigate('/DatHang');
+        if (curentURL) {
+            setHienThiDiaChi(false);
+        } else {
+            navigate('/DatHang');
+        }
     };
     return (
         <Box sx={{
             width: '30vw',
             minWidth: '300px',
-            borderRadius: '10px',
             textAlign: 'center',
             boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.4)',
             position: 'absolute', 
@@ -123,7 +127,7 @@ export default function DiaChi() {
                     Giao hàng tận nơi
                 </Typography>
             </Box>
-            <Box sx={{ padding: '10px', backgroundColor: 'white' }}>
+            <Box sx={{ padding: '10px', backgroundColor: 'white' ,borderRadius: '0px 0px 10px 10px', }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     <Autocomplete
                         autoFocus
@@ -178,7 +182,6 @@ export default function DiaChi() {
                     />
 
                     <TextField label="Số nhà, tên đường" variant="outlined" size="small" fullWidth value={diaChiData.soNhaTenDuong} onChange={(e) => setDiaChiData({ ...diaChiData, soNhaTenDuong: e.target.value })} />
-
                 </Box>
                 <Button variant='contained' fullWidth color='success' sx={{marginTop: '10px'}} onClick={handleXacNhanDiaChi}>Bắt đầu đặt hàng</Button>
             </Box>

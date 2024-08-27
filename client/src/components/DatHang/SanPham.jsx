@@ -5,7 +5,7 @@ import { AuthContext } from '../../context/AuthProvider';
 
 export default function SanPham({ sanPham }) {
   const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
-  const { setGioHang } = useContext(GioHangContext);
+  const {gioHang,setGioHang,setHienThiDiaChi } = useContext(GioHangContext);
   const [kichThuoc, setkichThuoc] = useState(null);
   const [loaiDe, setLoaiDe] = useState(null);
   const gia = (loaiDe?.giaLoaiDe || 0) + (kichThuoc?.giaKichThuoc || 0) + sanPham.giaSanPham;
@@ -16,6 +16,10 @@ export default function SanPham({ sanPham }) {
   }, [sanPham.kichThuoc, sanPham.loaiDe]);
 
   const themSanPhamVaoGioHang = (sanPham) => {
+    if(gioHang.diaChiGiaoHang === ''){
+      setHienThiDiaChi(true);
+      return;
+    }
     setGioHang((prevGioHang) => {
       // Đảm bảo prevGioHang.danhSachSanPham là một mảng
       const danhSachSanPham = prevGioHang?.danhSachSanPham || [];

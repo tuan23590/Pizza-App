@@ -15,14 +15,17 @@ import DiaChi from "../components/TrangChu/DiaChi";
 import QuanLyHangHoa from './../components/QuanLy/QuanLyHangHoa/QuanLyHangHoa';
 import QuanLyPhieuNhap from "../components/QuanLy/QuanLyPhieuNhap/QuanLyPhieuNhap";
 import Test from "../pages/Test";
+import SubscriptionProvider from "../context/SubscriptionProvider";
 const KhachHangProvider = () => {
     return <>
+        <SubscriptionProvider>
         <AuthProvider>
             <GioHangProvider>
                 <Header />
                 <Outlet />
             </GioHangProvider>
         </AuthProvider>
+        </SubscriptionProvider>
     </>
 }
 

@@ -1,7 +1,6 @@
 import { Badge, Box, Menu, MenuItem } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import { subscribeToNotifications } from '../utils/thongBaoUtils';
 
 export default function ThongBao() {
     const [inVisible, setInvisible] = useState(true);
@@ -19,12 +18,6 @@ export default function ThongBao() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    useEffect(() => {
-        subscribeToNotifications((notification) => {
-            setInvisible(false);
-        });
-    }, []);
     return (
         <Box
             sx={{

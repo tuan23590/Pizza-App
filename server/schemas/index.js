@@ -110,6 +110,18 @@ type DonNhap {
     chiTietDonNhap: [ChiTietDonNhap],
     ghiChu: String,
 },
+type Message {
+    message: String,
+    type: String,
+}
+type ThongBao {
+    id: String,
+    noiDung: String,
+    nguoiNhan: [String],
+    trangThai: String,
+    hinhAnh: String,
+    createdAt: String,
+},
 
 type Query {
     danhSachSanPham: [SanPham],
@@ -217,5 +229,15 @@ type Mutation {
     danhSachSanPham: String,
     ghiChu: String
     ): DonNhap,
+
+    themThongBao(
+    noiDung: String,
+    nguoiNhan: [String],
+    trangThai: String,
+    hinhAnh: String
+    ): ThongBao,
+}
+    type Subscription {
+    Notify: ThongBao
 }
 `;

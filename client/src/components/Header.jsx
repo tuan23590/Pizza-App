@@ -1,17 +1,16 @@
 import React, { useContext } from 'react';
 import { Box, Link, Typography } from '@mui/material';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import User from './User';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import { useNavigate } from 'react-router-dom';
 import DiaChi from './TrangChu/DiaChi';
 import { GioHangContext } from '../context/GioHangProvider';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import ThongBao from './ThongBao';
 
 export default function Header() {
   const { gioHang,hienThiDiaChi,setHienThiDiaChi } = useContext(GioHangContext);
   const navigate = useNavigate();
-  console.log(gioHang);
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white' }}>
@@ -38,12 +37,7 @@ export default function Header() {
             }}
             >{gioHang.diaChiGiaoHang}</Typography>
           </Box>
-          <Box sx={{
-            cursor: 'pointer',
-            paddingTop: '5px',
-          }}>
-            <NotificationsNoneIcon />
-          </Box>
+          <ThongBao />
           <User />
           <Link
             onClick={() => navigate('/TheoDoiDonHang')}
@@ -74,8 +68,6 @@ export default function Header() {
               zIndex: 999, // Đặt bên dưới Box nhưng trên các phần tử khác
             }}
           />
-
-          {/* Box displaying DiaChi */}
           <Box
             sx={{
               position: 'fixed',

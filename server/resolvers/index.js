@@ -1,6 +1,9 @@
 import chiTietDonNhapModel from "../models/chiTietDonNhapModel.js";
-import { danhMucModel, donHangModel, donNhapModel, nhapCungCapModel, sanPhamDaMuaModel, sanPhamModel } from "../models/index.js";
+import { danhMucModel, donHangModel, donNhapModel, nhapCungCapModel, sanPhamDaMuaModel, sanPhamModel, thongBaoModel } from "../models/index.js";
 import fs from 'fs';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubsub = new PubSub();
 
 export const resolvers = {
     Query: {
@@ -344,5 +347,17 @@ export const resolvers = {
             const donNhap = await donNhapModel.findOneAndUpdate({ _id: args.id }, args , { new: true });
             return donNhap;
         },
-    }
+        themThongBao: async (parent, args) => {
+            const thongBao = new thongBaoModel(args);
+            pubsub.publish('THEM_THONG_BAO', { Notify: thongBao });
+            return thongBao.save();
+        }
+    },
+    Subscription: {
+        Notify: {
+            subscribe: () => pubsub.asyncIterator([
+                'THEM_THONG_BAO'
+            ])
+        }
+    },
 };

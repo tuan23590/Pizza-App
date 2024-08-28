@@ -1,13 +1,8 @@
-import { Container, Link } from '@mui/material'
 import React from 'react'
+import { Typography } from '@mui/material';
 
 export default function Test() {
   return (
-    <Container>
-      <Link
-      
-                variant='button'
-      href="/admin">Admin</Link>
-    </Container>
+    <Typography>Test</Typography>
   )
 }

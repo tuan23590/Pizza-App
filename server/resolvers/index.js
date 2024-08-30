@@ -141,7 +141,7 @@ export const resolvers = {
             // sắp xếp theo maSanPham giảm dần
             danhSachSanPham.sort((a, b) => b.maSanPham.localeCompare(a.maSanPham));
             return danhSachSanPham;
-        }      
+        },
     },
     DonHang: {
         danhSachSanPham: async (parent) => {

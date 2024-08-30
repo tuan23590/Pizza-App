@@ -63,7 +63,6 @@ export default function SanPham({ sanPham }) {
     setNotifyOpen(true);
     setNotificationMessage('Đã thêm sản phẩm vào giỏ hàng');
     setNotificationSeverity('success');
-    
   };
 
   return (
@@ -74,7 +73,7 @@ export default function SanPham({ sanPham }) {
         boxSizing: 'border-box',
         marginLeft: '10px',
         marginBottom: '10px',
-        overflow: 'hidden', // Ensure the zoom effect doesn't overflow the Paper component
+        overflow: 'hidden',
       }}
     >
       <Box
@@ -91,9 +90,12 @@ export default function SanPham({ sanPham }) {
         }}
       />
       <Box sx={{ padding: '10px' }}>
-        <Typography variant='h6'>{sanPham.tenSanPham}</Typography>
-        {/* <Typography height={"20px"} color='green' mb={'5px'} variant='subtitle2'>{sanPham.ghiChu}</Typography> */}
-        <Typography variant='body1' mb={'5px'} >{sanPham.moTa}</Typography>
+        <Typography sx={{
+          fontSize: '1rem',
+          fontWeight: 'bold',
+          marginBottom: '5px'
+        }} >{sanPham.tenSanPham}</Typography>
+        <Typography height={'70px'} variant='body1' mb={'5px'} >{sanPham.moTa}</Typography>
 
 
         {sanPham.kichThuoc.length > 0 && (
@@ -103,7 +105,7 @@ export default function SanPham({ sanPham }) {
               fullWidth
               size='small'
               sx={{ marginBottom: '5px' }}
-              value={kichThuoc}
+              value={kichThuoc || ''}
               onChange={(e) => setkichThuoc(e.target.value)}
             >
               {sanPham.kichThuoc.map((kt) => (
@@ -121,7 +123,7 @@ export default function SanPham({ sanPham }) {
               fullWidth
               size='small'
               sx={{ marginBottom: '10px' }}
-              value={loaiDe}
+              value={loaiDe || ''}
               onChange={(e) => setLoaiDe(e.target.value)}
             >
               {sanPham.loaiDe.map((ld) => (

@@ -4,6 +4,8 @@ import { APIDonHangTheoEmail } from '../utils/donHangUtils'
 import ChiTietDonHang from '../components/QuanLy/ChiTietDonHang'
 import { AuthContext } from './../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { APINhanThongBao } from './../utils/thongBaoUtils';
+import { FOMATDATE } from '../function';
 
 export default function TheoDoiDonHang() {
     const { user } = useContext(AuthContext)
@@ -13,18 +15,8 @@ export default function TheoDoiDonHang() {
     const [openDialog, setOpenDialog] = useState(false)
     const [status, setStatus] = useState('Tất cả')
     const navigate = useNavigate()
+    const { data, loading, error } = APINhanThongBao();
 
-    const fomatDate = (date) => {
-        const d = new Date(parseFloat(date));
-
-        const hours = d.getHours().toString().padStart(2, '0');
-        const minutes = d.getMinutes().toString().padStart(2, '0');
-        const day = d.getDate().toString().padStart(2, '0');
-        const month = (d.getMonth() + 1).toString().padStart(2, '0'); // Tháng trong JavaScript bắt đầu từ 0
-        const year = d.getFullYear();
-
-        return `${hours}:${minutes} ${day}/${month}/${year}`;
-    }
 
     const handleSearch = async () => {
         const data = await APIDonHangTheoEmail(user.email)
@@ -49,7 +41,17 @@ export default function TheoDoiDonHang() {
         }
         handleSearch()
     }, [user])
-
+    useEffect(() => {
+        if (data) {
+            handleSearch();
+        }
+    }, [data])
+    useEffect(() => {
+        if (selectedOrder) {
+            const order = danhSachDonHang.find(order => order.maDonHang === selectedOrder.maDonHang);
+            setSelectedOrder(order);
+        }
+    }, [danhSachDonHang])
     const handleOpenDialog = (order) => {
         setSelectedOrder(order)
         setOpenDialog(true)
@@ -67,7 +69,7 @@ export default function TheoDoiDonHang() {
                     {danhSachDonHang.length > 0 && (
                         <Box sx={{ marginX: 'auto' }}>
                             <Box>
-                                {['Tất cả', 'Đang xử lý', 'Đang giao hàng', 'Đã giao hàng', 'Đã hủy'].map((trangThai, index) => (
+                                {['Tất cả', 'Đang xử lý','Đang chuẩn bị', 'Đang giao hàng', 'Đã giao hàng', 'Đã hủy'].map((trangThai, index) => (
                                     <Button
                                         key={index}
                                         sx={{ margin: '5px' }}
@@ -98,7 +100,11 @@ export default function TheoDoiDonHang() {
                                         <Grid item sm={12} display={'flex'} justifyContent={'space-between'} textAlign={'center'}>
                                             <Typography variant='h6'>Mã đơn hàng: {donHang.maDonHang}</Typography>
                                             <Typography
-                                                backgroundColor={donHang.trangThai === 'Đang xử lý' ? '#ff9100' : donHang.trangThai === 'Đang giao hàng' ? '#1e88e5' : donHang.trangThai === 'Đã giao hàng' ? '#0a8020' : '#e53935'}
+                                                backgroundColor={
+                                                    donHang.trangThai === 'Đang xử lý' ? '#ff9100' :
+                                                    donHang.trangThai === 'Đang giao hàng' ? '#1e88e5' :
+                                                    donHang.trangThai === 'Đang chuẩn bị' ? '#1e88e5' : 
+                                                    donHang.trangThai === 'Đã giao hàng' ? '#0a8020' : '#e53935'}
                                                 borderRadius={2}
                                                 color={'white'}
                                                 fontWeight={'600'}
@@ -110,7 +116,7 @@ export default function TheoDoiDonHang() {
                                             >{donHang.trangThai}</Typography>
                                         </Grid>
                                         <Grid item sm={6}>
-                                            <Typography><b>Ngày đặt hàng:</b> {fomatDate(donHang.ngayDatHang)}</Typography>
+                                            <Typography><b>Ngày đặt hàng:</b> {FOMATDATE(donHang.ngayDatHang)}</Typography>
                                         </Grid>
                                         <Grid item sm={6}>
                                             <Typography><b>Số điện thoại:</b> {donHang.soDienThoai}</Typography>
@@ -119,7 +125,7 @@ export default function TheoDoiDonHang() {
                                             <Typography><b>Địa chỉ giao hàng:</b> {donHang.diaChiGiaoHang}</Typography>
                                         </Grid>
                                         <Grid item sm={12}>
-                                            <Typography><b>Thời gian giao hàng dự kiến:</b> {fomatDate(donHang.thoiGianGiaoHang)}</Typography>
+                                            <Typography><b>Thời gian giao hàng dự kiến:</b> {FOMATDATE(donHang.thoiGianGiaoHang)}</Typography>
                                         </Grid>
                                     </Grid>
                                 ))}

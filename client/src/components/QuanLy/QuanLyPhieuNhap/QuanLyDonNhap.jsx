@@ -119,7 +119,7 @@ export default function QuanLyDonNhap() {
                       const maxLength = 50;
                       const tenSanPhams = donNhap.chiTietDonNhap
                         .map(
-                          (chiTietDonNhap) => chiTietDonNhap.sanPham.tenSanPham
+                          (chiTietDonNhap) => chiTietDonNhap.sanPham?.tenSanPham
                         )
                         .join(", ");
 

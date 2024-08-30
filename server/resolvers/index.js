@@ -284,6 +284,10 @@ export const resolvers = {
         },
         capNhatTrangThaiDonHang: async (parent, args) => {
             const donHang = await donHangModel.findOneAndUpdate({ maDonHang: args.maDonHang }, { trangThai: args.trangThai }, { new: true });
+            pubsub.publish('THEM_THONG_BAO', { Notify: {
+                message: `Đơn hàng ${args.maDonHang} đã được cập nhật trạng thái thành ${args.trangThai}`,
+                type: "update",
+            } });
             return donHang;
         },
         themNhaCungCap: async (parent, args) => {

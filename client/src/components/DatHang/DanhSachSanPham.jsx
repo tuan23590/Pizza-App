@@ -15,6 +15,8 @@ export default function DanhSachSanPham() {
         margin: 'auto',
         marginLeft: '10px',
         marginTop: '20px',
+        maxHeight: '87vh',
+        overflow: 'auto',
       }}
     >
       {danhSachSanPham.map((sanPham) => {

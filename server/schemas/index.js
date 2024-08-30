@@ -238,6 +238,6 @@ type Mutation {
     ): ThongBao,
 }
     type Subscription {
-    Notify: ThongBao
+    Notify: Message
 }
 `;

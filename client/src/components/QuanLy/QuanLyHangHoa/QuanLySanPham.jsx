@@ -177,7 +177,10 @@ export default function QuanLySanPham() {
             <Select
               label="Lọc theo danh mục"
               value={selectDanhMuc}
-              onChange={(e) => setSelectDanhMuc(e.target.value)}
+              onChange={(e) => {
+                setSelectDanhMuc(e.target.value);
+                setPage(0);
+              }}
             >
               <MenuItem value={null}>Tất cả</MenuItem>
               {danhMuc.map((dm) => (

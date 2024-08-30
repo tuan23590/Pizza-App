@@ -4,15 +4,11 @@ import { gql, useSubscription } from '@apollo/client';
 export const APINhanThongBao = () => {
   const { data, loading, error } = useSubscription(gql`
     subscription Notify {
-      Notify {
-        id
-        noiDung
-        nguoiNhan
-        trangThai
-        hinhAnh
-        createdAt
-      }
-    }
+  Notify {
+    message
+    type
+  }
+}
   `);
   return { data, loading, error };
 };

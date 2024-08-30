@@ -16,14 +16,9 @@ export default function Test() {
   console.log(danhSachThongBao);
   return (
     danhSachThongBao.map((thongBao) => (
-      <div key={thongBao.id}>
-        <Typography variant="h6">{thongBao.noiDung}</Typography>
-        <Typography variant="subtitle1">Nguoi Nhan: {thongBao.nguoiNhan}</Typography>
-        <Typography variant="subtitle2">Trang Thai: {thongBao.trangThai}</Typography>
-        {thongBao.hinhAnh && (
-          <img src={thongBao.hinhAnh} alt="Hinh Anh" style={{ width: '100px' }} />
-        )}
-        <Typography variant="caption">{new Date(thongBao.createdAt).toLocaleString()}</Typography>
+      <div key={thongBao}>
+        <Typography variant="h6">{thongBao.message}</Typography>
+        <Typography variant="subtitle1">Loai: {thongBao.type}</Typography>
       </div>
     ))
     // <div>

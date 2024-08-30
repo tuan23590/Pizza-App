@@ -145,9 +145,10 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
             setNotificationSeverity('error');
             return;
         }
+        //thêm chiTietDonNhap và đầu của danhSachSanPham
         setFormData((prev) => ({
             ...prev,
-            danhSachSanPham: [...prev.danhSachSanPham, chiTietDonNhap],
+            danhSachSanPham: [chiTietDonNhap, ...prev.danhSachSanPham],
         }));
         setChiTietDonNhap(null);
         setNotificationMessage('Thêm sản phẩm vào phiếu nhập thành công');
@@ -300,6 +301,7 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                         <TableHead>
                                             <TableRow>
+                                                <TableCell>STT</TableCell>
                                                 <TableCell>Sản Phẩm</TableCell>
                                                 <TableCell>Số Lượng</TableCell>
                                                 <TableCell>Đơn vị tính</TableCell>
@@ -336,6 +338,7 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
                                                         }
                                                     }}
                                                 >
+                                                    <TableCell>{index+1}</TableCell>
                                                     <TableCell component="th" scope="row">
                                                         {row?.sanPham?.tenSanPham}
                                                     </TableCell>

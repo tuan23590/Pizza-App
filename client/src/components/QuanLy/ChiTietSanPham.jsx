@@ -259,15 +259,17 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
             <TextField
               fullWidth
               label="Tên Sản Phẩm"
+              multiline
               variant="outlined"
               name="tenSanPham"
               value={formData?.tenSanPham}
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
+              multiline
               label="Mô Tả"
               variant="outlined"
               name="moTa"
@@ -338,11 +340,11 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}></Grid>
+            
             </>
           )
           }
-
+<Grid item xs={6}></Grid>
           {/* Hiển thị nếu formData.danhMuc == 'DM1' hoặc formData.danhSachKichThuoc.length > 0 hoặc formData.danhSachDe.length > 0  */}
           {(formData?.danhMuc === 'DM1' || formData?.danhSachKichThuoc?.length > 0 || formData?.danhSachLoaiDe?.length > 0) &&
             (

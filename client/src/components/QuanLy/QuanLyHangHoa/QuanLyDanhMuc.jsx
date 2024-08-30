@@ -88,6 +88,7 @@ export default function QuanLyDanhMuc() {
       if (data) {
         setNotificationMessage('Xóa danh mục thành công');
         setNotificationSeverity('success');
+        fetchData();
       } else {
         setNotificationMessage('Xóa danh mục thất bại');
         setNotificationSeverity('error');
@@ -138,7 +139,7 @@ export default function QuanLyDanhMuc() {
                 '&:hover': { backgroundColor: '#f5f5f5' },
               }}
               onClick={() => {
-                if (dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1') {
+                if (dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1' && dm.trangThai !== 'Đã xóa') {
                   handleOpen(dm);
                 }
               }}
@@ -154,7 +155,7 @@ export default function QuanLyDanhMuc() {
                 >{
                   dm?.trangThai?.toUpperCase()
                 }</TableCell>
-                {dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1'
+                {dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1' && dm.trangThai !== 'Đã xóa'
                  && (
                   <TableCell>
                     <Button size='small' variant="contained" sx={{ marginX: '10px' }} color="error" onClick={(e) =>{
@@ -185,7 +186,7 @@ export default function QuanLyDanhMuc() {
             label="Tên Danh Mục"
             type="text"
             fullWidth
-            value={currentDanhMuc.tenDanhMuc}
+            value={currentDanhMuc.tenDanhMuc || ''}
             onChange={handleInputChange}
           />
         </DialogContent>

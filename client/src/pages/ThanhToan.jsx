@@ -42,6 +42,11 @@ export default function ThanhToan() {
         if (data) {
             localStorage.setItem('gioHang', JSON.stringify([]));
             setSuccessDialogOpen(true);
+            setGioHang({
+                ... gioHang,
+                danhSachSanPham: [],
+                tongTien: 0
+            });
         }
     }
 

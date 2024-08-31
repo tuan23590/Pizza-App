@@ -122,7 +122,11 @@ type ThongBao {
     hinhAnh: String,
     createdAt: String,
 },
-
+type ThongKe {
+    labels: [String],
+    datas: [Float],
+    percent: Float,
+},
 type Query {
     danhSachSanPham: [SanPham],
     danhSachDanhMuc: [DanhMuc],
@@ -139,6 +143,9 @@ type Query {
     danhSachDonNhap: [DonNhap],
     danhSachNhaCungCapTheoDanhMuc(id: String): [NhaCungCap],
     danhSachDanhMucThemSanPham: [DanhMuc],
+    thongKeDoanhThu(type: String): ThongKe,
+    thongKeDonHang(type: String): ThongKe,
+    thongKeDonNhap(type: String): ThongKe,
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,

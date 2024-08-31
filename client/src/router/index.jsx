@@ -16,6 +16,8 @@ import QuanLyHangHoa from './../components/QuanLy/QuanLyHangHoa/QuanLyHangHoa';
 import QuanLyPhieuNhap from "../components/QuanLy/QuanLyPhieuNhap/QuanLyPhieuNhap";
 import Test from "../pages/Test";
 import SubscriptionProvider from "../context/SubscriptionProvider";
+import ErrorPage from "../pages/ErrorPage";
+import ThongKe from "../components/QuanLy/ThongKe/ThongKe";
 const KhachHangProvider = () => {
     return <>
         <SubscriptionProvider>
@@ -33,6 +35,7 @@ export default createBrowserRouter(
     [
         {
             element: <KhachHangProvider />,
+            errorElement: <ErrorPage />,
             children: [
                 {
                     element: <DangNhap />,
@@ -75,6 +78,11 @@ export default createBrowserRouter(
                     element: <QuanLy />,
                     path: "/QuanLy",
                     children: [
+                        {
+                            element: <ThongKe />,
+                            path: "/QuanLy/ThongKe",
+
+                        },
                         {
                             element: <QuanLyHangHoa />,
                             path: "/QuanLy/QuanLyHangHoa",

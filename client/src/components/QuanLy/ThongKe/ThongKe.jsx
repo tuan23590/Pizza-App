@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import BieuDoDuong from "./BieuDoDuong";
-import { APIThongKeDoanhThu, APIThongKeDonHang } from "../../../utils/thongKeUtils";
+import { APIThongKeDoanhThu, APIThongKeDonHang, APIThongKeDonNhap } from "../../../utils/thongKeUtils";
 
 export default function ThongKe() {
   const [duLieuDoanhThu, setDuLieuDoanhThu] = useState(
@@ -62,6 +62,19 @@ export default function ThongKe() {
       fetchData();
     }, [duLieuDonHang.button]);
     useEffect(() => {
+      const fetchData = async () => {
+        const data = await APIThongKeDonNhap(duLieuDonNhap.button.find(item => item.active).name);
+        console.log(data);
+        setDuLieuDonNhap(
+          () => ({
+            ...data,
+            button: duLieuDonNhap.button,
+            chartName: duLieuDonNhap.chartName,
+            unit: duLieuDonNhap.unit
+          })
+        );
+      };
+      fetchData();
     }, [duLieuDonNhap.button]);
   return (
     <Grid container spacing={2}>

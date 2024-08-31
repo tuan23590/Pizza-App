@@ -198,11 +198,6 @@ export const resolvers = {
                 const datas = [20, 25, 18, 20];
                 const percent = -35;
                 return { labels, datas, percent };
-            }else if(args.type==="Năm"){
-                const labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-                const datas = [20, 25, 18, 20, 22, 18, 20, 16, 18, 15, 20, 25];
-                const percent = 15;
-                return { labels, datas, percent };
             }
         }
     },

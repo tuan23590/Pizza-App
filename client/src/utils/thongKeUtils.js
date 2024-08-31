@@ -28,3 +28,18 @@ export const APIThongKeDonHang = async (type) => {
   });
   return thongKeDonHang;
 };
+
+export const APIThongKeDonNhap = async (type) => {
+  const query = `query ThongKeDonNhap($type: String) {
+  thongKeDonNhap(type: $type) {
+    labels
+    datas
+    percent
+  }
+}`;
+  const { thongKeDonNhap } = await GraphQLrequest({
+    query,
+    variables: { type },
+  });
+  return thongKeDonNhap;
+};

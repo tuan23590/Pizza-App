@@ -50,7 +50,7 @@ export default function BieuDoDuong({ setDuLieu, duLieu }) {
             fontWeight: "bold",
           }}
         >
-          14k
+          {duLieu.quantity}
         </Typography>
         <Typography
           sx={{
@@ -79,7 +79,7 @@ export default function BieuDoDuong({ setDuLieu, duLieu }) {
       </Typography>
       <Box
         sx={{
-          height: 100,
+          height: 140,
           marginTop: 2,
         }}
       >

@@ -5,6 +5,7 @@ export const APIThongKeDoanhThu = async (type) => {
     labels
     datas
     percent
+    quantity
   }
 }`;
   const { thongKeDoanhThu } = await GraphQLrequest({
@@ -20,6 +21,7 @@ export const APIThongKeDonHang = async (type) => {
     labels
     datas
     percent
+    quantity
   }
 }`;
   const { thongKeDonHang } = await GraphQLrequest({
@@ -35,6 +37,7 @@ export const APIThongKeDonNhap = async (type) => {
     labels
     datas
     percent
+    quantity
   }
 }`;
   const { thongKeDonNhap } = await GraphQLrequest({

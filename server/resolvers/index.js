@@ -147,17 +147,20 @@ export const resolvers = {
                 const labels = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
                 const datas = [30, 25, 28, 20, 22, 18, 20];
                 const percent = 5;
-                return { labels, datas, percent };
+                const quantity = 100;
+                return { labels, datas, percent, quantity };
             }else if(args.type==="Tháng"){
                 const labels = ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"];
                 const datas = [30, 25, 28, 20];
                 const percent = -35;
-                return { labels, datas, percent };
+                const quantity = 1000;
+                return { labels, datas, percent, quantity };
             }else if(args.type==="Năm"){
                 const labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
                 const datas = [30, 25, 28, 20, 22, 18, 20, 16, 18, 15, 20, 25];
                 const percent = 15;
-                return { labels, datas, percent };
+                const quantity = 2000;
+                return { labels, datas, percent, quantity };
             }
         },
         thongKeDonHang: async (parent, args) => {
@@ -165,26 +168,32 @@ export const resolvers = {
                 const labels = ["7h đến 8h", "8h đến 9h", "9h đến 10h", "10h đến 11h", "11h đến 12h", "12h đến 13h", "13h đến 14h", "14h đến 15h", "15h đến 16h", "16h đến 17h", "17h đến 18h", "18h đến 19h", "19h đến 20h", "20h đến 21h", "21h đến 22h"];
                 const datas = [10, 15, 18, 20, 22, 28, 20, 26, 18, 25, 30, 35, 40, 45, 50];
                 const percent = 15;
-                return { labels, datas, percent };
+                const quantity = 100;
+                return { labels, datas, percent, quantity };
             }else if(args.type==="Ngày"){
                 const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
                 const datas = [10, 15, 18, 20, 22, 28, 20, 26, 18, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130];
                 const percent = -15;
-                return { labels, datas, percent };
+                const quantity = 1000;
+                return { labels, datas, percent, quantity };
             }else if(args.type==="Tháng"){
                 const labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
                 const datas = [10, 15, 18, 20, 22, 18, 20, 16, 18, 15, 20, 25];
                 const percent = -15;
-                return { labels, datas, percent };
+                const quantity = 2000;
+                return { labels, datas, percent, quantity };
             }else if(args.type==="Tuần"){
                 const labels = ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"];
                 const datas = [10, 15, 18, 20];
-                return { labels, datas, percent };
+                const percent = -35;
+                const quantity = 100;
+                return { labels, datas, percent, quantity };
             }else if(args.type==="Năm"){
                 const labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
                 const datas = [10, 15, 18, 20, 22, 18, 20, 16, 18, 15, 20, 25];
                 const percent = -15;
-                return { labels, datas, percent };
+                const quantity = 3000;
+                return { labels, datas, percent, quantity };
             }
         },
         thongKeDonNhap: async (parent, args) => {
@@ -192,12 +201,14 @@ export const resolvers = {
                 const labels = ["Ngày 1", "Ngày 2", "Ngày 3", "Ngày 4", "Ngày 5", "Ngày 6", "Ngày 7", "Ngày 8", "Ngày 9", "Ngày 10"];
                 const datas = [20, 25, 18, 20, 22, 18, 20, 16, 18, 15];
                 const percent = -15;
-                return { labels, datas, percent };
+                const quantity = 100;
+                return { labels, datas, percent, quantity };
             }else if(args.type==="Tháng"){
                 const labels = ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"];
                 const datas = [20, 25, 18, 20];
                 const percent = -35;
-                return { labels, datas, percent };
+                const quantity = 1000;
+                return { labels, datas, percent, quantity };
             }
         }
     },

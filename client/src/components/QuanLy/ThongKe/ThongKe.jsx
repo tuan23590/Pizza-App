@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import BieuDoDuong from "./BieuDoDuong";
 import { APIThongKeDoanhThu, APIThongKeDonHang, APIThongKeDonNhap } from "../../../utils/thongKeUtils";
+import BieuDoCot from "./BieuDoCot";
+import BieuDoTron from './BieuDoTron';
 
 export default function ThongKe() {
   const [duLieuDoanhThu, setDuLieuDoanhThu] = useState(
@@ -18,7 +20,7 @@ export default function ThongKe() {
       // labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Day 8", "Day 9", "Day 10"],
       // datas:[10, 15, 18, 20, 22, 28, 20, 26, 18, 25],
       // percent: 15,
-      button: [{name: 'Giờ', active: true},{name: 'Ngày', active: false}, {name: 'Tuần', active: false}, {name: 'Tháng', active: false}, {name: 'Năm', active: false}],
+      button: [{name: 'Ngày', active: true}, {name: 'Tuần', active: false}, {name: 'Tháng', active: false}, {name: 'Năm', active: false}],
       chartName: 'Đơn Hàng',
       unit: 'Đơn hàng',
     });
@@ -86,6 +88,12 @@ export default function ThongKe() {
       </Grid>
       <Grid item xs={4}>
         {duLieuDonNhap.datas && <BieuDoDuong duLieu={duLieuDonNhap} setDuLieu ={setDuLieuDonNhap}/>}
+      </Grid>
+      <Grid item xs={6}>
+        <BieuDoCot />
+      </Grid>
+      <Grid item xs={6}>
+        <BieuDoTron />
       </Grid>
     </Grid>
   );

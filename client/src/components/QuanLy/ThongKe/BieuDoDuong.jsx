@@ -1,4 +1,4 @@
-import { Paper, Box, Typography, ButtonGroup, Button } from "@mui/material";
+import { Paper, Box, Typography, ButtonGroup, Button, Select, MenuItem } from "@mui/material";
 import React from "react";
 import SparkLineChart from "../../SparkLineChart";
 
@@ -13,29 +13,31 @@ export default function BieuDoDuong({ setDuLieu, duLieu }) {
         }}
       >
         <Typography variant="h6">{duLieu.chartName}</Typography>
-        <ButtonGroup
-          variant="outlined"
-          size="small"
-          color={duLieu.percent > 0 ? "success" : "error"}
+        <Select
+        size="small"
+        value={duLieu.select.find((item) => item.active).name}
+        sx={{
+          width: 120,
+        }}
         >
-          {duLieu.button.map((item, index) => (
-            <Button
+          {duLieu.select.map((item, index) => (
+            <MenuItem
               key={index}
-              variant={duLieu.button[index].active ? "contained" : "outlined"}
+              value={item.name}
               onClick={() => {
-                const newButton = duLieu.button.map((item, i) => {
+                const newSelect = duLieu.select.map((item, i) => {
                   if (i === index) {
                     return { ...item, active: true };
                   }
                   return { ...item, active: false };
                 });
-                setDuLieu({ ...duLieu, button: newButton });
+                setDuLieu({ ...duLieu, select: newSelect });
               }}
             >
               {item.name}
-            </Button>
+            </MenuItem>
           ))}
-        </ButtonGroup>
+        </Select>
       </Box>
       <Box
         sx={{
@@ -50,20 +52,20 @@ export default function BieuDoDuong({ setDuLieu, duLieu }) {
             fontWeight: "bold",
           }}
         >
-          {duLieu.quantity}
+          {duLieu.quantity?.toLocaleString()} {duLieu.unit}
         </Typography>
         <Typography
           sx={{
-            color: duLieu.percent > 0 ? "green" : "red",
+            color: duLieu.percent >= 0 ? "green" : "red",
             fontSize: 15,
             display: "flex",
             backgroundColor:
-              duLieu.percent > 0
+              duLieu.percent >= 0
                 ? "rgba(0, 255, 0, 0.1)"
                 : "rgba(255, 0, 0, 0.1)",
             paddingX: 0.5,
             borderRadius: 5,
-            border: duLieu.percent > 0 ? "1px solid green" : "1px solid red",
+            border: duLieu.percent >= 0 ? "1px solid green" : "1px solid red",
           }}
         >
           {duLieu.percent}%
@@ -75,7 +77,7 @@ export default function BieuDoDuong({ setDuLieu, duLieu }) {
           color: "gray",
         }}
       >
-        So với tuần trước
+        So với {(duLieu.select.find((item) => item.active).name).toLowerCase()} trước
       </Typography>
       <Box
         sx={{

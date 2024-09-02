@@ -28,7 +28,7 @@ const SparkLineChart = ({duLieu}) => {
     datasets: [
       {
         data: duLieu?.datas,
-        borderColor: duLieu.percent > 0 ? 'green' : 'red', // Color of the line
+        borderColor: duLieu.percent >= 0 ? 'green' : 'red', // Color of the line
         fill: true, // Enable the fill under the line
         tension: 0, // Smooth the line
         pointRadius: 0, // Remove the dots on the line
@@ -77,8 +77,8 @@ const SparkLineChart = ({duLieu}) => {
       const chart = chartRef.current;
       const gradient = chart.ctx.createLinearGradient(0, 0, 0, chart.height);
       // green color gradient
-      gradient.addColorStop(0, duLieu.percent > 0 ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'); // Start color
-      gradient.addColorStop(1, duLieu.percent > 0 ? 'rgba(0, 255, 0, 0)' : 'rgba(255, 0, 0, 0)'); // End color
+      gradient.addColorStop(0, duLieu.percent >= 0 ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)'); // Start color
+      gradient.addColorStop(1, duLieu.percent >= 0 ? 'rgba(0, 255, 0, 0)' : 'rgba(255, 0, 0, 0)'); // End color
 
       chart.data.datasets[0].backgroundColor = gradient;
       chart.update();

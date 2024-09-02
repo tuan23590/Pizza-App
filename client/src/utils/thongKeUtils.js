@@ -1,48 +1,65 @@
 import { GraphQLrequest } from "./request";
-export const APIThongKeDoanhThu = async (type) => {
-  const query = `query ThongKeDoanhThu($type: String) {
-  thongKeDoanhThu(type: $type) {
+
+export const APIThongKeGiaTriDonHang = async (type) => {
+  const query = `query thongKeGiaTriDonHang($type: Int) {
+  thongKeGiaTriDonHang(type: $type) {
     labels
     datas
     percent
     quantity
   }
 }`;
-  const { thongKeDoanhThu } = await GraphQLrequest({
+  const { thongKeGiaTriDonHang } = await GraphQLrequest({
     query,
     variables: { type },
   });
-  return thongKeDoanhThu;
+  return thongKeGiaTriDonHang;
 };
 
-export const APIThongKeDonHang = async (type) => {
-  const query = `query ThongKeDonHang($type: String) {
-  thongKeDonHang(type: $type) {
+export const APIThongKeSoLuongDonHang = async (type) => {
+  const query = `query thongKeSoLuongDonHang($type: Int) {
+  thongKeSoLuongDonHang(type: $type) {
     labels
     datas
     percent
     quantity
   }
 }`;
-  const { thongKeDonHang } = await GraphQLrequest({
+  const { thongKeSoLuongDonHang } = await GraphQLrequest({
     query,
     variables: { type },
   });
-  return thongKeDonHang;
+  return thongKeSoLuongDonHang;
 };
 
-export const APIThongKeDonNhap = async (type) => {
-  const query = `query ThongKeDonNhap($type: String) {
-  thongKeDonNhap(type: $type) {
+export const APIThongKeSoLuongDonNhap = async (type) => {
+  const query = `query ThongKeSoLuongDonNhap($type: Int) {
+  thongKeSoLuongDonNhap(type: $type) {
     labels
     datas
     percent
     quantity
   }
 }`;
-  const { thongKeDonNhap } = await GraphQLrequest({
+  const { thongKeSoLuongDonNhap } = await GraphQLrequest({
     query,
     variables: { type },
   });
-  return thongKeDonNhap;
+  return thongKeSoLuongDonNhap;
+};
+
+export const APIThongKeGiaTriDonNhap = async (type) => {
+  const query = `query ThongKeGiaTriDonNhap($type: Int) {
+  thongKeGiaTriDonNhap(type: $type) {
+    labels
+    datas
+    percent
+    quantity
+  }
+}`;
+  const { thongKeGiaTriDonNhap } = await GraphQLrequest({
+    query,
+    variables: { type },
+  });
+  return thongKeGiaTriDonNhap;
 };

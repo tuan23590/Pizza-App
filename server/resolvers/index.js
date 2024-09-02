@@ -142,75 +142,230 @@ export const resolvers = {
             danhSachSanPham.sort((a, b) => b.maSanPham.localeCompare(a.maSanPham));
             return danhSachSanPham;
         },
-        thongKeDoanhThu: async (parent, args) => {
-            if(args.type==="Tuần"){
-                const labels = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
-                const datas = [30, 25, 28, 20, 22, 18, 20];
-                const percent = 5;
-                const quantity = 100;
+        thongKeSoLuongDonHang: async (parent, args) => {
+            const soNgay = args.type // vd: 7, 30, 365
+            // tìm tất cả đơn hàng trong soNgay ngày gần nhất
+            // ngayDatHang trong donHangModel là kiểu epoch milliseconds
+            const donHang = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+            if(soNgay === 1){
+                const donHangTruoc = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - (soNgay + 1) * 24 * 60 * 60 * 1000, $lt: Date.now() - 24 * 60 * 60 * 1000 } });
+                const gioBatDau = 7;
+                const gioKetThuc = 21;
+                const labels = [];
+                const datas = [];
+                for (let i = gioBatDau; i <= gioKetThuc; i++) {
+                    labels.push(i + ":00 - " + (i + 1) + ":00");
+                    const gioEpoch = new Date(new Date().setHours(i, 0, 0, 0)).getTime();
+                    const danhSachDonHangTrongGio = donHang.filter(donHang => donHang.ngayDatHang >= gioEpoch && donHang.ngayDatHang < gioEpoch + 60 * 60 * 1000);
+                    datas.push(danhSachDonHangTrongGio.length);
+                }
+                const percent = donHangTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donHangTruoc.length) / donHangTruoc.length * 100);
+                return {
+                    labels,
+                    datas,
+                    percent,
+                    quantity: datas.reduce((a, b) => a + b, 0),
+                }
+            }else if(soNgay === 7 || soNgay === 30){
+                // tính donHangTruoc, nếu soNgay = 7 thì lấy 14 ngày trước, nếu soNgay = 30 thì lấy 60 ngày trước
+                const donHangTruoc = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const labels = [];
+                const datas = [];
+                for (let i = soNgay; i >= 1; i--) {
+                    const ngay = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString();
+                    // fomart to dd/mm/yyyy before push to labels
+                    labels.push(new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString( 'en-GB'));
+                    const ngayEpoch = new Date(ngay).getTime();
+                    const danhSachDonHangTrongNgay = donHang.filter(donHang => donHang.ngayDatHang >= ngayEpoch && donHang.ngayDatHang < ngayEpoch + 24 * 60 * 60 * 1000);
+                    const soLuongDonHangTrongNgay = danhSachDonHangTrongNgay.length;
+                    datas.push(soLuongDonHangTrongNgay);
+                }
+                const percent = donHangTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donHangTruoc.length) / donHangTruoc.length * 100);
+                console.log(percent);
+                const quantity = datas.reduce((a, b) => a + b, 0);
                 return { labels, datas, percent, quantity };
-            }else if(args.type==="Tháng"){
-                const labels = ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"];
-                const datas = [30, 25, 28, 20];
-                const percent = -35;
-                const quantity = 1000;
+        }else{
+                const donHangTruoc = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const soThang = Math.floor(soNgay / 30);
+                const labels = [];
+                const datas = [];
+                for (let i = soThang; i >= 1; i--) {
+                    const thang = new Date(Date.now() - i * 30 * 24 * 60 * 60 * 1000);
+                    labels.push(thang.toLocaleDateString('en-GB', { month: '2-digit', year: 'numeric' }));
+                    const thangEpoch = new Date(thang).getTime();
+                    const danhSachDonHangTrongThang = donHang.filter(donHang => donHang.ngayDatHang >= thangEpoch && donHang.ngayDatHang < thangEpoch + 30 * 24 * 60 * 60 * 1000);
+                    datas.push(danhSachDonHangTrongThang.length);
+                }
+                const percent = donHangTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donHangTruoc.length) / donHangTruoc.length * 100);
+                const quantity = datas.reduce((a, b) => a + b, 0);
                 return { labels, datas, percent, quantity };
-            }else if(args.type==="Năm"){
-                const labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-                const datas = [30, 25, 28, 20, 22, 18, 20, 16, 18, 15, 20, 25];
-                const percent = 15;
-                const quantity = 2000;
-                return { labels, datas, percent, quantity };
-            }
-        },
-        thongKeDonHang: async (parent, args) => {
-            if(args.type==="Giờ"){
-                const labels = ["7h đến 8h", "8h đến 9h", "9h đến 10h", "10h đến 11h", "11h đến 12h", "12h đến 13h", "13h đến 14h", "14h đến 15h", "15h đến 16h", "16h đến 17h", "17h đến 18h", "18h đến 19h", "19h đến 20h", "20h đến 21h", "21h đến 22h"];
-                const datas = [10, 15, 18, 20, 22, 28, 20, 26, 18, 25, 30, 35, 40, 45, 50];
-                const percent = 15;
-                const quantity = 100;
-                return { labels, datas, percent, quantity };
-            }else if(args.type==="Ngày"){
-                const labels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
-                const datas = [10, 15, 18, 20, 22, 28, 20, 26, 18, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130];
-                const percent = -15;
-                const quantity = 1000;
-                return { labels, datas, percent, quantity };
-            }else if(args.type==="Tháng"){
-                const labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-                const datas = [10, 15, 18, 20, 22, 18, 20, 16, 18, 15, 20, 25];
-                const percent = -15;
-                const quantity = 2000;
-                return { labels, datas, percent, quantity };
-            }else if(args.type==="Tuần"){
-                const labels = ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"];
-                const datas = [10, 15, 18, 20];
-                const percent = -35;
-                const quantity = 100;
-                return { labels, datas, percent, quantity };
-            }else if(args.type==="Năm"){
-                const labels = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
-                const datas = [10, 15, 18, 20, 22, 18, 20, 16, 18, 15, 20, 25];
-                const percent = -15;
-                const quantity = 3000;
-                return { labels, datas, percent, quantity };
-            }
-        },
-        thongKeDonNhap: async (parent, args) => {
-            if(args.type==="Tuần"){
-                const labels = ["Ngày 1", "Ngày 2", "Ngày 3", "Ngày 4", "Ngày 5", "Ngày 6", "Ngày 7", "Ngày 8", "Ngày 9", "Ngày 10"];
-                const datas = [20, 25, 18, 20, 22, 18, 20, 16, 18, 15];
-                const percent = -15;
-                const quantity = 100;
-                return { labels, datas, percent, quantity };
-            }else if(args.type==="Tháng"){
-                const labels = ["Tuần 1", "Tuần 2", "Tuần 3", "Tuần 4"];
-                const datas = [20, 25, 18, 20];
-                const percent = -35;
-                const quantity = 1000;
-                return { labels, datas, percent, quantity };
-            }
         }
+        },
+        thongKeGiaTriDonHang: async (parent, args) => {
+            const soNgay = args.type
+            const donHang = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+            if(soNgay === 1){
+                const donHangTruoc = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - (soNgay + 1) * 24 * 60 * 60 * 1000, $lt: Date.now() - 24 * 60 * 60 * 1000 } });
+                const gioBatDau = 7;
+                const gioKetThuc = 21;
+                const labels = [];
+                const datas = [];
+                for (let i = gioBatDau; i <= gioKetThuc; i++) {
+                    labels.push(i + ":00 - " + (i + 1) + ":00");
+                    const gioEpoch = new Date(new Date().setHours(i, 0, 0, 0)).getTime();
+                    const danhSachDonHangTrongGio = donHang.filter(donHang => donHang.ngayDatHang >= gioEpoch && donHang.ngayDatHang < gioEpoch + 60 * 60 * 1000);
+                    const giaTriDonHangTrongGio = danhSachDonHangTrongGio.reduce((a, b) => a + b.tongTien, 0);
+                    datas.push(giaTriDonHangTrongGio);
+                }
+                const percent = donHangTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donHangTruoc.reduce((a, b) => a + b.tongTien, 0)) / donHangTruoc.reduce((a, b) => a + b.tongTien, 0) * 100);
+                return {
+                    labels,
+                    datas,
+                    percent,
+                    quantity: datas.reduce((a, b) => a + b, 0),
+                }
+            }else if(soNgay === 7 || soNgay === 30){
+                const donHangTruoc = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const labels = [];
+                const datas = [];
+                for (let i = soNgay; i >= 1; i--) {
+                    const ngay = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString();
+                    labels.push(new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString( 'en-GB'));
+                    const ngayEpoch = new Date(ngay).getTime();
+                    const danhSachDonHangTrongNgay = donHang.filter(donHang => donHang.ngayDatHang >= ngayEpoch && donHang.ngayDatHang < ngayEpoch + 24 * 60 * 60 * 1000);
+                    const giaTriDonHangTrongNgay = danhSachDonHangTrongNgay.reduce((a, b) => a + b.tongTien, 0);
+                    datas.push(giaTriDonHangTrongNgay);
+                }
+                const percent = donHangTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donHangTruoc.reduce((a, b) => a + b.tongTien, 0)) / donHangTruoc.reduce((a, b) => a + b.tongTien, 0) * 100);
+                const quantity = datas.reduce((a, b) => a + b, 0);
+                return { labels, datas, percent, quantity };
+            }else{
+                const donHangTruoc = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const soThang = Math.floor(soNgay / 30);
+                const labels = [];
+                const datas = [];
+                for (let i = soThang; i >= 1; i--) {
+                    const thang = new Date(Date.now() - i * 30 * 24 * 60 * 60 * 1000);
+                    labels.push(thang.toLocaleDateString('en-GB', { month: '2-digit', year: 'numeric' }));
+                    const thangEpoch = new Date(thang).getTime();
+                    const danhSachDonHangTrongThang = donHang.filter(donHang => donHang.ngayDatHang >= thangEpoch && donHang.ngayDatHang < thangEpoch + 30 * 24 * 60 * 60 * 1000);
+                    const giaTriDonHangTrongThang = danhSachDonHangTrongThang.reduce((a, b) => a + b.tongTien, 0);
+                    datas.push(giaTriDonHangTrongThang);
+                }
+                const percent = donHangTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donHangTruoc.reduce((a, b) => a + b.tongTien, 0)) / donHangTruoc.reduce((a, b) => a + b.tongTien, 0) * 100);
+                const quantity = datas.reduce((a, b) => a + b, 0);
+                return { labels, datas, percent, quantity };
+            }
+        },
+        thongKeSoLuongDonNhap: async (parent, args) => {
+            const soNgay = args.type;
+            const donNhap = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+            if(soNgay === 1){
+                const donNhapTruoc = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - (soNgay + 1) * 24 * 60 * 60 * 1000, $lt: Date.now() - 24 * 60 * 60 * 1000 } });
+                const gioBatDau = 7;
+                const gioKetThuc = 21;
+                const labels = [];
+                const datas = [];
+                for (let i = gioBatDau; i <= gioKetThuc; i++) {
+                    labels.push(i + ":00 - " + (i + 1) + ":00");
+                    const gioEpoch = new Date(new Date().setHours(i, 0, 0, 0)).getTime();
+                    const danhSachDonNhapTrongGio = donNhap.filter(donNhap => donNhap.ngayNhap >= gioEpoch && donNhap.ngayNhap < gioEpoch + 60 * 60 * 1000);
+                    datas.push(danhSachDonNhapTrongGio.length);
+                }
+                const percent = donNhapTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donNhapTruoc.length) / donNhapTruoc.length * 100);
+                return {
+                    labels,
+                    datas,
+                    percent,
+                    quantity: datas.reduce((a, b) => a + b, 0),
+                }
+            }else if(soNgay === 7 || soNgay === 30){
+                const donNhapTruoc = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const labels = [];
+                const datas = [];
+                for (let i = soNgay; i >= 1; i--) {
+                    const ngay = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString();
+                    labels.push(new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString( 'en-GB'));
+                    const ngayEpoch = new Date(ngay).getTime();
+                    const danhSachDonNhapTrongNgay = donNhap.filter(donNhap => donNhap.ngayNhap >= ngayEpoch && donNhap.ngayNhap < ngayEpoch + 24 * 60 * 60 * 1000);
+                    datas.push(danhSachDonNhapTrongNgay.length);
+                }
+                const percent = donNhapTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donNhapTruoc.length) / donNhapTruoc.length * 100);
+                const quantity = datas.reduce((a, b) => a + b, 0);
+                return { labels, datas, percent, quantity };
+            }else{
+                const donNhapTruoc = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const soThang = Math.floor(soNgay / 30);
+                const labels = [];
+                const datas = [];
+                for (let i = soThang; i >= 1; i--) {
+                    const thang = new Date(Date.now() - i * 30 * 24 * 60 * 60 * 1000);
+                    labels.push(thang.toLocaleDateString('en-GB', { month: '2-digit', year: 'numeric' }));
+                    const thangEpoch = new Date(thang).getTime();
+                    const danhSachDonNhapTrongThang = donNhap.filter(donNhap => donNhap.ngayNhap >= thangEpoch && donNhap.ngayNhap < thangEpoch + 30 * 24 * 60 * 60 * 1000);
+                    datas.push(danhSachDonNhapTrongThang.length);
+                }
+                const percent = donNhapTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donNhapTruoc.length) / donNhapTruoc.length * 100);
+                const quantity = datas.reduce((a, b) => a + b, 0);
+                return { labels, datas, percent, quantity };
+            }
+        },
+        thongKeGiaTriDonNhap: async (parent, args) => {
+            const soNgay = args.type;
+            const donNhap = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+            if(soNgay === 1){
+                const donNhapTruoc = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - (soNgay + 1) * 24 * 60 * 60 * 1000, $lt: Date.now() - 24 * 60 * 60 * 1000 } });
+                const gioBatDau = 7;
+                const gioKetThuc = 21;
+                const labels = [];
+                const datas = [];
+                for (let i = gioBatDau; i <= gioKetThuc; i++) {
+                    labels.push(i + ":00 - " + (i + 1) + ":00");
+                    const gioEpoch = new Date(new Date().setHours(i, 0, 0, 0)).getTime();
+                    const danhSachDonNhapTrongGio = donNhap.filter(donNhap => donNhap.ngayNhap >= gioEpoch && donNhap.ngayNhap < gioEpoch + 60 * 60 * 1000);
+                    const giaTriDonNhapTrongGio = danhSachDonNhapTrongGio.reduce((a, b) => a + b.tongTien, 0);
+                    datas.push(giaTriDonNhapTrongGio);
+                }
+                const percent = donNhapTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donNhapTruoc.reduce((a, b) => a + b.tongTien, 0)) / donNhapTruoc.reduce((a, b) => a + b.tongTien, 0) * 100);
+                return {
+                    labels,
+                    datas,
+                    percent,
+                    quantity: datas.reduce((a, b) => a + b, 0),
+                }
+            }else if(soNgay === 7 || soNgay === 30){
+                const donNhapTruoc = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const labels = [];
+                const datas = [];
+                for (let i = soNgay; i >= 1; i--) {
+                    const ngay = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString();
+                    labels.push(new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString( 'en-GB'));
+                    const ngayEpoch = new Date(ngay).getTime();
+                    const danhSachDonNhapTrongNgay = donNhap.filter(donNhap => donNhap.ngayNhap >= ngayEpoch && donNhap.ngayNhap < ngayEpoch + 24 * 60 * 60 * 1000);
+                    const giaTriDonNhapTrongNgay = danhSachDonNhapTrongNgay.reduce((a, b) => a + b.tongTien, 0);
+                    datas.push(giaTriDonNhapTrongNgay);
+                }
+                const percent = donNhapTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donNhapTruoc.reduce((a, b) => a + b.tongTien, 0)) / donNhapTruoc.reduce((a, b) => a + b.tongTien, 0) * 100);
+                const quantity = datas.reduce((a, b) => a + b, 0);
+                return { labels, datas, percent, quantity };
+            } else {
+                const donNhapTruoc = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+                const soThang = Math.floor(soNgay / 30);
+                const labels = [];
+                const datas = [];
+                for (let i = soThang; i >= 1; i--) {
+                    const thang = new Date(Date.now() - i * 30 * 24 * 60 * 60 * 1000);
+                    labels.push(thang.toLocaleDateString('en-GB', { month: '2-digit', year: 'numeric' }));
+                    const thangEpoch = new Date(thang).getTime();
+                    const danhSachDonNhapTrongThang = donNhap.filter(donNhap => donNhap.ngayNhap >= thangEpoch && donNhap.ngayNhap < thangEpoch + 30 * 24 * 60 * 60 * 1000);
+                    const giaTriDonNhapTrongThang = danhSachDonNhapTrongThang.reduce((a, b) => a + b.tongTien, 0);
+                    datas.push(giaTriDonNhapTrongThang);
+                }
+                const percent = donNhapTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donNhapTruoc.reduce((a, b) => a + b.tongTien, 0)) / donNhapTruoc.reduce((a, b) => a + b.tongTien, 0) * 100);
+                const quantity = datas.reduce((a, b) => a + b, 0);
+                return { labels, datas, percent, quantity };
+            }
+        },
     },
     DonHang: {
         danhSachSanPham: async (parent) => {

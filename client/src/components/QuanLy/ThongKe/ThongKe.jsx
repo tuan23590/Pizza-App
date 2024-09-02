@@ -1,93 +1,125 @@
 import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import BieuDoDuong from "./BieuDoDuong";
-import { APIThongKeDoanhThu, APIThongKeDonHang, APIThongKeDonNhap } from "../../../utils/thongKeUtils";
+import {
+  APIThongKeSoLuongDonHang,
+  APIThongKeSoLuongDonNhap,
+  APIThongKeGiaTriDonHang,
+  APIThongKeGiaTriDonNhap,
+} from "../../../utils/thongKeUtils";
 import BieuDoCot from "./BieuDoCot";
-import BieuDoTron from './BieuDoTron';
+import BieuDoTron from "./BieuDoTron";
 
 export default function ThongKe() {
-  const [duLieuDoanhThu, setDuLieuDoanhThu] = useState(
-    {
-      // labels: ['', '', '', '', '', '', '', '', '', ''],
-      // datas:[ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      // percent: 10,
-      button: [{name: 'Tuần', active: true}, {name: 'Tháng', active: false},{name: 'Năm', active: false}],
-      chartName: 'Doanh thu',
-      unit: 'Triệu đồng',
-    });
-  const [duLieuDonHang, setDuLieuDonHang] = useState(
-    {
-      // labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Day 8", "Day 9", "Day 10"],
-      // datas:[10, 15, 18, 20, 22, 28, 20, 26, 18, 25],
-      // percent: 15,
-      button: [{name: 'Ngày', active: true}, {name: 'Tuần', active: false}, {name: 'Tháng', active: false}, {name: 'Năm', active: false}],
-      chartName: 'Đơn Hàng',
-      unit: 'Đơn hàng',
-    });
-  const [duLieuDonNhap, setDuLieuDonNhap] = useState(
-    {
-      labels: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6", "Day 7", "Day 8", "Day 9", "Day 10"],
-      datas:[20, 25, 18, 20, 22, 18, 20, 16, 18, 15],
-      percent: -15,
-      button: [{name: 'Tuần', active: true}, {name: 'Tháng', active: false}],
-      chartName: 'Đơn nhập',
-      unit: 'Đơn nhập',
-    });
-    useEffect(() => {
-      const fetchData = async () => {
-        const data = await APIThongKeDoanhThu(duLieuDoanhThu.button.find(item => item.active).name);
-        console.log(data);
-        setDuLieuDoanhThu(
-          () => ({
-            ...data,
-            button: duLieuDoanhThu.button,
-            chartName: duLieuDoanhThu.chartName,
-            unit: duLieuDoanhThu.unit
-          })
-        );
-      };
-      fetchData();
-    }, [duLieuDoanhThu.button]);
-    useEffect(() => {
-      const fetchData = async () => {
-        const data = await APIThongKeDonHang(duLieuDonHang.button.find(item => item.active).name);
-        console.log(data);
-        setDuLieuDonHang(
-          () => ({
-            ...data,
-            button: duLieuDonHang.button,
-            chartName: duLieuDonHang.chartName,
-            unit: duLieuDonHang.unit
-          })
-        );
-      };
-      fetchData();
-    }, [duLieuDonHang.button]);
-    useEffect(() => {
-      const fetchData = async () => {
-        const data = await APIThongKeDonNhap(duLieuDonNhap.button.find(item => item.active).name);
-        console.log(data);
-        setDuLieuDonNhap(
-          () => ({
-            ...data,
-            button: duLieuDonNhap.button,
-            chartName: duLieuDonNhap.chartName,
-            unit: duLieuDonNhap.unit
-          })
-        );
-      };
-      fetchData();
-    }, [duLieuDonNhap.button]);
+  const select = [
+    { name: "1 Ngày", active: true, value: 1 },
+    { name: "7 Ngày", active: false, value: 7 },
+    { name: "30 Ngày", active: false, value: 30 },
+    { name: "180 Ngày", active: false, value: 180 },
+    { name: "365 Ngày", active: false, value: 365 },
+  ];
+  const [soLuongDonHang, setSoLuongDonHang] = useState({
+    select,
+    chartName: "Số Lượng Đơn Hàng",
+    unit: "Đơn hàng",
+  });
+  const [tongTienDonHang, setTongTienDonHang] = useState({
+    select,
+    chartName: "Doanh Thu Đơn Hàng",
+    unit: "VNĐ",
+  });
+  const [soLuongDonNhap, setSoLuongDonNhap] = useState({
+    select,
+    chartName: "Số Lượng Đơn Nhập",
+    unit: "Đơn nhập",
+  });
+  const [tongTienDonNhap, setTongTienDonNhap] = useState({
+    select,
+    chartName: "Số Lượng Đơn Nhập",
+    unit: "VNĐ",
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await APIThongKeGiaTriDonHang(
+        tongTienDonHang.select.find((item) => item.active).value
+      );
+      console.log(data);
+      setTongTienDonHang(() => ({
+        ...data,
+        select: tongTienDonHang.select,
+        chartName: tongTienDonHang.chartName,
+        unit: tongTienDonHang.unit,
+      }));
+    };
+    fetchData();
+  }, [tongTienDonHang.select]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await APIThongKeSoLuongDonHang(
+        soLuongDonHang.select.find((item) => item.active).value
+      );
+      console.log(data);
+      setSoLuongDonHang(() => ({
+        ...data,
+        select: soLuongDonHang.select,
+        chartName: soLuongDonHang.chartName,
+        unit: soLuongDonHang.unit,
+      }));
+    };
+    fetchData();
+  }, [soLuongDonHang.select]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await APIThongKeSoLuongDonNhap(
+        soLuongDonNhap.select.find((item) => item.active).value
+      );
+      console.log(data);
+      setSoLuongDonNhap(() => ({
+        ...data,
+        select: soLuongDonNhap.select,
+        chartName: soLuongDonNhap.chartName,
+        unit: soLuongDonNhap.unit,
+      }));
+    };
+    fetchData();
+  }, [soLuongDonNhap.select]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await APIThongKeGiaTriDonNhap(
+        tongTienDonNhap.select.find((item) => item.active).value
+      );
+      console.log(data);
+      setTongTienDonNhap(() => ({
+        ...data,
+        select: tongTienDonNhap.select,
+        chartName: tongTienDonNhap.chartName,
+        unit: tongTienDonNhap.unit,
+      }));
+    };
+    fetchData();
+  }, [tongTienDonNhap.select]);
   return (
     <Grid container spacing={2}>
-      <Grid item xs={4}>
-        {duLieuDoanhThu.datas && <BieuDoDuong duLieu={duLieuDoanhThu} setDuLieu ={setDuLieuDoanhThu}/>}
+      <Grid item xs={3}>
+        {soLuongDonHang.datas && (
+          <BieuDoDuong duLieu={soLuongDonHang} setDuLieu={setSoLuongDonHang} />
+        )}
       </Grid>
-      <Grid item xs={4}>
-        {duLieuDonHang.datas && <BieuDoDuong duLieu={duLieuDonHang} setDuLieu ={setDuLieuDonHang}/>}
+      <Grid item xs={3}>
+        {tongTienDonHang.datas && (
+          <BieuDoDuong duLieu={tongTienDonHang} setDuLieu={setTongTienDonHang} />
+        )}
       </Grid>
-      <Grid item xs={4}>
-        {duLieuDonNhap.datas && <BieuDoDuong duLieu={duLieuDonNhap} setDuLieu ={setDuLieuDonNhap}/>}
+      <Grid item xs={3}>
+        {soLuongDonNhap.datas && (
+          <BieuDoDuong duLieu={soLuongDonNhap} setDuLieu={setSoLuongDonNhap} />
+        )}
+      </Grid>
+      <Grid item xs={3}>
+        {soLuongDonNhap.datas && (
+          <BieuDoDuong duLieu={tongTienDonNhap} setDuLieu={setTongTienDonNhap} />
+        )}
       </Grid>
       <Grid item xs={6}>
         <BieuDoCot />

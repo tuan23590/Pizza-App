@@ -76,7 +76,7 @@ export default function BieuDoTron() {
       }}>
       <Box
         sx={{
-          height: 375,
+          height: 370,
           marginTop: 2,
           width: 300,
         }}

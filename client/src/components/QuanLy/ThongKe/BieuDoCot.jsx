@@ -85,7 +85,7 @@ export default function BieuDoCot() {
       </Typography>
       <Box
         sx={{
-          height: 375,
+          height: 370,
           marginTop: 2,
         }}
       >

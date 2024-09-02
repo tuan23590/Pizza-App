@@ -144,9 +144,10 @@ type Query {
     danhSachDonNhap: [DonNhap],
     danhSachNhaCungCapTheoDanhMuc(id: String): [NhaCungCap],
     danhSachDanhMucThemSanPham: [DanhMuc],
-    thongKeDoanhThu(type: String): ThongKe,
-    thongKeDonHang(type: String): ThongKe,
-    thongKeDonNhap(type: String): ThongKe,
+    thongKeGiaTriDonHang(type: Int): ThongKe,
+    thongKeSoLuongDonHang(type: Int): ThongKe,
+    thongKeSoLuongDonNhap(type: Int): ThongKe,
+    thongKeGiaTriDonNhap(type: Int): ThongKe,
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,

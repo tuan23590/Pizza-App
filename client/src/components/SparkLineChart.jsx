@@ -55,7 +55,7 @@ const SparkLineChart = ({duLieu}) => {
         intersect: false, // Show tooltip even when not intersecting a data point
         callbacks: {
           label: (context) => {
-            return `${context.parsed.y} ${duLieu.unit}`;
+            return `${(context.parsed.y).toLocaleString()} ${duLieu.unit}`;
           },
         },
       },

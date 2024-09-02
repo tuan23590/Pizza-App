@@ -126,7 +126,7 @@ type ThongKe {
     labels: [String],
     datas: [Float],
     percent: Float,
-    quantity: Int,
+    quantity: Float,
 },
 type Query {
     danhSachSanPham: [SanPham],

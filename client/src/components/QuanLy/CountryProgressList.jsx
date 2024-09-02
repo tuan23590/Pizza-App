@@ -32,8 +32,8 @@ const ProgressItem = ({ country, flag, percentage }) => (
 
 const CountryProgressList = () => (
   <Box width="300px">
-    {data.map((item) => (
-      <ProgressItem key={item.country} {...item} />
+    {data.map((item,index) => (
+      <ProgressItem key={index} {...item} />
     ))}
   </Box>
 );

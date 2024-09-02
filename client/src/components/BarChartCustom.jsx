@@ -28,7 +28,7 @@ export default function BarChartCustom() {
           color: "url(#gradientColor)"  // Tham chiếu đến gradient SVG
         },
       ]}
-      grid={{ horizontal: { stroke: "#f0f0f0" } }}
+      grid={{ horizontal: true }}
     >
       <svg>
         <defs>

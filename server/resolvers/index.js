@@ -181,7 +181,6 @@ export const resolvers = {
                     datas.push(soLuongDonHangTrongNgay);
                 }
                 const percent = donHangTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donHangTruoc.length) / donHangTruoc.length * 100);
-                console.log(percent);
                 const quantity = datas.reduce((a, b) => a + b, 0);
                 return { labels, datas, percent, quantity };
         }else{
@@ -326,12 +325,13 @@ export const resolvers = {
                     const giaTriDonNhapTrongGio = danhSachDonNhapTrongGio.reduce((a, b) => a + b.tongTien, 0);
                     datas.push(giaTriDonNhapTrongGio);
                 }
+                const quantity = datas.reduce((a, b) => a + b, 0);
                 const percent = donNhapTruoc.length === 0 ? 0 : Math.round((datas.reduce((a, b) => a + b, 0) - donNhapTruoc.reduce((a, b) => a + b.tongTien, 0)) / donNhapTruoc.reduce((a, b) => a + b.tongTien, 0) * 100);
                 return {
                     labels,
                     datas,
                     percent,
-                    quantity: datas.reduce((a, b) => a + b, 0),
+                    quantity,
                 }
             }else if(soNgay === 7 || soNgay === 30){
                 const donNhapTruoc = await donNhapModel.find({ ngayNhap: { $gte: Date.now() - (soNgay * 2) * 24 * 60 * 60 * 1000, $lt: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });

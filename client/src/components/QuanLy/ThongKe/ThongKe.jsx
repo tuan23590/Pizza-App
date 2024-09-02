@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid } from "@mui/material";
+import { Box, CircularProgress, Grid, Paper } from "@mui/material";
 import BieuDoDuong from "./BieuDoDuong";
 import {
   APIThongKeSoLuongDonHang,
@@ -43,7 +43,6 @@ export default function ThongKe() {
       const data = await APIThongKeGiaTriDonHang(
         tongTienDonHang.select.find((item) => item.active).value
       );
-      console.log(data);
       setTongTienDonHang(() => ({
         ...data,
         select: tongTienDonHang.select,
@@ -58,7 +57,6 @@ export default function ThongKe() {
       const data = await APIThongKeSoLuongDonHang(
         soLuongDonHang.select.find((item) => item.active).value
       );
-      console.log(data);
       setSoLuongDonHang(() => ({
         ...data,
         select: soLuongDonHang.select,
@@ -73,7 +71,6 @@ export default function ThongKe() {
       const data = await APIThongKeSoLuongDonNhap(
         soLuongDonNhap.select.find((item) => item.active).value
       );
-      console.log(data);
       setSoLuongDonNhap(() => ({
         ...data,
         select: soLuongDonNhap.select,
@@ -89,7 +86,6 @@ export default function ThongKe() {
       const data = await APIThongKeGiaTriDonNhap(
         tongTienDonNhap.select.find((item) => item.active).value
       );
-      console.log(data);
       setTongTienDonNhap(() => ({
         ...data,
         select: tongTienDonNhap.select,
@@ -101,26 +97,44 @@ export default function ThongKe() {
   }, [tongTienDonNhap.select]);
   return (
     <Grid container spacing={2}>
-      <Grid item xs={3}>
-        {soLuongDonHang.datas && (
+
+      <Grid item xs={3} sx={{height: 300}}>
+        {soLuongDonHang.datas ? (
           <BieuDoDuong duLieu={soLuongDonHang} setDuLieu={setSoLuongDonHang} />
+        ):(
+          <Paper sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 284}}>
+            <CircularProgress />
+          </Paper>
         )}
       </Grid>
-      <Grid item xs={3}>
-        {tongTienDonHang.datas && (
+      <Grid item xs={3} sx={{height: 300}}>
+        {tongTienDonHang.datas ? (
           <BieuDoDuong duLieu={tongTienDonHang} setDuLieu={setTongTienDonHang} />
+        ):(
+          <Paper sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 284}}>
+            <CircularProgress />
+          </Paper>
         )}
       </Grid>
-      <Grid item xs={3}>
-        {soLuongDonNhap.datas && (
+      <Grid item xs={3} sx={{height: 300}}>
+        {soLuongDonNhap.datas ? (
           <BieuDoDuong duLieu={soLuongDonNhap} setDuLieu={setSoLuongDonNhap} />
+        ):(
+          <Paper sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 284}}>
+            <CircularProgress />
+          </Paper>
         )}
       </Grid>
-      <Grid item xs={3}>
-        {soLuongDonNhap.datas && (
+      <Grid item xs={3} sx={{height: 300}}>
+        {soLuongDonNhap.datas ? (
           <BieuDoDuong duLieu={tongTienDonNhap} setDuLieu={setTongTienDonNhap} />
+        ):(
+          <Paper sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: 284}}>
+            <CircularProgress />
+          </Paper>
         )}
       </Grid>
+
       <Grid item xs={6}>
         <BieuDoCot />
       </Grid>

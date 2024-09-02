@@ -61,5 +61,6 @@ export const APIThongKeGiaTriDonNhap = async (type) => {
     query,
     variables: { type },
   });
+  console.log(thongKeGiaTriDonNhap);
   return thongKeGiaTriDonNhap;
 };

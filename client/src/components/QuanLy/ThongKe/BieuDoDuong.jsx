@@ -81,7 +81,7 @@ export default function BieuDoDuong({ setDuLieu, duLieu }) {
       </Typography>
       <Box
         sx={{
-          height: 140,
+          height: 95,
           marginTop: 2,
         }}
       >

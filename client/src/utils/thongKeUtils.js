@@ -61,6 +61,22 @@ export const APIThongKeGiaTriDonNhap = async (type) => {
     query,
     variables: { type },
   });
-  console.log(thongKeGiaTriDonNhap);
   return thongKeGiaTriDonNhap;
+};
+
+export const APIThongKeSanPhamTheoDanhMuc = async (loaiThongKe,maDanhMuc,type) => {
+  const query = `query ThongKeSanPhamTheoDanhMuc($loaiThongKe: Int, $maDanhMuc: String, $type: Int) {
+  thongKeSanPhamTheoDanhMuc(loaiThongKe: $loaiThongKe, maDanhMuc: $maDanhMuc, type: $type) {
+    labels
+    datas
+    percent
+    quantity
+    oldDatas
+  }
+}`;
+  const { thongKeSanPhamTheoDanhMuc } = await GraphQLrequest({
+    query,
+    variables: { loaiThongKe,maDanhMuc,type },
+  });
+  return thongKeSanPhamTheoDanhMuc;
 };

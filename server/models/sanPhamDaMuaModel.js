@@ -31,6 +31,9 @@ const SanPhamDaMuaSchema = new mongoose.Schema({
     donViTinh: {
         type: String,
     },
+    maDonHang: {
+        type: String,
+    }
 },{timestamps: true});
 
 const sanPhamDaMuaModel = mongoose.model('SanPhamDaMua',SanPhamDaMuaSchema);

@@ -79,6 +79,7 @@ export default function QuanLySanPham() {
   };
 
   const handleSearchChange = (event) => {
+    setPage(0);
     setSearchTerm(event.target.value);
   };
 

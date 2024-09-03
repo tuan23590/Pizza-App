@@ -96,9 +96,12 @@ export default function ThongKe() {
     fetchData();
   }, [tongTienDonNhap.select]);
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{
+      height: "95.5%",
+      overflow: "auto",
+    }}>
 
-      <Grid item xs={3} sx={{height: 300}}>
+      <Grid item xs={3} sx={{height: 250}}>
         {soLuongDonHang.datas ? (
           <BieuDoDuong duLieu={soLuongDonHang} setDuLieu={setSoLuongDonHang} />
         ):(
@@ -107,7 +110,7 @@ export default function ThongKe() {
           </Paper>
         )}
       </Grid>
-      <Grid item xs={3} sx={{height: 300}}>
+      <Grid item xs={3} sx={{height: 250}}>
         {tongTienDonHang.datas ? (
           <BieuDoDuong duLieu={tongTienDonHang} setDuLieu={setTongTienDonHang} />
         ):(
@@ -116,7 +119,7 @@ export default function ThongKe() {
           </Paper>
         )}
       </Grid>
-      <Grid item xs={3} sx={{height: 300}}>
+      <Grid item xs={3} sx={{height: 250}}>
         {soLuongDonNhap.datas ? (
           <BieuDoDuong duLieu={soLuongDonNhap} setDuLieu={setSoLuongDonNhap} />
         ):(
@@ -125,7 +128,7 @@ export default function ThongKe() {
           </Paper>
         )}
       </Grid>
-      <Grid item xs={3} sx={{height: 300}}>
+      <Grid item xs={3} sx={{height: 250}}>
         {soLuongDonNhap.datas ? (
           <BieuDoDuong duLieu={tongTienDonNhap} setDuLieu={setTongTienDonNhap} />
         ):(
@@ -135,10 +138,10 @@ export default function ThongKe() {
         )}
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <BieuDoCot />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <BieuDoTron />
       </Grid>
     </Grid>

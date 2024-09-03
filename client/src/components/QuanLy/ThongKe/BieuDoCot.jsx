@@ -1,10 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BarChartCustom from "../../BarChartCustom";
 import { Paper, Box, Typography, Select, MenuItem } from "@mui/material";
+import { APIDanhSachDanhMucThemSanPham } from './../../../utils/danhMucUtils';
+import { APIThongKeSanPhamTheoDanhMuc } from './../../../utils/thongKeUtils';
 
 export default function BieuDoCot() {
-  const [danhMuc, setDanhMuc] = useState('Pizza');
-  const [thoiGian, setThoiGian] = useState('7 ngày');
+  const [danhMuc, setDanhMuc] = useState();
+  const [thoiGian, setThoiGian] = useState(1);
+  const [loaiThongKe, setLoaiThongKe] = useState(1);
+  const [danhSachDanhMuc, setDanhSachDanhMuc] = useState([]);
+  const [duLieuThongKe, setDuLieuThongKe] = useState([]);
+  const danhSachThoiGian = [
+    { name: "1 Ngày", value: 1 },
+    { name: "7 Ngày",  value: 7 },
+    { name: "30 Ngày",  value: 30 },
+    { name: "180 Ngày",  value: 180 },
+    { name: "365 Ngày",  value: 365 },
+  ];
+  const danhSachLoaiThongKe = [
+    { name: "Giá Trị", value: 1 },
+    { name: "Số lượng",  value: 2 },
+  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await APIDanhSachDanhMucThemSanPham();
+      setDanhSachDanhMuc(data);
+      setDanhMuc(data[0].maDanhMuc);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await APIThongKeSanPhamTheoDanhMuc(loaiThongKe,danhMuc,thoiGian);
+      setDuLieuThongKe(data);
+    }
+    if(danhMuc && thoiGian){
+      console.log("fetch");
+      fetchData();
+    }
+  }, [danhMuc,thoiGian,loaiThongKe]);
 
   return (
     <Paper sx={{ padding: 2 }}>
@@ -15,81 +50,55 @@ export default function BieuDoCot() {
           alignItems: "center",
         }}
       >
-        <Typography variant="h6">Danh thu theo sản phẩm</Typography>
+        <Typography variant="h6">Theo dõi sản phẩm</Typography>
         <Box>
         <Select
           sx={{ width: 200,mx:1 }}
           size="small"
-          value={danhMuc}
+          value={loaiThongKe || "" }
+          onChange={(e) => setLoaiThongKe(e.target.value)}
+        >
+          {danhSachLoaiThongKe.map((item) => (
+            <MenuItem key={item.value} value={item.value}>
+              {item.name}
+            </MenuItem>
+          ))}
+        </Select>
+        <Select
+          sx={{ width: 200,mx:1 }}
+          size="small"
+          value={danhMuc || "" }
           onChange={(e) => setDanhMuc(e.target.value)}
         >
-          <MenuItem value="Pizza">Pizza</MenuItem>
-          <MenuItem value="Spaghetti">Spaghetti</MenuItem>
-          <MenuItem value="Ice cream">Ice cream</MenuItem>
-          <MenuItem value="Chocolate">Chocolate</MenuItem>
+          {danhSachDanhMuc.map((item) => (
+            <MenuItem key={item.id} value={item.maDanhMuc}>
+              {item.tenDanhMuc}
+            </MenuItem>
+          ))}
         </Select>
 
         <Select
           sx={{ width: 200,mx:1 }}
           size="small"
           margin="dense"
-          value={thoiGian}
+          value={thoiGian || "" }
           onChange={(e) => setThoiGian(e.target.value)}
         >
-          <MenuItem value="1 ngày">24 giờ</MenuItem>
-          <MenuItem value="7 ngày">7 ngày</MenuItem>
-          <MenuItem value="30 ngày">30 ngày</MenuItem>
-          <MenuItem value="90 ngày">90 ngày</MenuItem>
-          <MenuItem value="180 ngày">180 ngày</MenuItem>
-          <MenuItem value="365 ngày">365 ngày</MenuItem>
+          {danhSachThoiGian.map((item) => (
+            <MenuItem key={item.value} value={item.value}>
+              {item.name}
+            </MenuItem>
+          ))}
         </Select>
         </Box>
       </Box>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "start",
-          alignItems: "center",
-          gap: 1,
-        }}
-      >
-        <Typography
-          sx={{
-            fontSize: 25,
-            fontWeight: "bold",
-          }}
-        >
-          14k
-        </Typography>
-        <Typography
-          sx={{
-            color: "green",
-            fontSize: 15,
-            display: "flex",
-            backgroundColor: "rgba(0, 255, 0, 0.1)",
-            paddingX: 0.5,
-            borderRadius: 5,
-            border: "1px solid green",
-          }}
-        >
-          20%
-        </Typography>
-      </Box>
-      <Typography
-        sx={{
-          fontSize: 12,
-          color: "gray",
-        }}
-      >
-        So với 30 ngày trước
-      </Typography>
-      <Box
-        sx={{
-          height: 370,
+          height: 270,
           marginTop: 2,
         }}
       >
-        <BarChartCustom />
+        <BarChartCustom duLieuThongKe={duLieuThongKe} loaiThongKe={loaiThongKe} />
       </Box>
     </Paper>
   );

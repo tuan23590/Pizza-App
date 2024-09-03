@@ -41,6 +41,7 @@ type SanPham {
 },
 
 type SanPhamDaMua {
+    maDonHang: String,
     maSanPham: String,
     tenSanPham: String,
     kichThuoc: String,
@@ -127,6 +128,7 @@ type ThongKe {
     datas: [Float],
     percent: Float,
     quantity: Float,
+    oldDatas: [Float],
 },
 type Query {
     danhSachSanPham: [SanPham],
@@ -148,6 +150,7 @@ type Query {
     thongKeSoLuongDonHang(type: Int): ThongKe,
     thongKeSoLuongDonNhap(type: Int): ThongKe,
     thongKeGiaTriDonNhap(type: Int): ThongKe,
+    thongKeSanPhamTheoDanhMuc(loaiThongKe: Int, maDanhMuc: String, type: Int): ThongKe,
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,

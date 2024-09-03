@@ -2,7 +2,6 @@ import * as React from "react";
 import { BarChart } from "@mui/x-charts/BarChart";
 
 export default function BarChartCustom({ duLieuThongKe,loaiThongKe }) {
-  console.log("[duLieuThongKe]: ", duLieuThongKe);
   return (
     <BarChart
       xAxis={[
@@ -15,12 +14,12 @@ export default function BarChartCustom({ duLieuThongKe,loaiThongKe }) {
       series={[
         { 
           data: duLieuThongKe.datas || [], 
-          label: loaiThongKe === 1 ? "Giá trị bán ra" : "Số lượng bán ra",
+          label: loaiThongKe === 1 ? "Giá trị bán ra (VNĐ)" : "Số lượng bán ra (sản phẩm)",
           color: "url(#gradientColor1)"  // Tham chiếu đến gradient đầu tiên
         },
         { 
           data: duLieuThongKe.oldDatas || [], 
-          label: loaiThongKe === 1 ? "Giá trị nhập vào" : "Số lượng nhập vào",
+          label: loaiThongKe === 1 ? "Giá trị nhập vào (VNĐ)" : "Số lượng nhập vào (sản phẩm)",
           color: "url(#gradientColor2)"  // Tham chiếu đến gradient thứ hai
         },
       ]}

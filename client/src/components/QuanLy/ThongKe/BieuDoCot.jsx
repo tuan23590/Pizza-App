@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BarChartCustom from "../../BarChartCustom";
-import { Paper, Box, Typography, Select, MenuItem } from "@mui/material";
+import { Paper, Box, Typography, Select, MenuItem, CircularProgress } from "@mui/material";
 import { APIDanhSachDanhMucThemSanPham } from './../../../utils/danhMucUtils';
 import { APIThongKeSanPhamTheoDanhMuc } from './../../../utils/thongKeUtils';
 
@@ -36,7 +36,6 @@ export default function BieuDoCot() {
       setDuLieuThongKe(data);
     }
     if(danhMuc && thoiGian){
-      console.log("fetch");
       fetchData();
     }
   }, [danhMuc,thoiGian,loaiThongKe]);
@@ -98,7 +97,18 @@ export default function BieuDoCot() {
           marginTop: 2,
         }}
       >
-        <BarChartCustom duLieuThongKe={duLieuThongKe} loaiThongKe={loaiThongKe} />
+        {duLieuThongKe == null ? (
+          <Box sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}>
+            <CircularProgress />
+          </Box>
+        ):(
+          <BarChartCustom duLieuThongKe={duLieuThongKe} loaiThongKe={loaiThongKe} />
+        )}
       </Box>
     </Paper>
   );

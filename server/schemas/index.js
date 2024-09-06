@@ -136,6 +136,10 @@ type ThongKe {
     quantity: Float,
     oldDatas: [Float],
 },
+type ChiTiet{
+    tenChiTiet: String,
+    loaiChiTiet: String,
+},
 type Query {
     danhSachSanPham: [SanPham],
     danhSachDanhMuc: [DanhMuc],
@@ -158,16 +162,13 @@ type Query {
     thongKeGiaTriDonNhap(type: Int): ThongKe,
     thongKeSanPhamTheoDanhMuc(loaiThongKe: Int, maDanhMuc: String, type: Int): ThongKe,
     danhMucTheoNhaCungCap(maNhaCungCap: String): [DanhMuc],
+    danhSachChiTiet: [ChiTiet],
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,
-
     xoaDanhMuc(id: String): String,
-    
     capNhatDanhMuc(id: String, tenDanhMuc: String): DanhMuc,
-    
     xoaSanPham(id: String): String,
-
     themSanPham(
     danhMuc: String, 
     tenSanPham: String, 
@@ -255,6 +256,11 @@ type Mutation {
     trangThai: String,
     hinhAnh: String
     ): ThongBao,
+
+    themChiTiet(
+    tenChiTiet: String,
+    loaiChiTiet: String
+    ): ChiTiet,
 }
     type Subscription {
     Notify: Message

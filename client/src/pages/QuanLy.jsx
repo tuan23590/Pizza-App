@@ -18,6 +18,7 @@ export default function QuanLy() {
             {'link':'QuanLyHangHoa','text':'Quản Lý Hàng Hóa', 'phanQuyen': []},
             {'link':'QuanLyDonHang','text':'Quản Lý Dơn Hàng', 'phanQuyen': []},
             {'link':'QuanLyPhieuNhap','text':'Quản Lý Phiếu Nhập', 'phanQuyen': []},
+            {'link':'QuanLyKhac','text':'Quản Lý Khác', 'phanQuyen': []},
             ]} />
     </Grid>
     <Grid item xs={10} sx={{height: '100%', paddingTop: '15px',paddingRight: '15px'}}>

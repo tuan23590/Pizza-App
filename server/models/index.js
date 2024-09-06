@@ -7,6 +7,7 @@ import nhapCungCapModel from './nhaCungCapModel.js';
 import chiTietDonNhapModel from './chiTietDonNhapModel.js';
 import thongBaoModel from './thongBaoModel.js';
 import trangThaiGiaoHangModel from './trangThaiGiaoHangModel.js';
+import chiTietModel from './chiTietModel.js';
 
 export {
     sanPhamModel,
@@ -17,5 +18,6 @@ export {
     chiTietDonNhapModel,
     nhapCungCapModel,
     thongBaoModel,
-    trangThaiGiaoHangModel
+    trangThaiGiaoHangModel,
+    chiTietModel
 }

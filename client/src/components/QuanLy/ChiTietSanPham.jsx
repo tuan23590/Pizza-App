@@ -20,6 +20,7 @@ import { APIDanhSachDanhMucThemSanPham } from "../../utils/danhMucUtils";
 import FileUpload from "../FileUpload";
 import { APICapNhatSanPham, APIThemSanPham } from "../../utils/sanPhamUtils";
 import { AuthContext } from "./../../context/AuthProvider";
+import { APIDanhSachChiTiet } from "../../utils/chiTietUtils";
 
 export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
   const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } =
@@ -31,9 +32,6 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
     if (mode === "edit" && sanPham) {
       const kichThuocParsed = JSON.parse(sanPham.kichThuoc || "[]");
       const loaiDeParsed = JSON.parse(sanPham.loaiDe || "[]");
-
-      console.log("kichThuocParsed", kichThuocParsed);
-      console.log("loaiDeParsed", loaiDeParsed);
 
       setFormData({
         id: sanPham.id,
@@ -82,15 +80,22 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
   const kichThuocRefs = useRef([]);
   const deRefs = useRef([]);
 
-  const danhSachKichThuoc = ["Nhỏ", "Vừa", "Lớn"];
-  const danhSachDe = [
-    "Đế kéo tay truyền thống",
-    "Đế giòn xốp",
-    "Viền phô mai",
-    "Viền xúc xích",
-    "Viền phô mai xúc xích",
-    "Viền phô mai xoắn",
-  ];
+  const [danhSachKichThuoc, setDanhSachKichThuoc] = useState([]);
+  const [danhSachDe, setDanhSachDe] = useState([]);
+  const [danhSachDonVi, setDanhSachDonVi] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await APIDanhSachChiTiet();
+      const kichThuoc = data.filter((item) => item.loaiChiTiet === "KT");
+      const de = data.filter((item) => item.loaiChiTiet === "DE");
+      const donVi = data.filter((item) => item.loaiChiTiet === "DV");
+      setDanhSachDe(de.map((item) => item.tenChiTiet));
+      setDanhSachKichThuoc(kichThuoc.map((item) => item.tenChiTiet));
+      setDanhSachDonVi(donVi.map((item) => item.tenChiTiet));
+    };
+    fetchData();
+  }, []);
 
   const fetchDanhMuc = async () => {
     const danhMuc = await APIDanhSachDanhMucThemSanPham();
@@ -323,11 +328,12 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
                 onChange={handleChange}
                 name="donViTinh"
               >
-                <MenuItem value="Cái">Cái</MenuItem>
-                <MenuItem value="Phần">Phần</MenuItem>
-                <MenuItem value="Chai">Chai</MenuItem>
-                <MenuItem value="Lon">Lon</MenuItem>
-                <MenuItem value="Ly">Ly</MenuItem>
+                {danhSachDonVi.map((item) => (
+                  <MenuItem key={item._id} value={item.tenChiTiet}>
+                    {item.tenChiTiet}
+                  </MenuItem>
+                ))
+                }
               </Select>
             </FormControl>
           </Grid>

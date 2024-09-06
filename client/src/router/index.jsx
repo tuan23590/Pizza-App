@@ -20,6 +20,7 @@ import ErrorPage from "../pages/ErrorPage";
 import ThongKe from "../components/QuanLy/ThongKe/ThongKe";
 import ThucHienDonHang from './../pages/ThucHienDonHang';
 import GiaoHang from './../pages/GiaoHang';
+import QuanLyKhac from "../components/QuanLy/QuanLyKhac";
 const KhachHangProvider = () => {
     return <>
         <SubscriptionProvider>
@@ -91,6 +92,11 @@ export default createBrowserRouter(
                         {
                             element: <ThongKe />,
                             path: "/QuanLy/ThongKe",
+
+                        },
+                        {
+                            element: <QuanLyKhac />,
+                            path: "/QuanLy/QuanLyKhac",
 
                         },
                         {

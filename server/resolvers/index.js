@@ -1,5 +1,6 @@
 import {
   chiTietDonNhapModel,
+  chiTietModel,
   danhMucModel,
   donHangModel,
   donNhapModel,
@@ -723,7 +724,11 @@ export const resolvers = {
       });
       const danhSachDanhMuc = await danhMucModel.find({ _id: { $in: danhSachMaDanhMuc.danhSachDanhMuc } });
       return danhSachDanhMuc;
-    }
+    },
+    danhSachChiTiet: async (parent, args) => {
+      const danhSachChiTiet = await chiTietModel.find();
+      return danhSachChiTiet;
+    },
   },
   DonHang: {
     danhSachSanPham: async (parent) => {
@@ -781,6 +786,10 @@ export const resolvers = {
     },
   },
   Mutation: {
+    themChiTiet: async (parent, args) => {
+      const chiTiet = new chiTietModel(args);
+      return chiTiet.save();
+    },
     themDanhMuc: async (parent, args) => {
       const danhMucCuoi = await danhMucModel
         .findOne({ maDanhMuc: { $ne: "DMXOA" } })

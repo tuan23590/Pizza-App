@@ -37,7 +37,6 @@ export const APIDonHangTheoEmail = async (email) => {
     tongTien
     ghiChuDiaChi
     phuongThucThanhToan
-    trangThai
     danhSachSanPham {
       maSanPham
       tenSanPham
@@ -49,6 +48,12 @@ export const APIDonHangTheoEmail = async (email) => {
       giaSanPham
       kichThuoc 
       loaiDe
+    }
+    trangThai {
+      id
+      thoiGian
+      trangThai
+      lyDoHuyDonHang
     }
   }
 }`;
@@ -73,7 +78,12 @@ export const APIDanhSachDonHang = async () => {
     tongTien
     ghiChuDiaChi
     phuongThucThanhToan
-    trangThai
+     trangThai {
+      id
+      thoiGian
+      trangThai
+      lyDoHuyDonHang
+    }
     danhSachSanPham {
       maSanPham
       tenSanPham

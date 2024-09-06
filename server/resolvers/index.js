@@ -7,6 +7,7 @@ import {
   sanPhamDaMuaModel,
   sanPhamModel,
   thongBaoModel,
+  trangThaiGiaoHangModel,
 } from "../models/index.js";
 import fs from "fs";
 import { PubSub } from "graphql-subscriptions";
@@ -723,6 +724,12 @@ export const resolvers = {
       });
       return danhSachSanPham;
     },
+    trangThai: async (parent) => {
+      //parent.trangThai là danh sách id trạng thái
+      const trangThai = await trangThaiGiaoHangModel.find({ _id: { $in: parent.trangThai } });
+      console.log(trangThai);
+      return trangThai;
+    }
   },
   SanPham: {
     danhMuc: async (parent) => {
@@ -862,7 +869,12 @@ export const resolvers = {
       }
       const donHang = new donHangModel(args);
       donHang.maDonHang = maDonHangMoi;
-      donHang.trangThai = "Đang xử lý";
+      const idTrangThai = new trangThaiGiaoHangModel({
+        trangThai: "Đang xử lý",
+        thoiGian: Date.now(),
+      });
+      await idTrangThai.save();
+      donHang.trangThai.push(idTrangThai._id);
       donHang.ngayDatHang = Date.now();
       // nếu args.thoiGianGiaoHang = "Càng sớm càng tốt" thì lấy Date.now() + 2 giờ ngược lại lấy args.thoiGianGiaoHang
       donHang.thoiGianGiaoHang =
@@ -894,11 +906,14 @@ export const resolvers = {
       }
     },
     capNhatTrangThaiDonHang: async (parent, args) => {
-      const donHang = await donHangModel.findOneAndUpdate(
-        { maDonHang: args.maDonHang },
-        { trangThai: args.trangThai },
-        { new: true }
-      );
+      console.log(args);
+      const trangThai = new trangThaiGiaoHangModel({
+        trangThai: args.trangThai,
+        thoiGian: Date.now(),
+        lyDoHuyDonHang: args.lyDoHuyDonHang,
+      });
+      await trangThai.save();
+      const donHang = await donHangModel.findOneAndUpdate( { maDonHang: args.maDonHang }, { $push: { trangThai: trangThai._id } }, { new: true });
       pubsub.publish("THEM_THONG_BAO", {
         Notify: {
           message: `Đơn hàng ${args.maDonHang} đã được cập nhật trạng thái thành ${args.trangThai}`,

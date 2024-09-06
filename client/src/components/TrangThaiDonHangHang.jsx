@@ -18,55 +18,73 @@ import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import RemoveShoppingCartOutlinedIcon from '@mui/icons-material/RemoveShoppingCartOutlined';
+import { FOMATDATE } from '../function';
 
-const allSteps = [
-  {
-    label: 'Đơn Hàng Đã Đặt',
-    iconFilled: <ShoppingBagIcon />,
-    iconOutlined: <ShoppingBagOutlinedIcon />,
-  },
-  {
-    label: 'Đang Xử Lý Đơn Hàng',
-    iconFilled: <FactCheckIcon />,
-    iconOutlined: <FactCheckOutlinedIcon />,
-  },
-  {
-    label: 'Đang Chuẩn Bị Đơn Hàng',
-    iconFilled: <LocalFireDepartmentIcon />,
-    iconOutlined: <LocalFireDepartmentOutlinedIcon />,
-  },
-  {
-    label: 'Đang Giao Hàng',
-    iconFilled: <LocalShippingIcon />,
-    iconOutlined: <LocalShippingOutlinedIcon />,
-  },
-  {
-    label: 'Đã Giao Hàng',
-    iconFilled: <VerifiedUserIcon />,
-    iconOutlined: <VerifiedUserOutlinedIcon />,
-  },
-  {
-    label: 'Đã Hủy Đơn Hàng',
-    iconFilled: <RemoveShoppingCartIcon />,
-    iconOutlined: <RemoveShoppingCartOutlinedIcon />,
-  }
-];
+
 
 export default function TrangThaiDonHang({ trangThai }) {
-  const steps = trangThai === 'Đã hủy' 
+  const trangThaiDH = trangThai ? trangThai[trangThai?.length - 1]?.trangThai : '';
+  const thoiGian = trangThai ? trangThai[trangThai?.length - 1]?.thoiGian : '';
+  const allSteps = [
+    {
+      label: 'Đơn Hàng Đã Đặt',
+      iconFilled: <ShoppingBagIcon />,
+      iconOutlined: <ShoppingBagOutlinedIcon />,
+      time: trangThai ? trangThai[0]?.thoiGian : '',
+    },
+    {
+      label: 'Đang Xử Lý Đơn Hàng',
+      iconFilled: <FactCheckIcon />,
+      iconOutlined: <FactCheckOutlinedIcon />,
+      time: trangThai ? trangThai[1]?.thoiGian : '',
+      // Thời gian xử lý = trangThai[0]?.thoiGian + 15 phút, trangThai[0]?.thoiGian kiểu string
+      status: 'Duyệt chấm nhất đến: '+ FOMATDATE(parseInt(thoiGian) + 900000),
+    },
+    {
+      label: 'Đang Chuẩn Bị Đơn Hàng',
+      iconFilled: <LocalFireDepartmentIcon />,
+      iconOutlined: <LocalFireDepartmentOutlinedIcon />,
+      time: trangThai ? trangThai[2]?.thoiGian : '',
+      // + 30 phút
+      status: 'Thời gian hoàn thành dự kiến: '+FOMATDATE(parseInt(thoiGian) + 1800000),
+    },
+    {
+      label: 'Đang Giao Hàng',
+      iconFilled: <LocalShippingIcon />,
+      iconOutlined: <LocalShippingOutlinedIcon />,
+      time: trangThai ? trangThai[3]?.thoiGian : '',
+      
+      //status: 'Thời gian hoàn thành dự kiến: '+FOMATDATE(parseInt(thoiGian) + 1800000),
+    },
+    {
+      label: 'Đã Giao Hàng',
+      iconFilled: <VerifiedUserIcon />,
+      iconOutlined: <VerifiedUserOutlinedIcon />,
+      // + 60 phút
+      status: 'Thời gian giao hàng dự kiến: '+FOMATDATE(parseInt(thoiGian) + 3600000),
+    },
+    {
+      label: 'Đã Hủy Đơn Hàng',
+      iconFilled: <RemoveShoppingCartIcon />,
+      iconOutlined: <RemoveShoppingCartOutlinedIcon />,
+    }
+  ];
+
+
+  const steps = trangThaiDH === 'Đã hủy' 
     ? [allSteps[0], allSteps[5]]  // Hiển thị "Đơn Hàng Đã Đặt" và "Đã Hủy Đơn Hàng"
     : allSteps.slice(0, 5);        // Hiển thị tất cả các bước ngoại trừ "Đã Hủy Đơn Hàng"
 
   const activeStep = 
-    trangThai === 'Đã đặt hàng' ? 0 :
-    trangThai === 'Đang xử lý' ? 1 :
-    trangThai === 'Đang chuẩn bị' ? 2 :
-    trangThai === 'Đang giao hàng' ? 3 :
-    trangThai === 'Đã giao hàng' ? 4 : 
-    trangThai === 'Đã hủy' ? 1 : 0;  // Nếu "Đã hủy", chỉ số bước là 1 vì chỉ có 2 bước được hiển thị
+    trangThaiDH === 'Đã đặt hàng' ? 0 :
+    trangThaiDH === 'Đang xử lý' ? 1 :
+    trangThaiDH === 'Đang chuẩn bị' ? 2 :
+    trangThaiDH === 'Đang giao hàng' ? 3 :
+    trangThaiDH === 'Đã giao hàng' ? 4 : 
+    trangThaiDH === 'Đã hủy' ? 1 : 0;  // Nếu "Đã hủy", chỉ số bước là 1 vì chỉ có 2 bước được hiển thị
 
   // Xác định màu sắc dựa trên trạng thái
-  const stepColor = trangThai === 'Đã hủy' ? 'red' : 'green';
+  const stepColor = trangThaiDH === 'Đã hủy' ? 'red' : 'green';
 
   return (
     <Box mb={4}>
@@ -98,6 +116,14 @@ export default function TrangThaiDonHang({ trangThai }) {
                   color={index <= activeStep ? stepColor : 'inherit'}
                 >
                   {step.label}
+                </Typography>
+                <Typography
+                  color={index <= activeStep ? stepColor : 'inherit'}
+                  variant='caption'
+                >
+                  {step.time ? FOMATDATE(step.time) : (
+                    step.status
+                  )}
                 </Typography>
               </Box>
             </StepLabel>

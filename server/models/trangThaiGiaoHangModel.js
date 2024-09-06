@@ -1,17 +1,17 @@
 import mongoose from 'mongoose'
 
 
-const DanhMucSchema = new mongoose.Schema({
-    maDanhMuc: {
-        type: String,
-    },
-    tenDanhMuc: {
-        type: String,
-    },
+const TrangThaiGiaoHangSchema = new mongoose.Schema({
     trangThai: {
+        type: String,
+    },
+    thoiGian: {
+        type: String,
+    },
+    lyDoHuyDonHang: {
         type: String,
     },
 },{timestamps: true});
 
-const danhMucModel = mongoose.model('DanhMuc',DanhMucSchema);
-export default danhMucModel;
+const trangThaiGiaoHangModel = mongoose.model('TrangThaiGiaoHang',TrangThaiGiaoHangSchema);
+export default trangThaiGiaoHangModel;

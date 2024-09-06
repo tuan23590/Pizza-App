@@ -84,7 +84,7 @@ export default function QuanlyDonHang() {
                 <TableCell>{donHang.tongTien.toLocaleString('vi-VN')}₫</TableCell>
                 <TableCell>{donHang.phuongThucThanhToan}</TableCell>
                 <TableCell>
-                    {donHang.trangThai}
+                    {donHang.trangThai[donHang.trangThai.length - 1].trangThai}
                 </TableCell>
                 </TableRow>
             ))}

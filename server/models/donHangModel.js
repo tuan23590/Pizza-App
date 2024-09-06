@@ -38,7 +38,7 @@ const DonHangSchema = new mongoose.Schema({
         type: String,
     },
     trangThai: {
-        type: String,
+        type: [String],
     },
     danhSachSanPham: {
         type: [String],

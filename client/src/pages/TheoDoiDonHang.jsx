@@ -28,7 +28,7 @@ export default function TheoDoiDonHang() {
   const [status, setStatus] = useState("Tất cả");
   const navigate = useNavigate();
   const { data, loading, error } = APINhanThongBao();
-
+  
   const handleSearch = async () => {
     const data = await APIDonHangTheoEmail(user.email);
     const sortedData = data.sort((a, b) => b.ngayDatHang - a.ngayDatHang);
@@ -41,7 +41,7 @@ export default function TheoDoiDonHang() {
       setFilteredDonHang(danhSachDonHang);
     } else {
       const filtered = danhSachDonHang.filter(
-        (donHang) => donHang.trangThai === status
+        (donHang) => donHang.trangThai[donHang.trangThai.length - 1].trangThai === status
       );
       setFilteredDonHang(filtered);
     }
@@ -140,13 +140,13 @@ export default function TheoDoiDonHang() {
                       </Typography>
                       <Typography
                         backgroundColor={
-                          donHang.trangThai === "Đang xử lý"
+                          donHang.trangThai[donHang.trangThai.length - 1].trangThai === "Đang xử lý"
                             ? "#ff9100"
-                            : donHang.trangThai === "Đang giao hàng"
+                            : donHang.trangThai[donHang.trangThai.length - 1].trangThai === "Đang giao hàng"
                             ? "#1e88e5"
-                            : donHang.trangThai === "Đang chuẩn bị"
+                            : donHang.trangThai[donHang.trangThai.length - 1].trangThai === "Đang chuẩn bị"
                             ? "#1e88e5"
-                            : donHang.trangThai === "Đã giao hàng"
+                            : donHang.trangThai[donHang.trangThai.length - 1].trangThai === "Đã giao hàng"
                             ? "#0a8020"
                             : "#e53935"
                         }
@@ -159,7 +159,7 @@ export default function TheoDoiDonHang() {
                         alignItems={"center"}
                         display={"flex"}
                       >
-                        {donHang.trangThai}
+                        {donHang.trangThai[donHang.trangThai.length - 1].trangThai}
                       </Typography>
                     </Grid>
                     <Grid item sm={6}>

@@ -20,9 +20,10 @@ export default function ChiTietDonHang({
   selectedOrder,
   isCustomer,
 }) {
+  const trangThai = selectedOrder?.trangThai[selectedOrder.trangThai.length - 1].trangThai;
     const xuLyDoiTrangThai = async () => {
-        const trangThai = selectedOrder?.trangThai === "Đang xử lý" ? "Đang chuẩn bị" : selectedOrder?.trangThai === "Đang chuẩn bị" ? "Đang giao hàng" : "Đã giao hàng"
-        const data = await APICapNhatTrangThaiDonHang({maDonHang: selectedOrder.maDonHang, trangThai})
+        const trangThaiDH = trangThai === "Đang xử lý" ? "Đang chuẩn bị" : trangThai === "Đang chuẩn bị" ? "Đang giao hàng" : "Đã giao hàng"
+        const data = await APICapNhatTrangThaiDonHang({maDonHang: selectedOrder.maDonHang, trangThai: trangThaiDH})
         if (data) {
             handleCloseDialog()
             console.log(data)
@@ -244,9 +245,9 @@ export default function ChiTietDonHang({
         <Button variant="outlined" onClick={handleCloseDialog} color="warning">
           Đóng
         </Button>
-        {!isCustomer && (
+        {!isCustomer && trangThai !== "Đã giao hàng" && (
         <Button variant="contained" onClick={xuLyDoiTrangThai} color="success">
-          {selectedOrder?.trangThai === "Đang xử lý" ? "Xác nhận đơn hàng" : selectedOrder?.trangThai === "Đang chuẩn bị" ? "Đơn hàng đã chuản bị xong" : "Đã giao hàng thành công"}
+          {trangThai === "Đang xử lý" ? "Xác nhận đơn hàng" : trangThai === "Đang chuẩn bị" ? "Đơn hàng đã chuẩn bị xong" : "Đã giao hàng thành công"}
         </Button>
         )}
       </DialogActions>

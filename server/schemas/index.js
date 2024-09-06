@@ -14,8 +14,14 @@ type DonHang {
     tongTien: Float,
     ghiChuDiaChi: String,
     phuongThucThanhToan: String,
-    trangThai: String,
+    trangThai: [TrangThaiGiaoHang],
     danhSachSanPham: [SanPhamDaMua]
+},
+type TrangThaiGiaoHang {
+    id: String,
+    thoiGian: String,
+    trangThai: String,
+    lyDoHuyDonHang: String,
 },
 type DanhMuc {
     id: String,

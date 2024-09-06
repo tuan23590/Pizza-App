@@ -64,9 +64,9 @@ export const resolvers = {
       return danhSachDanhMuc;
     },
     danhSachDanhMucChoNguoiDung: async () => {
-      // loai bo danh muc "DMXOA" và danh mục có trạng thái là "Đã xóa"
+      // loai bo danh muc "DMXOA", "DMNL" và danh mục có trạng thái là "Đã xóa"
       let danhSachDanhMuc = await danhMucModel.find({
-        maDanhMuc: { $ne: "DMXOA" },
+        maDanhMuc: { $nin: ["DMXOA", "DMNL"] },
         trangThai: { $ne: "Đã xóa" },
       });
       // kiểm tra số lượng sản phẩm (sanPhamModel.countDocuments đếm những sanPham có trạng thái là "Đang kinh doanh" và danhMuc là maDanhMuc) nếu số lượng sản phẩm > 0 thì giữ lại danh mục đó
@@ -180,6 +180,7 @@ export const resolvers = {
     danhSachSanPhamTheoMaDanhMucNguoiDung: async (parent, args) => {
       const danhSachSanPham = await sanPhamModel.find({
         trangThai: "Đang kinh doanh",
+        soLuong: { $gt: 0 },
         danhMuc: args.maDanhMuc,
       });
       // sắp xếp theo maSanPham giảm dần
@@ -716,6 +717,13 @@ export const resolvers = {
 
       return { labels, datas, oldDatas };
     },
+    danhMucTheoNhaCungCap: async (parent, args) => {
+      const danhSachMaDanhMuc = await nhapCungCapModel.findOne({
+        maNhaCungCap: args.maNhaCungCap,
+      });
+      const danhSachDanhMuc = await danhMucModel.find({ _id: { $in: danhSachMaDanhMuc.danhSachDanhMuc } });
+      return danhSachDanhMuc;
+    }
   },
   DonHang: {
     danhSachSanPham: async (parent) => {
@@ -838,7 +846,7 @@ export const resolvers = {
         ...args,
         giaSanPham: parseFloat(args.giaSanPham),
         maSanPham: maSanPhamMoi,
-        trangThai: "Ngừng kinh doanh",
+        trangThai: "Đang kinh doanh",
         soLuong: 0,
       });
       return await sanPham.save();

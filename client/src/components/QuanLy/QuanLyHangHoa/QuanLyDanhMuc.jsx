@@ -139,7 +139,7 @@ export default function QuanLyDanhMuc() {
                 '&:hover': { backgroundColor: '#f5f5f5' },
               }}
               onClick={() => {
-                if (dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1' && dm.trangThai !== 'Đã xóa') {
+                if (dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1'&& dm.maDanhMuc !== 'DMNL' && dm.trangThai !== 'Đã xóa') {
                   handleOpen(dm);
                 }
               }}
@@ -155,7 +155,7 @@ export default function QuanLyDanhMuc() {
                 >{
                   dm?.trangThai?.toUpperCase()
                 }</TableCell>
-                {dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1' && dm.trangThai !== 'Đã xóa'
+                {dm.maDanhMuc !== 'DMXOA' && dm.maDanhMuc !== 'DM1'&& dm.maDanhMuc !== 'DMNL' && dm.trangThai !== 'Đã xóa'
                  && (
                   <TableCell>
                     <Button size='small' variant="contained" sx={{ marginX: '10px' }} color="error" onClick={(e) =>{

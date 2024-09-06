@@ -22,8 +22,8 @@ import {
 import { APIThemDonNhap } from '../../../utils/donNhapUtils';
 import { AuthContext } from '../../../context/AuthProvider';
 import { APIDanhSachSanPhamTheoMaDanhMuc } from './../../../utils/sanPhamUtils';
-import { APIDanhSachDanhMucThemSanPham } from './../../../utils/danhMucUtils';
-import { APIDanhSachNhaCungCapTheoDanhMuc } from './../../../utils/nhaCungCapUtils';
+import { APIDanhMucTheoNhaCungCap } from './../../../utils/danhMucUtils';
+import { APIDanhSachNhaCungCap } from './../../../utils/nhaCungCapUtils';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { FOMATDATE } from './../../../function/index';
 
@@ -37,7 +37,6 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
     const [formData, setFormData] = useState(null);
     useEffect(() => {
         setDanhSachSanPham([]);
-        setDanhSachNhaCungCap([]);
         setDanhMucSelected(null);
         if (open) {
             if (mode === 'edit' && donNhap) {
@@ -67,9 +66,9 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await APIDanhSachDanhMucThemSanPham();
-            if (data) {
-                setDanhSachDanhMuc(data);
+            const dataNhaCungCap = await APIDanhSachNhaCungCap();
+            if (dataNhaCungCap) {
+                setDanhSachNhaCungCap(dataNhaCungCap);
             }
         };
         fetchData();
@@ -80,19 +79,13 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
             setChiTietDonNhap({ ...chiTietDonNhap, sanPham: null });
         }
         const fetchData = async () => {
-            if (danhMucSelected) {
-                const data = await APIDanhSachSanPhamTheoMaDanhMuc(danhMucSelected.maDanhMuc);
+                const data = await APIDanhMucTheoNhaCungCap(chiTietDonNhap?.nhaCungCap.maNhaCungCap);
                 if (data) {
-                    setDanhSachSanPham(data);
+                    setDanhSachDanhMuc(data);
                 }
-                const dataNhaCungCap = await APIDanhSachNhaCungCapTheoDanhMuc(danhMucSelected.id);
-                if (dataNhaCungCap) {
-                    setDanhSachNhaCungCap(dataNhaCungCap);
-                }
-            }
         };
         fetchData();
-    }, [danhMucSelected]);
+    }, [chiTietDonNhap?.nhaCungCap]);
 
     useEffect(() => {
 
@@ -111,6 +104,16 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
             setFormData((prev) => ({ ...prev, tongTien: tongTien }));
         }
     }, [formData?.danhSachSanPham]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await APIDanhSachSanPhamTheoMaDanhMuc(danhMucSelected?.maDanhMuc);
+            if (data) {
+                setDanhSachSanPham(data);
+            }
+        };
+        fetchData();
+    }, [danhMucSelected]);
 
     const handleSubmit = async () => {
         if (
@@ -150,7 +153,10 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
             ...prev,
             danhSachSanPham: [chiTietDonNhap, ...prev.danhSachSanPham],
         }));
-        setChiTietDonNhap(null);
+        setChiTietDonNhap(
+            null
+        );
+        setDanhMucSelected(null);
         setNotificationMessage('Thêm sản phẩm vào phiếu nhập thành công');
         setNotificationSeverity('success');
         setNotifyOpen(true);
@@ -196,6 +202,17 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
 
                             <Grid item xs={12}>
                                 <Typography sx={{ fontSize: '20px' }}><b>Thông sản phẩm nhập</b></Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Autocomplete
+                                    disabled={mode === 'edit'}
+                                    value={chiTietDonNhap?.nhaCungCap || null}
+                                    options={danhSachNhaCungCap}
+                                    getOptionLabel={(option) => option.tenNhaCungCap}
+                                    renderInput={(params) => <TextField {...params} label="Nhà Cung Cấp" />}
+                                    onChange={(e, value) => setChiTietDonNhap({ ...chiTietDonNhap, nhaCungCap: value })}
+                                />
+
                             </Grid>
                             <Grid item xs={6}>
                                 <Autocomplete
@@ -258,17 +275,7 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
                                 />
                             </Grid>
 
-                            <Grid item xs={6}>
-                                <Autocomplete
-                                    disabled={mode === 'edit'}
-                                    value={chiTietDonNhap?.nhaCungCap || null}
-                                    options={danhSachNhaCungCap}
-                                    getOptionLabel={(option) => option.tenNhaCungCap}
-                                    renderInput={(params) => <TextField {...params} label="Nhà Cung Cấp" />}
-                                    onChange={(e, value) => setChiTietDonNhap({ ...chiTietDonNhap, nhaCungCap: value })}
-                                />
 
-                            </Grid>
                             <Grid item xs={6}>
                                 <Typography sx={{ paddingTop: '20px', fontSize: '20px' }}><b>Thành Tiền:</b> {(chiTietDonNhap?.thanhTien || 0).toLocaleString('vi-VN')}₫</Typography>
                             </Grid>

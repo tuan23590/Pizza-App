@@ -62,7 +62,6 @@ export const APIXoaDanhMuc = async (deleteId) => {
 };
 
 export const APICapNhatDanhMuc = async (id,tenDanhMuc) => {
-  console.log(id,tenDanhMuc);
   const query = `mutation CapNhatDanhMuc($capNhatDanhMucId: String, $tenDanhMuc: String) {
   capNhatDanhMuc(id: $capNhatDanhMucId, tenDanhMuc: $tenDanhMuc) {
     id
@@ -73,4 +72,18 @@ export const APICapNhatDanhMuc = async (id,tenDanhMuc) => {
 }`;
   const {capNhatDanhMuc} = await GraphQLrequest({query, variables: {capNhatDanhMucId: id, tenDanhMuc}});
   return capNhatDanhMuc;
+};
+
+export const APIDanhMucTheoNhaCungCap = async (maNhaCungCap) => {
+  const query = `query DanhMucTheoNhaCungCap($maNhaCungCap: String) {
+  danhMucTheoNhaCungCap(maNhaCungCap: $maNhaCungCap) {
+    id
+    tenDanhMuc
+    maDanhMuc
+    soLuongSanPham
+    trangThai
+  }
+}`;
+  const {danhMucTheoNhaCungCap} = await GraphQLrequest({query, variables: {maNhaCungCap}});
+  return danhMucTheoNhaCungCap;
 };

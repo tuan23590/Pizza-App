@@ -20,6 +20,7 @@ const httpServer = http.createServer(app);
 const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.rhmhmkh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const PORT = process.env.PORT || 4000;
 
+
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const wsServer = new WebSocketServer({

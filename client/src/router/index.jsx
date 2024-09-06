@@ -18,6 +18,8 @@ import Test from "../pages/Test";
 import SubscriptionProvider from "../context/SubscriptionProvider";
 import ErrorPage from "../pages/ErrorPage";
 import ThongKe from "../components/QuanLy/ThongKe/ThongKe";
+import ThucHienDonHang from './../pages/ThucHienDonHang';
+import GiaoHang from './../pages/GiaoHang';
 const KhachHangProvider = () => {
     return <>
         <SubscriptionProvider>
@@ -53,6 +55,14 @@ export default createBrowserRouter(
                 {
                     element: <TheoDoiDonHang />,
                     path: "/TheoDoiDonHang"
+                },
+                {
+                    element: <ThucHienDonHang />,
+                    path: "/ThucHienDonHang"
+                },
+                {
+                    element:<GiaoHang/>,
+                    path: "/GiaoHang"
                 },
                 {
                     element: <DatHang />,

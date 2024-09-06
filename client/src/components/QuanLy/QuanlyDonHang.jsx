@@ -84,23 +84,7 @@ export default function QuanlyDonHang() {
                 <TableCell>{donHang.tongTien.toLocaleString('vi-VN')}₫</TableCell>
                 <TableCell>{donHang.phuongThucThanhToan}</TableCell>
                 <TableCell>
-                    <Select 
-                    value={donHang.trangThai}
-                    sx = {{
-                        height: '25px',
-                        fontSize: '14px'
-                    }}
-                    onChange={(e)=>handleChange(e, donHang)}
-                    onClick={(e)=>{
-                        e.stopPropagation();
-                    }}
-                    >
-                        <MenuItem value={"Đang xử lý"}>Đang xử lý</MenuItem>
-                        <MenuItem value={"Đang chuẩn bị"}>Đang chuẩn bị</MenuItem>
-                        <MenuItem value={"Đang giao hàng"}>Đang giao hàng</MenuItem>
-                        <MenuItem value={"Đã giao hàng"}>Đã giao hàng</MenuItem>
-                        <MenuItem value={"Đã hủy"}>Đã hủy</MenuItem>
-                    </Select>
+                    {donHang.trangThai}
                 </TableCell>
                 </TableRow>
             ))}

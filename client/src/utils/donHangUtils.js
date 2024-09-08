@@ -62,9 +62,9 @@ export const APIDonHangTheoEmail = async (email) => {
 };
 
 
-export const APIDanhSachDonHang = async () => {
-  const query = `query DanhSachDonHang {
-  danhSachDonHang {
+export const APIDanhSachDonHang = async (type) => {
+  const query = `query DanhSachDonHang($type: Int) {
+  danhSachDonHang(type: $type) {
     id
     maDonHang
     tenKhachHang
@@ -98,7 +98,7 @@ export const APIDanhSachDonHang = async () => {
     }
   }
 }`;
-  const {danhSachDonHang} = await GraphQLrequest({query});
+  const {danhSachDonHang} = await GraphQLrequest({query, variables: {type}});
   return danhSachDonHang;
 };
 

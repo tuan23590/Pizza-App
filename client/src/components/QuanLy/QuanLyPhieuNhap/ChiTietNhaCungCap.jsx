@@ -202,6 +202,7 @@ export default function ChiTietNhaCungCap({ open, onClose, mode, nhaCungCap }) {
             <TextField
               required
               fullWidth
+              autoFocus
               label="Tên Nhà Cung Cấp"
               name="tenNhaCungCap"
               value={formData.tenNhaCungCap}
@@ -210,7 +211,7 @@ export default function ChiTietNhaCungCap({ open, onClose, mode, nhaCungCap }) {
           </Grid>
           <Grid item xs={6}>
             <Autocomplete
-              autoFocus
+              
               fullWidth
               options={danhSachTinhTp}
               getOptionLabel={(option) => option.name_with_type}

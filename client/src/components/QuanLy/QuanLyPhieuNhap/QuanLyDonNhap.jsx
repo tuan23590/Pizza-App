@@ -59,7 +59,9 @@ export default function QuanLyDonNhap() {
             variant="contained"
             color="primary"
             sx={{ margin: "20px" }}
-            onClick={() => handleOpenDialog("add")}
+            onClick={(e) => {
+              e.currentTarget.blur();
+              handleOpenDialog("add")}}
           >
             Thêm Đơn Nhập
           </Button>

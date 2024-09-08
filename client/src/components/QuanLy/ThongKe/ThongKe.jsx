@@ -9,6 +9,7 @@ import {
 } from "../../../utils/thongKeUtils";
 import BieuDoCot from "./BieuDoCot";
 import BieuDoTron from "./BieuDoTron";
+import QuanlyDonHang from './../QuanlyDonHang';
 
 export default function ThongKe() {
   const select = [
@@ -97,7 +98,7 @@ export default function ThongKe() {
   }, [tongTienDonNhap.select]);
   return (
     <Grid container spacing={2} sx={{
-      height: "95.5%",
+      height: "102%",
       overflow: "auto",
     }}>
 
@@ -137,11 +138,13 @@ export default function ThongKe() {
           </Paper>
         )}
       </Grid>
-
       <Grid item xs={12}>
         <BieuDoCot />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={9}> 
+        <QuanlyDonHang />
+      </Grid>
+      <Grid item xs={3}>
         <BieuDoTron />
       </Grid>
     </Grid>

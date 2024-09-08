@@ -7,7 +7,7 @@ export default function BieuDoTron() {
   const [thoiGian, setThoiGian] = useState('7 ngày');
 
   return (
-    <Paper sx={{ padding: 2 }}>
+    <Paper sx={{ padding: 2, overflow: 'hidden' }}>
       <Box
         sx={{
           display: "flex",
@@ -69,22 +69,23 @@ export default function BieuDoTron() {
       >
         So với 30 ngày trước
       </Typography>
-      <Box sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
+      <Box>
       <Box
         sx={{
           height: 270,
           marginTop: 2,
           width: 300,
+          marginLeft: 9,
+          marginTop: -2,
+          overflow: "hidden",
         }}
       >
         <PieChartCostom/>
-        
       </Box>
-      <Box>
+      <Box sx={{
+        marginLeft: 3,
+        overflow: "hidden",
+      }}>
             <CountryProgressList/>
         </Box>
       </Box>

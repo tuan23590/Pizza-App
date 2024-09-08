@@ -329,8 +329,8 @@ export default function ChiTietSanPham({ open, onClose, sanPham, mode }) {
                 name="donViTinh"
               >
                 {danhSachDonVi.map((item) => (
-                  <MenuItem key={item._id} value={item.tenChiTiet}>
-                    {item.tenChiTiet}
+                  <MenuItem key={item} value={item}>
+                    {item}
                   </MenuItem>
                 ))
                 }

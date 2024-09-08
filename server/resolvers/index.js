@@ -7,6 +7,7 @@ import {
   nhapCungCapModel,
   sanPhamDaMuaModel,
   sanPhamModel,
+  taiKhoanModel,
   thongBaoModel,
   trangThaiGiaoHangModel,
 } from "../models/index.js";
@@ -17,6 +18,16 @@ const pubsub = new PubSub();
 
 export const resolvers = {
   Query: {
+    danhSachTaiKhoan: async () => {
+      const danhSachTaiKhoan = await taiKhoanModel.find();
+      for (let i = 0; i < danhSachTaiKhoan.length; i++) {
+        const soDonHang = await donHangModel.countDocuments({
+          email: danhSachTaiKhoan[i].email,
+        });
+        danhSachTaiKhoan[i].soDonHang = soDonHang
+      }
+      return danhSachTaiKhoan;
+    },
     danhSachSanPham: async () => {
       const danhSachSanPham = await sanPhamModel.find();
       //sắp xếp theo maSanPham giảm dần và các sản có maDanhMuclà "DMXOA" sẽ đứng cuối cùng
@@ -96,9 +107,14 @@ export const resolvers = {
       const donHang = await donHangModel.find({ email: args.email });
       return donHang;
     },
-    danhSachDonHang: async () => {
-      const danhSachDonHang = await donHangModel.find();
-      // sắp xếp theo maDonHang giảm dần
+    danhSachDonHang: async (parent, args) => {
+      const soNgay = args.type;
+      let danhSachDonHang = [];
+      if(soNgay === 0){
+        danhSachDonHang = await donHangModel.find();
+      }else{
+      danhSachDonHang = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+      }
       danhSachDonHang.sort((a, b) => b.maDonHang.localeCompare(a.maDonHang));
       return danhSachDonHang;
     },
@@ -786,6 +802,34 @@ export const resolvers = {
     },
   },
   Mutation: {
+    xoaTaiKhoan: async (parent, args) => {
+      await taiKhoanModel.findOneAndDelete({ email: args.email });
+      return "Xóa tài khoản thành công";
+    },
+    themTaiKhoan: async (parent, args) => {
+      const taiKhoan = await taiKhoanModel.findOne({ email: args.email });
+      if (taiKhoan) {
+        return await taiKhoanModel.findOneAndUpdate({ email: args.email }, {
+          lanCuoiDangNhap: Date.now(),
+          uid: args.uid || taiKhoan.uid,
+          phanQuyen: args.phanQuyen || taiKhoan.phanQuyen,
+          hoTen: args.hoTen || taiKhoan.hoTen,
+          soDienThoai: args.soDienThoai || taiKhoan.soDienThoai,
+          diaChi: args.diaChi || taiKhoan.diaChi,
+        }, { new: true });
+      }else{
+        const newTaiKhoan = new taiKhoanModel({
+          uid: args.uid || "",
+          email: args.email || "",
+          phanQuyen: args.phanQuyen || "Khách hàng",
+          hoTen: args.hoTen || "",
+          soDienThoai: args.soDienThoai || "",
+          diaChi: args.diaChi || "",
+          lanCuoiDangNhap: Date.now(),
+        });
+        return newTaiKhoan.save();
+      }
+    },
     themChiTiet: async (parent, args) => {
       const chiTiet = new chiTietModel(args);
       return chiTiet.save();

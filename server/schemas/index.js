@@ -140,13 +140,23 @@ type ChiTiet{
     tenChiTiet: String,
     loaiChiTiet: String,
 },
+type TaiKhoan {
+    uid: String,
+    email: String,
+    phanQuyen: String,
+    hoTen: String,
+    soDienThoai: String,
+    diaChi: String,
+    lanCuoiDangNhap: String,
+    soDonHang: Int,
+},
 type Query {
     danhSachSanPham: [SanPham],
     danhSachDanhMuc: [DanhMuc],
     danhSachDanhMucChoNguoiDung: [DanhMuc],
     danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham],
     danhSachSanPhamTheoMaDanhMucNguoiDung(maDanhMuc: String): [SanPham],
-    danhSachDonHang: [DonHang],
+    danhSachDonHang(type: Int): [DonHang],
     donHangTheoEmail(email: String): [DonHang],
     danhSachTinhTp: [TinhTp],
     danhSachTinhTpDayDu: [TinhTp],
@@ -163,6 +173,7 @@ type Query {
     thongKeSanPhamTheoDanhMuc(loaiThongKe: Int, maDanhMuc: String, type: Int): ThongKe,
     danhMucTheoNhaCungCap(maNhaCungCap: String): [DanhMuc],
     danhSachChiTiet: [ChiTiet],
+    danhSachTaiKhoan: [TaiKhoan],
 },
 type Mutation {
     themDanhMuc(tenDanhMuc: String): DanhMuc,
@@ -261,6 +272,17 @@ type Mutation {
     tenChiTiet: String,
     loaiChiTiet: String
     ): ChiTiet,
+
+    themTaiKhoan(
+    uid: String,
+    email: String,
+    phanQuyen: String,
+    hoTen: String,
+    soDienThoai: String,
+    diaChi: String,
+    ): TaiKhoan,
+
+    xoaTaiKhoan(email: String): String,
 }
     type Subscription {
     Notify: Message

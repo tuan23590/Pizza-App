@@ -141,6 +141,7 @@ export default function QuanLySanPham() {
   };
 
   const handleRequestSort = (property) => {
+    setPage(0);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);

@@ -29,7 +29,7 @@ export default function User() {
     }}>
       <AccountCircleIcon sx={{ color: 'red' }} />
       {user.uid ? 
-      <Typography sx={{ fontWeight: '500' }} onClick={xuLyDangXuat}>{user.displayName + '(Đăng xuất)'}</Typography> : 
+      <Typography sx={{ fontWeight: '500' }} onClick={xuLyDangXuat}>{(user.displayName || user.email) + '(Đăng xuất)'}</Typography> : 
       <Typography sx={{ fontWeight: '500' }} onClick={()=>{navigate('/DangNhap')}}>Tài khoản</Typography>}
       {/* <Typography sx={{ fontWeight: '500' }}>{user.displayName}</Typography> */}
     </Box>

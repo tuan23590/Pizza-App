@@ -27,6 +27,7 @@ export default function NhanVien() {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
+  const [isEdit, setIsEdit] = useState(false);
   const fetchData = async () => {
     const data = await APIDanhSachTaiKhoan();
     setDanhSachTaiKhoan(data.filter((item) => item.phanQuyen !== "Khách hàng"));
@@ -46,6 +47,7 @@ export default function NhanVien() {
     setOpen(false);
     setFormData(null);
     fetchData();
+    setIsEdit(false);
   };
   const xoaTaiKhoan = async (email) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa tài khoản này?")) {
@@ -107,7 +109,12 @@ export default function NhanVien() {
               {danhSachTaiKhoan.map((taiKhoan) => (
                 <TableRow
                   key={taiKhoan.uid + taiKhoan.email + taiKhoan.hoTen}
-                  onClick={() => handleClickOpen(taiKhoan)}
+                  onClick={() => {
+                    if (taiKhoan.phanQuyen !== "Quản lý") {
+                      handleClickOpen(taiKhoan);
+                      setIsEdit(true);
+                    }
+                  }}
                   sx={{
                     cursor: "pointer",
                     "&:hover": {
@@ -123,7 +130,8 @@ export default function NhanVien() {
                   <TableCell>
                     {TIMEAGO(parseInt(taiKhoan.lanCuoiDangNhap))}
                   </TableCell>
-                  <TableCell>
+                  {taiKhoan.phanQuyen !== "Quản lý" && (
+                    <TableCell>
                     <Button
                       variant="contained"
                       color="error"
@@ -136,6 +144,7 @@ export default function NhanVien() {
                       Xóa
                     </Button>
                   </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -148,6 +157,7 @@ export default function NhanVien() {
         handleClose={handleClose}
         formData={formData}
         setFormData={setFormData}
+        isEdit={isEdit}
       />
     </Paper>
   );

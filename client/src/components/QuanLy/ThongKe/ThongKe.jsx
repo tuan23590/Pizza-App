@@ -141,12 +141,12 @@ export default function ThongKe() {
       <Grid item xs={12}>
         <BieuDoCot />
       </Grid>
-      <Grid item xs={9}> 
+      <Grid item xs={12}> 
         <QuanlyDonHang />
       </Grid>
-      <Grid item xs={3}>
+      {/* <Grid item xs={3}>
         <BieuDoTron />
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }

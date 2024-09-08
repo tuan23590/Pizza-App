@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
+  Box,
   Grid,
+  CircularProgress
 } from '@mui/material';
 import DanhMucQuanLy from '../components/QuanLy/DanhMucQuanLy';
+import { AuthContext } from '../context/AuthProvider';
 
 export default function QuanLy() {
+  const {taiKhoan} = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    if(taiKhoan != null && taiKhoan.phanQuyen !='Quản lý'){
+      window.location.href = '/';
+    }else if(taiKhoan != null && taiKhoan.phanQuyen =='Quản lý'){
+      setLoading(false);
+    }
+  }, [taiKhoan]);
+  if (loading)
+  return <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+    < CircularProgress />
+  </Box>
   return (
     <>
         <Grid container sx={{

@@ -20,6 +20,7 @@ export default function ChiTietTaiKhoan({
   formData,
   setFormData,
   isCustomer,
+  isEdit,
 }) {
   const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
   const ThemNhanVien = async () => {
@@ -93,7 +94,7 @@ export default function ChiTietTaiKhoan({
         </Button>
         {!isCustomer && (
           <Button onClick={ThemNhanVien} color="primary" variant="contained">
-          Thêm nhân viên
+          {isEdit ? "Cập nhật nhân viên" : "Thêm nhân viên"}
         </Button>
         )}
       </DialogActions>

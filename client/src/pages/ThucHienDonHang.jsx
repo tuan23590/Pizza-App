@@ -10,6 +10,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    CircularProgress,
   } from "@mui/material";
   import React, { useContext, useEffect, useState } from "react";
   import { APIDonHangTheoEmail } from "../utils/donHangUtils";
@@ -20,15 +21,17 @@ import {
   import { FOMATDATE } from "../function";
   
   export default function ThucHienDonHang() {
-    const { user } = useContext(AuthContext);
+    const { user,taiKhoan } = useContext(AuthContext);
     const [danhSachDonHang, setDanhSachDonHang] = useState([]);
     const [filteredDonHang, setFilteredDonHang] = useState([]); // Danh sách đơn hàng đã được lọc
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [openDialog, setOpenDialog] = useState(false);
     const [status, setStatus] = useState("Tất cả");
     const navigate = useNavigate();
-    const { data, loading, error } = APINhanThongBao();
-  
+    const { data } = APINhanThongBao();
+
+    
+
     const handleSearch = async () => {
       const data = await APIDonHangTheoEmail(user.email);
       const sortedData = data
@@ -84,7 +87,18 @@ import {
     const handleCloseDialog = () => {
       setOpenDialog(false);
     };
-  
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+      if(taiKhoan != null && taiKhoan.phanQuyen !='Nhân viên bán hàng'){
+        window.location.href = '/';
+      }else if(taiKhoan != null && taiKhoan.phanQuyen =='Nhân viên bán hàng'){
+        setLoading(false);
+      }
+    }, [taiKhoan]);
+    if (loading)
+    return <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+      < CircularProgress />
+    </Box>
     return (
       <>
         <Typography fullWidth variant="h5" py={5} sx={{ textAlign: "center" }}>

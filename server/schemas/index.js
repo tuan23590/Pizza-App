@@ -146,7 +146,7 @@ type Query {
     danhSachDanhMucChoNguoiDung: [DanhMuc],
     danhSachSanPhamTheoMaDanhMuc(maDanhMuc: String): [SanPham],
     danhSachSanPhamTheoMaDanhMucNguoiDung(maDanhMuc: String): [SanPham],
-    danhSachDonHang: [DonHang],
+    danhSachDonHang(type: Int): [DonHang],
     donHangTheoEmail(email: String): [DonHang],
     danhSachTinhTp: [TinhTp],
     danhSachTinhTpDayDu: [TinhTp],

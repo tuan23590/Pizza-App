@@ -21,7 +21,7 @@ export default function QuanLy() {
             {'link':'QuanLyKhac','text':'Quản Lý Khác', 'phanQuyen': []},
             ]} />
     </Grid>
-    <Grid item xs={10} sx={{height: '100%', paddingTop: '15px',paddingRight: '15px'}}>
+    <Grid item xs={10} sx={{height: '94%', paddingTop: '15px',paddingRight: '15px'}}>
     <Outlet />
     </Grid>
     </Grid>

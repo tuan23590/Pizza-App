@@ -12,7 +12,7 @@ import { AuthContext } from './../context/AuthProvider';
 
 export default function ThanhToan() {
     const { setNotifyOpen, setNotificationMessage, setNotificationSeverity } = useContext(AuthContext);
-    const { gioHang, setGioHang } = useContext(GioHangContext);
+    const { gioHang, setGioHang,setHienThiDiaChi } = useContext(GioHangContext);
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [ngaySelected, setNgaySelected] = useState('Hôm nay');
@@ -133,12 +133,20 @@ export default function ThanhToan() {
                     </Box>
 
                     <Divider sx={{ marginY: '20px' }} />
-                    <Box display={'flex'} justifyContent={'space-between'} >
+                    <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} >
                         <Box display={'flex'} alignItems="center">
                             <LocationOnOutlinedIcon />
                             <Typography sx={{ marginLeft: '10px' }}>Giao hàng tận nơi: <b>{gioHang.diaChiGiaoHang}</b></Typography>
                         </Box>
-                        <Typography color={'green'}>Thay đổi</Typography>
+                        <Typography sx={{
+                            cursor: 'pointer',
+                            // hiển thị text trên 1 dòng
+                            whiteSpace: 'nowrap',
+                            width: '100px',
+                        }} 
+                        color={'green'}
+                        onClick={() => {setHienThiDiaChi(true)}}
+                        >Thay đổi</Typography>
                     </Box>
                     <TextField name='ghiChuDiaChi' onChange={handleChange} size='small' fullWidth label="Ghi chú địa chỉ" variant="outlined" sx={{ marginTop: '20px' }} />
                     <Divider sx={{ marginY: '20px' }} />
@@ -222,8 +230,8 @@ export default function ThanhToan() {
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button variant='outlined' onClick={handleDialogClose}>Đóng</Button>
-                    <Button variant='contained' onClick={handleDialogConform}>Xác nhận</Button>
+                    <Button variant='outlined' color='success' onClick={handleDialogClose}>Đóng</Button>
+                    <Button variant='contained' color='success' onClick={handleDialogConform}>Xác nhận</Button>
                 </DialogActions>
             </Dialog>
 
@@ -237,7 +245,7 @@ export default function ThanhToan() {
                     <Typography>Cảm ơn bạn đã đặt hàng. Đơn hàng của bạn sẽ được xử lý và giao hàng sớm nhất.</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button variant='contained' onClick={() => { navigate('/') }}>Về trang chủ</Button>
+                    <Button variant='contained' color='success' onClick={() => { navigate('/') }}>Về trang chủ</Button>
                 </DialogActions>
             </Dialog>
         </>

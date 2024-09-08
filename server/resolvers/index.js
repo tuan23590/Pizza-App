@@ -96,9 +96,14 @@ export const resolvers = {
       const donHang = await donHangModel.find({ email: args.email });
       return donHang;
     },
-    danhSachDonHang: async () => {
-      const danhSachDonHang = await donHangModel.find();
-      // sắp xếp theo maDonHang giảm dần
+    danhSachDonHang: async (parent, args) => {
+      const soNgay = args.type;
+      let danhSachDonHang = [];
+      if(soNgay === 0){
+        danhSachDonHang = await donHangModel.find();
+      }else{
+      danhSachDonHang = await donHangModel.find({ ngayDatHang: { $gte: Date.now() - soNgay * 24 * 60 * 60 * 1000 } });
+      }
       danhSachDonHang.sort((a, b) => b.maDonHang.localeCompare(a.maDonHang));
       return danhSachDonHang;
     },

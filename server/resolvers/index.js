@@ -917,10 +917,16 @@ export const resolvers = {
       return sanPham;
     },
     themDonHang: async (parent, args) => {
+      const danhSachSanPham = JSON.parse(args.danhSachSanPham);
+      // kiểm tra số lượng sản phẩm còn đủ không
+      for (let i = 0; i < danhSachSanPham.length; i++) {
+        const sanPham = await sanPhamModel.findOne({ _id: danhSachSanPham[i].id });
+        if (sanPham.soLuong < danhSachSanPham[i].soLuong) {
+          return null;
+        }
+      }
       const donHangCuoi = await donHangModel.findOne().sort({ _id: -1 }).exec();
-
       let maDonHangMoi;
-
       if (donHangCuoi) {
         const maDonHangCuoi = donHangCuoi.maDonHang;
         const soCuoi = parseInt(maDonHangCuoi.replace("DH", ""), 10);
@@ -942,7 +948,7 @@ export const resolvers = {
         args.thoiGianGiaoHang == "Càng sớm càng tốt"
           ? Date.now() + 2 * 60 * 60 * 1000
           : args.thoiGianGiaoHang;
-      const danhSachSanPham = JSON.parse(args.danhSachSanPham);
+      
       let danhSachIdSanPhamDaMua = [];
       try {
         for (let i = 0; i < danhSachSanPham.length; i++) {

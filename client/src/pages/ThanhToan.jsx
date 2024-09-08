@@ -47,6 +47,10 @@ export default function ThanhToan() {
                 danhSachSanPham: [],
                 tongTien: 0
             });
+        }else{
+            setNotifyOpen(true);
+            setNotificationMessage('Sản phẩm đã hết hàng hoặc không đủ số lượng');
+            setNotificationSeverity('error');
         }
     }
 

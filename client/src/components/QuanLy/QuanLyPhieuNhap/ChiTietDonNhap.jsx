@@ -33,6 +33,7 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
     const [danhSachNhaCungCap, setDanhSachNhaCungCap] = useState([]);
     const [danhSachDanhMuc, setDanhSachDanhMuc] = useState([]);
     const [danhMucSelected, setDanhMucSelected] = useState(null);
+    const [nhaCungCapSelected, setNhaCungCapSelected] = useState(null);
     const [chiTietDonNhap, setChiTietDonNhap] = useState(null);
     const [formData, setFormData] = useState(null);
     useEffect(() => {
@@ -79,13 +80,13 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
             setChiTietDonNhap({ ...chiTietDonNhap, sanPham: null });
         }
         const fetchData = async () => {
-                const data = await APIDanhMucTheoNhaCungCap(chiTietDonNhap?.nhaCungCap.maNhaCungCap);
+                const data = await APIDanhMucTheoNhaCungCap(nhaCungCapSelected?.maNhaCungCap);
                 if (data) {
                     setDanhSachDanhMuc(data);
                 }
         };
         fetchData();
-    }, [chiTietDonNhap?.nhaCungCap]);
+    }, [nhaCungCapSelected]);
 
     useEffect(() => {
 
@@ -113,6 +114,10 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
             }
         };
         fetchData();
+        setChiTietDonNhap({
+            ...chiTietDonNhap,
+            nhaCungCap: nhaCungCapSelected,
+        });
     }, [danhMucSelected]);
 
     const handleSubmit = async () => {
@@ -141,17 +146,16 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
             !chiTietDonNhap?.sanPham ||
             !chiTietDonNhap.soLuong ||
             !chiTietDonNhap.giaNhap ||
-            !chiTietDonNhap.nhaCungCap
+            !nhaCungCapSelected
         ) {
             setNotifyOpen(true);
             setNotificationMessage('Vui lòng nhập đầy đủ thông tin sản phẩm');
             setNotificationSeverity('error');
             return;
         }
-        //thêm chiTietDonNhap và đầu của danhSachSanPham
         setFormData((prev) => ({
             ...prev,
-            danhSachSanPham: [chiTietDonNhap, ...prev.danhSachSanPham],
+            danhSachSanPham: [ chiTietDonNhap,...prev.danhSachSanPham],
         }));
         setChiTietDonNhap(
             null
@@ -205,18 +209,18 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
                             </Grid>
                             <Grid item xs={12}>
                                 <Autocomplete
-                                    disabled={mode === 'edit'}
-                                    value={chiTietDonNhap?.nhaCungCap || null}
+                                    disabled={mode === 'edit' || formData?.danhSachSanPham.length > 0}
+                                    value={nhaCungCapSelected || null}
                                     options={danhSachNhaCungCap}
                                     getOptionLabel={(option) => option.tenNhaCungCap}
                                     renderInput={(params) => <TextField {...params} label="Nhà Cung Cấp" />}
-                                    onChange={(e, value) => setChiTietDonNhap({ ...chiTietDonNhap, nhaCungCap: value })}
+                                    onChange={(e, value) => { setNhaCungCapSelected(value); }}
                                 />
 
                             </Grid>
                             <Grid item xs={6}>
                                 <Autocomplete
-                                    value={danhMucSelected}
+                                    value={danhMucSelected || null}
                                     disabled={mode === 'edit'}
                                     options={danhSachDanhMuc}
                                     getOptionLabel={(option) => option.tenDanhMuc}
@@ -227,7 +231,7 @@ export default function ChiTietDonNhap({ open, onClose, mode, donNhap }) {
                             <Grid item xs={6}>
                                 <Autocomplete
                                     disabled={mode === 'edit'}
-                                    value={chiTietDonNhap?.sanPham}
+                                    value={chiTietDonNhap?.sanPham || null}
                                     options={danhSachSanPham}
                                     getOptionLabel={(option) => option.tenSanPham}
                                     renderInput={(params) => <TextField {...params} label="Sản Phẩm" />}

@@ -13,7 +13,7 @@ import {
     CircularProgress,
   } from "@mui/material";
   import React, { useContext, useEffect, useState } from "react";
-  import { APIDonHangTheoEmail } from "../utils/donHangUtils";
+  import { APIDanhSachDonHang } from "../utils/donHangUtils";
   import ChiTietDonHang from "../components/QuanLy/ChiTietDonHang";
   import { AuthContext } from "./../context/AuthProvider";
   import { useNavigate } from "react-router-dom";
@@ -33,7 +33,8 @@ import {
     
 
     const handleSearch = async () => {
-      const data = await APIDonHangTheoEmail(user.email);
+      const data = await APIDanhSachDonHang(0);
+      console.log(data);
       const sortedData = data
         .sort((a, b) => b.ngayDatHang - a.ngayDatHang)
         .filter(

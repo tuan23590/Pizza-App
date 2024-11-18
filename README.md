@@ -1,7 +1,7 @@
 # Project Documentation
 
 ## Overview
-This project consists of a **frontend** and **backend**, built with modern web development tools. The frontend uses **Vite** for fast development and React for UI components, while the backend is built on **Express.js** and **Apollo Server** to provide a GraphQL API.
+This project consists of a **frontend** and **backend**, built with modern web development tools. The frontend uses **Vite** for fast development and React for UI components, while the backend is built on **Apollo Server** to provide a GraphQL API.
 
 ---
 
